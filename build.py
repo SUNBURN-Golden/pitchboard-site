@@ -123,11 +123,11 @@ closing=closing_call()
 closing_html=(f'<a class="closing-soon" href="/calls/#{esc(closing[2]["id"])}">Closing soon: {esc(closing[2]["outlet"])} · {fmt(closing[2]["deadline"])}</a>' if closing else '')
 home=f'''<section class="hero home-hero"><h1>Where to pitch book reviews and cultural criticism.</h1>
 <form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Search by name, pay, or region"><button type="submit">Search</button></form>
-<nav class="status-chips" aria-label="Browse by status"><a class="status-chip" href="/outlets/?status=open">{cnt("open")} open</a><a class="status-chip" href="/outlets/?status=pitch-first">{cnt("pitch-first")} pitch first</a></nav>
+<nav class="status-chips" aria-label="Browse by status"><a class="status-chip" href="#open-now">{cnt("open")} open · {cnt("pitch-first")} pitch first</a></nav>
 {closing_html}</section>
 {subscribe_box()}
 {sponsor_slot()}
-<section><h2>Open or pitch-first right now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:10],'home-table')}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
+<section><h2 id="open-now">Open or pitch-first right now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:10],'home-table')}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
 page('/',SITE,home)
 # ---------- Directory ----------
 regions=sorted({r['region'] for r in outlets})
