@@ -64,7 +64,7 @@ def pay_src_label(r):
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block non-browser reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
 PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls')]
 MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About')]
-def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and status with last-checked dates.",extra_head='',active=None):
+def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None):
     cur=' aria-current="page"'
     current=active or path
     nav=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in PRIMARY_NAV)
