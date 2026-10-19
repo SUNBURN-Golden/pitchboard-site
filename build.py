@@ -127,7 +127,7 @@ home=f'''<section class="hero home-hero"><h1>Where to pitch book reviews and cul
 {closing_html}</section>
 {subscribe_box()}
 {sponsor_slot()}
-<section><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the outlet's own page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:10],'home-table')}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
+<section><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:10],'home-table')}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
 page('/',SITE,home)
 # ---------- Directory ----------
 regions=sorted({r['region'] for r in outlets})
@@ -171,7 +171,7 @@ def daysleft(c):
     n=(d_(c['deadline'])-TODAY).days
     return 'Deadline passed' if n<0 else 'Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'
 cl=sorted(cd['calls'],key=lambda c:(c['deadline'] is None,c['deadline'] or '9999'))
-cbody='<h1>Calls &amp; deadlines</h1><p class="muted">Reading windows and calls for criticism, with deadlines. The list is short: it includes only items we have read on the outlet\'s own page. We will add themed calls weekly.</p>'
+cbody='<h1>Calls &amp; deadlines</h1><p class="muted">Reading windows and calls for criticism, with deadlines. The list is short: it includes only items we have read on the outlet\'s own page. We add themed calls as we confirm them.</p>'
 for c in cl:
     cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
 <p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if c["deadline"] else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
@@ -203,7 +203,7 @@ page('/advertise/','Advertise',abody,desc="Sponsor The Pitchboard: labeled newsl
 mbody=f'''<h1>Methodology</h1>
 <h2>What we record</h2><p>Name, homepage, pitch-guidelines link, pay <em>as published</em>, word count, status, the date we last checked, and the source page. If we did not see a fact, the field is blank or marked "not recorded". We never record private editor emails; we link to the outlet's own guidelines page.</p>
 <h2>Statuses</h2><dl class="facts">{"".join(f'<dt>{badge({"status":k})}</dt><dd>{esc(v[2])}</dd>' for k,v in STATUS.items())}</dl>
-<h2>Last-checked dates and staleness</h2><p>Every outlet shows the date we last read its page. Entries older than {STALE_DAYS} days get a <span class="badge s-stale">Stale: re-check</span> badge. Our goal is to re-check every entry at least every 6 weeks, and open or pitch-first outlets weekly on rotation.</p>
+<h2>Last-checked dates and staleness</h2><p>Every outlet shows the date we last read its page. Entries older than {STALE_DAYS} days get a <span class="badge s-stale">Stale: re-check</span> badge. We re-check entries on a rotating schedule, oldest first, and show the last-checked date on every row.</p>
 <h2>Where the facts come from</h2><ul><li><strong>Outlet page read directly:</strong> we fetched the outlet's own guidelines page.</li><li><strong>Outlet page via search excerpt:</strong> some sites block non-browser access; we saw the outlet's own page text in a search excerpt. Confirm by hand.</li><li><strong>NBCC sheet:</strong> the National Book Critics Circle's public publications spreadsheet is used as a lead list. Pay or word counts taken from it are labeled and carry that sheet row's own last-updated date; many are 2022-vintage.</li><li><strong>Third-party only:</strong> flagged as unconfirmed.</li></ul>
 <h2>Independence</h2><p>Sponsored and featured items are always labeled. They never change any outlet's status, data, or ordering, apart from a clearly marked featured position. Outlets cannot pay to change what we report.</p>
 <h2>Limits</h2><p>Pages change without notice, some outlets do not publish pay, and we may have missed an update. Verify on the outlet's page before pitching, and <a href="/about/#corrections">send corrections</a> to '''+CONTACT_LINK+'''.</p>
