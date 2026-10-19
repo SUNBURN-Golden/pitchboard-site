@@ -62,10 +62,13 @@ def pay_src_label(r):
     if ps: return f"From: {esc(ps)}"
     return "See notes"
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block automated reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
-NAV=[('/','Open now'),('/outlets/','Directory'),('/calls/','Calls'),('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About')]
+PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls'),('/newsletter/','Newsletter')]
+MORE_NAV=[('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About')]
 def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None):
     cur=' aria-current="page"'
-    nav=''.join('<a href="%s"%s>%s</a>'%(h,cur if (active or path)==h else '',l) for h,l in NAV)
+    current=active or path
+    nav=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in PRIMARY_NAV)
+    more=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in MORE_NAV)
     t=f'{title} · {SITE}' if title!=SITE else f'{SITE}: paid book review & criticism outlets, with last-checked dates'
     canon=BASE+(path if path.endswith('/') else path+'/') if path!='/404' else None
     if canon:
@@ -76,8 +79,7 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
 <title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
-<form class="gsearch" action="/outlets/" method="get" role="search"><label class="sr" for="gq">Search outlets</label><input id="gq" name="q" type="search" placeholder="Search outlets…"><button>Search</button></form>
-<nav aria-label="Main">{nav}</nav></div></header>
+<nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
 <main id="main" class="wrap">{body}</main>
 <footer class="wrap foot"><p>Data last built {fmt(TODAY.isoformat())}. Facts are taken from each outlet's public pages and dated; always confirm on the outlet's own page before pitching. <a href="/methodology/">How we check</a> · <a href="/advertise/">Sponsored items are always labeled</a></p>
 <p class="sm">Corrections or sponsorship: {CONTACT_LINK} · <a href="{ARCHIVE}" rel="noopener">Newsletter archive</a> · <a href="/newsletter/">Subscribe</a></p></footer>
@@ -92,52 +94,73 @@ def row(r):
     f=r['name'] in featured
     hay=' '.join(str(r.get(k) or '') for k in ('name','pays','word_count','notes','region','status')).lower()
     star=' <span class="label sm">Featured · Sponsored</span>' if f else ''
-    return (f'<tr data-status="{esc(r["status"])}" data-region="{esc(r["region"])}" data-pay="{"1" if r.get("pays") and r["pays"]!="unpublished" else "0"}" data-featured="{"1" if f else "0"}" data-text="{esc(hay)}">'
-     f'<td class="n"><a href="/outlets/{r["slug"]}/">{esc(r["name"])}</a>{star}<div class="muted sm">{esc(r["region"])}</div></td>'
-     f'<td>{badge(r)}</td><td>{short(r.get("pays"))}</td><td>{short(r.get("word_count"),40)}</td><td class="chk">{checked(r)}</td></tr>')
-HEAD='<thead><tr><th>Outlet</th><th>Status</th><th>Pay (as published)</th><th>Word count</th><th>Last checked</th></tr></thead>'
+    return (f'<tr role="row" data-status="{esc(r["status"])}" data-region="{esc(r["region"])}" data-pay="{"1" if r.get("pays") and r["pays"]!="unpublished" else "0"}" data-featured="{"1" if f else "0"}" data-text="{esc(hay)}">'
+     f'<td role="cell" data-label="Outlet" class="n"><a href="/outlets/{r["slug"]}/">{esc(r["name"])}</a>{star}<div class="muted sm">{esc(r["region"])}</div></td>'
+     f'<td role="cell" data-label="Status">{badge(r)}</td><td role="cell" data-label="Pay (as published)">{short(r.get("pays"))}</td><td role="cell" data-label="Word count">{short(r.get("word_count"),40)}</td><td role="cell" data-label="Last checked" class="chk">{checked(r)}</td></tr>')
+HEAD='<thead role="rowgroup"><tr role="row"><th role="columnheader" scope="col">Outlet</th><th role="columnheader" scope="col">Status</th><th role="columnheader" scope="col">Pay (as published)</th><th role="columnheader" scope="col">Word count</th><th role="columnheader" scope="col">Last checked</th></tr></thead>'
 def table(rs,id_=''):
     rs=sorted(rs,key=lambda r:(r['name'] not in featured,r['name'].lower()))
     idattr=(' id="%s"'%id_) if id_ else ''
-    return f'<div class="tablewrap"><table class="outlets"{idattr}>{HEAD}<tbody>{"".join(row(r) for r in rs)}</tbody></table></div>'
+    return f'<div class="tablewrap"><table role="table" class="outlets"{idattr}>{HEAD}<tbody role="rowgroup">{"".join(row(r) for r in rs)}</tbody></table></div>'
 cnt=lambda s:sum(1 for r in outlets if r['status']==s)
+def closing_call():
+    valid=[]
+    for c in cd['calls']:
+        try:
+            deadline=d_(c.get('deadline')) if c.get('deadline') else None
+        except (TypeError,ValueError):
+            continue
+        try:
+            opens=d_(c.get('opens')) if c.get('opens') else None
+        except (TypeError,ValueError):
+            continue
+        if opens and opens>TODAY: continue
+        if deadline and deadline>=TODAY: valid.append((deadline,str(c.get('id') or ''),c))
+    return min(valid,key=lambda x:(x[0],x[1])) if valid else None
 # ---------- Home ----------
 openr=sorted([r for r in outlets if r['status'] in('open','pitch-first')],key=lambda r:(r['name'] not in featured,-d_(r['last_checked']).toordinal(),r['name'].lower()))
-home=f'''<section class="hero"><h1>Where to pitch book reviews and cultural criticism.</h1>
-<p class="lead">{len(outlets)} outlets with pay as published, word counts, pitch rules, and an honest status, each with a <strong>last-checked date</strong>. A weekly "Open Calls" email follows the same data.</p>
-<p class="stats"><span><b>{cnt("open")}</b> open</span><span><b>{cnt("pitch-first")}</b> pitch first</span><span><b>{cnt("closed")}</b> closed</span><span><b>{cnt("periodic-calls")+cnt("no-public-guidelines")}</b> calls-only or no public guidelines</span></p>
-<p><a class="btn" href="/outlets/">Browse the directory</a> <a class="btn alt" href="/calls/">Calls &amp; deadlines</a> <a class="btn alt" href="/newsletter/">Weekly digest</a></p></section>
+closing=closing_call()
+closing_html=(f'<a class="closing-soon" href="/calls/#{esc(closing[2]["id"])}">Closing soon: {esc(closing[2]["outlet"])} · {fmt(closing[2]["deadline"])}</a>' if closing else '')
+home=f'''<section class="hero home-hero"><h1>Where to pitch book reviews and cultural criticism.</h1>
+<form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Search by name, pay, or region"><button type="submit">Search</button></form>
+<nav class="status-chips" aria-label="Browse by status"><a class="status-chip" href="/outlets/?status=open">{cnt("open")} open</a><a class="status-chip" href="/outlets/?status=pitch-first">{cnt("pitch-first")} pitch first</a></nav>
+{closing_html}</section>
 {subscribe_box()}
 {sponsor_slot()}
-<section><h2>Open or pitch-first right now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:30],'home-table')}<p><a href="/outlets/?status=open">See all open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
+<section><h2>Open or pitch-first right now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:10],'home-table')}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
 page('/',SITE,home)
 # ---------- Directory ----------
 regions=sorted({r['region'] for r in outlets})
 opts=lambda vals,al:''.join(f'<option value="{esc(v)}">{esc(l)}</option>' for v,l in vals)
 dirbody=f'''<h1>Directory</h1><p class="muted">{len(outlets)} outlets. Type to search names, pay and notes. Every row shows when it was last checked.</p>
-<form class="filters" onsubmit="return false"><label>Search <input id="f-q" type="search" placeholder="e.g. translation, $200, UK"></label>
-<label>Status <select id="f-status"><option value="">Any</option><option value="open">Open</option><option value="pitch-first">Pitch first</option><option value="closed">Closed</option><option value="periodic-calls">Calls only</option><option value="no-public-guidelines">No public guidelines</option></select></label>
-<label>Region <select id="f-region"><option value="">Any</option>{"".join(f'<option>{esc(g)}</option>' for g in regions)}</select></label>
-<label class="chk2"><input id="f-pay" type="checkbox"> Pay figure recorded</label><span id="f-count" class="muted" aria-live="polite"></span></form>
+<form id="directory-filters" class="filters" action="/outlets/" method="get"><label>Search <input id="f-q" name="q" type="search" placeholder="e.g. translation, $200, UK"></label>
+<label>Status <select id="f-status" name="status"><option value="">Any</option><option value="open">Open</option><option value="pitch-first">Pitch first</option><option value="closed">Closed</option><option value="periodic-calls">Calls only</option><option value="no-public-guidelines">No public guidelines</option></select></label>
+<label>Region <select id="f-region" name="region"><option value="">Any</option>{"".join(f'<option>{esc(g)}</option>' for g in regions)}</select></label>
+<label class="chk2"><input id="f-pay" name="pay" value="1" type="checkbox"> Pay figure recorded</label><span id="f-count" class="muted" aria-live="polite"></span></form>
 {table(outlets,'dir-table')}<noscript><p>Filtering needs JavaScript; the full table above works without it.</p></noscript>'''
 page('/outlets/','Directory',dirbody,desc="Search and filter outlets that pay for book reviews and cultural criticism, by status, pay and word count.")
 # ---------- Outlet pages ----------
+nav_outlets=sorted(outlets,key=lambda r:(r['name'] not in featured,r['name'].lower()))
+next_outlet={r['slug']:nav_outlets[(i+1)%len(nav_outlets)] for i,r in enumerate(nav_outlets)}
 for r in outlets:
     f=r['name'] in featured
     links=[]
-    if r.get('pitch_guidelines_url'): links.append(f'<a href="{esc(r["pitch_guidelines_url"])}" rel="noopener">Pitch guidelines (outlet)</a>')
     if r.get('url'): links.append(f'<a href="{esc(r["url"])}" rel="noopener">Outlet homepage</a>')
     if r.get('source_url') and r.get('source_url')!=r.get('pitch_guidelines_url'): links.append(f'<a href="{esc(r["source_url"])}" rel="noopener">Source for this entry</a>')
+    pitch_cta=f'<a class="btn pitch-cta" href="{esc(r["pitch_guidelines_url"])}" rel="noopener">Pitch guidelines (outlet)</a>' if r.get('pitch_guidelines_url') else ''
+    nxt=next_outlet[r['slug']]
     body=f'''<p class="crumb"><a href="/outlets/">← Directory</a></p>
 <h1>{esc(r["name"])} {badge(r)}</h1>{'<p><span class="label">Featured · Sponsored</span> This listing is a paid placement; the data below is unaffected.</p>' if f else ''}
 <p class="checkline">{checked(r,True)} · {esc(VER.get(r["verification"],r["verification"]))}</p>
+{pitch_cta}
 <dl class="facts"><dt>Status</dt><dd>{badge(r)} {esc(STATUS.get(r["status"],("","",""))[2])}</dd>
 <dt>Pay (as published)</dt><dd>{esc(r.get("pays")) if r.get("pays") else '<span class="muted">not recorded</span>'}<div class="sm muted">{pay_src_label(r)}</div></dd>
 <dt>Word count</dt><dd>{esc(r.get("word_count")) if r.get("word_count") else '<span class="muted">not recorded</span>'}</dd>
 <dt>Region</dt><dd>{esc(r["region"])}</dd>
 <dt>Links</dt><dd>{" · ".join(links) or '<span class="muted">none recorded</span>'}</dd></dl>
 <h2>Pitch notes</h2><p>{esc(r.get("notes") or "No notes yet.")}</p>
-<p class="note">Our take: <em>coming soon</em>. Spot something out of date? <a href="/about/#corrections">Tell us</a>. Always confirm on the outlet's own page before pitching; pages change without notice.</p>'''
+<p class="note">Spot something out of date? <a href="/about/#corrections">Tell us</a>. Always confirm on the outlet's own page before pitching; pages change without notice.</p>
+<a class="next-outlet" href="/outlets/{nxt['slug']}/">Next outlet: {esc(nxt['name'])} →</a>'''
     page(f'/outlets/{r["slug"]}/',r['name'],body,desc=f'{r["name"]}: pitch status, pay and word count, last checked {fmt(r["last_checked"])}.',active='/outlets/')
 # ---------- Calls ----------
 def daysleft(c):
@@ -150,7 +173,7 @@ def daysleft(c):
 cl=sorted(cd['calls'],key=lambda c:(c['deadline'] is None,c['deadline'] or '9999'))
 cbody='<h1>Calls &amp; deadlines</h1><p class="muted">Reading windows and calls relevant to criticism, with deadlines. This list is short because we only list items we have read on the outlet\'s own page; we will add themed calls weekly.</p>'
 for c in cl:
-    cbody+=f'''<article class="call"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
+    cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
 <p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if c["deadline"] else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
 <p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>'''
 cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'<li><strong>{esc(w["outlet"])}</strong>: {esc(w["note"])} <a href="{esc(w["link"])}" rel="noopener">page</a></li>' for w in cd['watch'])+'</ul>'
