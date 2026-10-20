@@ -92,9 +92,8 @@ def sponsor_slot():
     if s: return f'<aside class="sponsor"><span class="label">Sponsored</span><p><strong>{esc(s["sponsor"])}</strong>: {esc(s["text"])}</p></aside>'
     return '<aside class="sponsor open-slot"><span class="label">Sponsored</span><p>This sponsor slot is available (writing programs, presses, tools). It always carries this label and never changes any outlet\'s data or order. <a href="/advertise/">Details</a></p></aside>'
 def paymax(r):
-    s=r.get('pays') or ''
-    n=[int(x.replace(',','')) for x in re.findall(r'[$£€]\s?(\d[\d,]*)',s)]  # currency amounts only, not years
-    return max(n) if n else 0
+    v=r.get('pay_usd_max')  # USD, set in data/outlets.json (see data/FX_NOTE.md); None = not stated
+    return '' if v is None else str(int(v))
 def row(r):
     f=r['name'] in featured
     hay=' '.join(str(r.get(k) or '') for k in ('name','pays','word_count','notes','region','status')).lower()
@@ -143,7 +142,7 @@ dirbody=f'''<h1>Directory</h1><p class="muted">{len(outlets)} outlets. Type to s
 <label>Region <select id="f-region" name="region"><option value="">Any</option>{"".join(f'<option>{esc(g)}</option>' for g in regions)}</select></label>
 <label>Sort <select id="f-sort" name="sort"><option value="">Default (A-Z)</option><option value="pay">Highest pay figure first</option><option value="checked">Recently checked</option></select></label>
 <label class="chk2"><input id="f-pay" name="pay" value="1" type="checkbox"> Pay figure recorded</label><span id="f-count" class="muted" aria-live="polite"></span></form>
-<p class="muted">Pay is shown as each outlet publishes it. Currencies are not converted.</p>
+<p class="muted">Pay is shown as each outlet publishes it. To sort by pay, we convert the top of each stated range to US dollars at approximate October 2026 rates. Outlets without a converted amount sort last.</p>
 {table(outlets,'dir-table')}<noscript><p>Filtering needs JavaScript; the full table above works without it.</p></noscript>'''
 page('/outlets/','Directory',dirbody,desc="Search and filter outlets that pay for book reviews and cultural criticism, by status, pay and word count.")
 # ---------- Outlet pages ----------
