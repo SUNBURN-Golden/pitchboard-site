@@ -64,8 +64,9 @@ def pay_src_label(r):
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block non-browser reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
 PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls')]
 MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About')]
-def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None):
+def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None,layout=None):
     cur=' aria-current="page"'
+    main_cls='wrap '+layout if layout else 'wrap'
     current=active or path
     nav=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in PRIMARY_NAV)
     more=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in MORE_NAV)
@@ -80,7 +81,7 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
 <nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
-<main id="main" class="wrap">{body}</main>
+<main id="main" class="{main_cls}">{body}</main>
 <footer class="wrap foot"><p>Data last built {fmt(TODAY.isoformat())}. Facts come from each outlet's public pages and are dated; always confirm on the outlet's own page before pitching. <a href="/methodology/">How we check</a> · <a href="/advertise/">Sponsored items are always labeled</a></p>
 <p class="sm">Corrections or sponsorship: {CONTACT_LINK} · <a href="{ARCHIVE}" rel="noopener">Newsletter archive</a> · <a href="/newsletter/">Subscribe</a></p></footer>
 <script src="/static/app.js" defer></script>{ATTR_SCRIPT}</body></html>'''
@@ -161,7 +162,7 @@ for r in outlets:
 <h2>Pitch notes</h2><p>{esc(r.get("notes") or "No notes yet.")}</p>
 <p class="note">Spot something out of date? <a href="/about/#corrections">Tell us</a>. Always confirm on the outlet's own page before pitching; pages change without notice.</p>
 <a class="next-outlet" href="/outlets/{nxt['slug']}/">Next outlet: {esc(nxt['name'])} →</a>'''
-    page(f'/outlets/{r["slug"]}/',r['name'],body,desc=f'{r["name"]}: pitch status, pay and word count, last checked {fmt(r["last_checked"])}.',active='/outlets/')
+    page(f'/outlets/{r["slug"]}/',r['name'],body,desc=f'{r["name"]}: pitch status, pay and word count, last checked {fmt(r["last_checked"])}.',active='/outlets/',layout='article')
 # ---------- Calls ----------
 def daysleft(c):
     if not c['deadline']: return 'Rolling'
@@ -184,7 +185,7 @@ nbody=f'''<h1>The Open Calls newsletter</h1><p class="lead">A weekly email: what
 <h2>What's in an issue</h2><ul><li><strong>Open Calls:</strong> new, changed and closing-soon outlets, each with its last-checked date.</li><li><strong>One critical note:</strong> 150-250 words on a single outlet (pay vs. work, pitch rules, who gets in).</li><li><strong>One labeled sponsor slot.</strong></li></ul>
 <h2>Archive</h2><p>Past issues appear on the <a href="{ARCHIVE}" rel="noopener">Pitchboard newsletter archive</a> (hosted by beehiiv). The first issues have not been sent yet, so it may be empty.</p>
 <p class="sm muted">Questions or corrections: {CONTACT_LINK}.</p>'''
-page('/newsletter/','Newsletter',nbody,desc="Free weekly Open Calls email: which criticism outlets are taking pitches now, with deadlines.")
+page('/newsletter/','Newsletter',nbody,desc="Free weekly Open Calls email: which criticism outlets are taking pitches now, with deadlines.",layout='article')
 # ---------- Advertise ----------
 abody='''<h1>Advertise</h1><p class="lead">Reach writers who pitch criticism. Everything sold here is labeled, and sponsorship never changes an outlet's status, data or order.</p>
 <div class="notice"><strong>Draft pricing; nothing is for sale yet.</strong> Prices step up as the list grows; founding rates apply while the list is small.</div>
@@ -198,7 +199,7 @@ abody='''<h1>Advertise</h1><p class="lead">Reach writers who pitch criticism. Ev
 <h2>How sponsored items appear</h2>'''+sponsor_slot()+'''<p>Featured listings carry a <span class="label sm">Featured · Sponsored</span> label in tables and on the outlet page. The outlet's status, pay and notes stay exactly as we found them.</p>
 <h2>Who it's for</h2><p>MFA and low-residency programs, writing tools, small presses, literary organizations, and magazines recruiting reviewers.</p>
 <h2>Book a slot or ask a question</h2><p>Email '''+CONTACT_LINK+''' with what you want to promote and the dates you have in mind. Nothing is for sale until we confirm by reply.</p>'''+subscribe_box('Or see the newsletter first',False)
-page('/advertise/','Advertise',abody,desc="Sponsor The Pitchboard: labeled newsletter slots and featured outlet listings for writers who pitch criticism.")
+page('/advertise/','Advertise',abody,desc="Sponsor The Pitchboard: labeled newsletter slots and featured outlet listings for writers who pitch criticism.",layout='article')
 # ---------- Methodology ----------
 mbody=f'''<h1>Methodology</h1>
 <h2>What we record</h2><p>Name, homepage, pitch-guidelines link, pay <em>as published</em>, word count, status, the date we last checked, and the source page. If we did not see a fact, the field is blank or marked "not recorded". We never record private editor emails; we link to the outlet's own guidelines page.</p>
@@ -208,13 +209,13 @@ mbody=f'''<h1>Methodology</h1>
 <h2>Independence</h2><p>Sponsored and featured items are always labeled. They never change any outlet's status, data, or ordering, apart from a clearly marked featured position. Outlets cannot pay to change what we report.</p>
 <h2>Limits</h2><p>Pages change without notice, some outlets do not publish pay, and we may have missed an update. Verify on the outlet's page before pitching, and <a href="/about/#corrections">send corrections</a> to '''+CONTACT_LINK+'''.</p>
 <h2 id="privacy">Privacy</h2><p>This site has no accounts and does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
-page('/methodology/','Methodology',mbody,desc="How The Pitchboard checks outlets, dates every fact, labels sources, and keeps sponsorship separate from data.")
+page('/methodology/','Methodology',mbody,desc="How The Pitchboard checks outlets, dates every fact, labels sources, and keeps sponsorship separate from data.",layout='article')
 # ---------- About ----------
 page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent directory for people who write criticism. It is run by a critic who criticizes everything, including the market that pays for criticism. Notes on outlets will be opinionated. The data will not be.</p>
 <p class="notice"><strong>Launched October 2026.</strong> The directory is new and still a work in progress; every entry shows when it was last checked. Spot a mistake? <a href="#corrections">Tell us</a>.</p>
 <h2 id="corrections">Corrections</h2><p>Spot something out of date or wrong? Outlet editors can ask us to update or remove an entry. Email {CONTACT_LINK} with the outlet name and a link to the page that shows the correct information.</p>
 <h2 id="contact">Contact and sponsorship</h2><p>Corrections, press and sponsorship enquiries: {CONTACT_LINK}. See <a href="/advertise/">Advertise</a> for how sponsored items work.</p>
-<h2 id="privacy">Privacy</h2><p><a href="https://www.beehiiv.com" rel="noopener">beehiiv</a> handles newsletter signups; it stores your address and sends the emails. Details are on the <a href="/methodology/#privacy">methodology page</a>. Past issues: <a href="{ARCHIVE}" rel="noopener">newsletter archive</a>.</p>''',desc="About The Pitchboard, an independent directory of outlets that pay for book reviews and cultural criticism; corrections and contact.")
+<h2 id="privacy">Privacy</h2><p><a href="https://www.beehiiv.com" rel="noopener">beehiiv</a> handles newsletter signups; it stores your address and sends the emails. Details are on the <a href="/methodology/#privacy">methodology page</a>. Past issues: <a href="{ARCHIVE}" rel="noopener">newsletter archive</a>.</p>''',desc="About The Pitchboard, an independent directory of outlets that pay for book reviews and cultural criticism; corrections and contact.",layout='article')
 page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
 # ---------- static ----------
 (OUT/'static').mkdir(parents=True,exist_ok=True)
