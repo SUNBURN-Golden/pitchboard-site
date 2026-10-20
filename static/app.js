@@ -9,7 +9,7 @@
     rows.forEach(function(r){var ok=s.every(function(w){return r.dataset.text.indexOf(w)>-1})&&(!st.value||r.dataset.status===st.value)&&(!rg.value||r.dataset.region===rg.value)&&(!pay.checked||r.dataset.pay==='1');r.hidden=!ok;if(ok)n++;});
     var m=so.value;
     rows.slice().sort(function(a,b){var f=(b.dataset.featured==='1'?1:0)-(a.dataset.featured==='1'?1:0);if(f)return f;
-      if(m==='pay')return (+b.dataset.paymax||0)-(+a.dataset.paymax||0)||a._idx-b._idx;
+      if(m==='pay'){var x=a.dataset.paymax,y=b.dataset.paymax;if(x===''&&y==='')return a._idx-b._idx;if(x==='')return 1;if(y==='')return -1;return (+y)-(+x)||a._idx-b._idx;}
       if(m==='checked')return (a.dataset.checked<b.dataset.checked?1:a.dataset.checked>b.dataset.checked?-1:0)||a._idx-b._idx;
       return a._idx-b._idx;
     }).forEach(function(r){body.appendChild(r);});
