@@ -107,31 +107,51 @@ def table(rs,id_=''):
     idattr=(' id="%s"'%id_) if id_ else ''
     return f'<div class="tablewrap"><table role="table" class="outlets"{idattr}>{HEAD}<tbody role="rowgroup">{"".join(row(r) for r in rs)}</tbody></table></div>'
 cnt=lambda s:sum(1 for r in outlets if r['status']==s)
-def closing_call():
-    valid=[]
-    for c in cd['calls']:
-        try:
-            deadline=d_(c.get('deadline')) if c.get('deadline') else None
-        except (TypeError,ValueError):
-            continue
-        try:
-            opens=d_(c.get('opens')) if c.get('opens') else None
-        except (TypeError,ValueError):
-            continue
-        if opens and opens>TODAY: continue
-        if deadline and deadline>=TODAY: valid.append((deadline,str(c.get('id') or ''),c))
-    return min(valid,key=lambda x:(x[0],x[1])) if valid else None
+def daysleft(c):
+    if not c['deadline']: return 'Rolling'
+    if c['opens'] and d_(c['opens'])>TODAY:
+        k=(d_(c['opens'])-TODAY).days
+        return 'Opens in %d day%s'%(k,'s' if k!=1 else '')
+    n=(d_(c['deadline'])-TODAY).days
+    return 'Deadline passed' if n<0 else 'Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'
 # ---------- Home ----------
 openr=sorted([r for r in outlets if r['status'] in('open','pitch-first')],key=lambda r:(r['name'] not in featured,-d_(r['last_checked']).toordinal(),r['name'].lower()))
-closing=closing_call()
-closing_html=(f'<a class="closing-soon" href="/calls/#{esc(closing[2]["id"])}">Closing soon: {esc(closing[2]["outlet"])} · {fmt(closing[2]["deadline"])}</a>' if closing else '')
-home=f'''<section class="hero home-hero"><h1>Where to pitch book reviews and cultural criticism.</h1>
+paytop=sorted((r for r in outlets if r.get('pay_usd_max') is not None),key=lambda r:(-r['pay_usd_max'],r['name'].lower()))[:4]
+due=[]
+for c in cd['calls']:
+    try:
+        ddl=d_(c['deadline']) if c.get('deadline') else None
+        op=d_(c['opens']) if c.get('opens') else None
+    except (TypeError,ValueError):
+        continue
+    if op and op>TODAY: continue
+    if ddl and ddl>=TODAY: due.append(c)
+due=sorted(due,key=lambda c:(c['deadline'],c.get('id') or ''))[:4]
+def toprate(r):
+    v=r.get('pay_usd_max')
+    return f'<b>${int(v):,}</b>' if v is not None else f'<span class="rt-text">{short(r.get("pays"),80)}</span>'
+def rate_row(r):
+    return (f'<a class="rate-tr" href="/outlets/{r["slug"]}/">'
+     f'<span class="rt-outlet"><b>{esc(r["name"])}</b><span class="muted sm">{short(r.get("word_count"),40)} · checked {fmt(r["last_checked"])}</span></span>'
+     f'<span class="rt-rate">{toprate(r)}</span><span class="rt-status">{badge(r)}</span><span class="rt-arrow" aria-hidden="true">→</span></a>')
+ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet · length · checked</span><span>Top rate</span><span>Status</span><span></span></div>'
+ +''.join(rate_row(r) for r in openr[:8])+'</div>')
+paycards='<div class="pay-strip">'+''.join(
+ f'<a class="pay-card" href="/outlets/{r["slug"]}/"><span class="pay-amt">${int(r["pay_usd_max"]):,}</span><b>{esc(r["name"])}</b><span class="muted sm">Checked {fmt(r["last_checked"])}</span></a>'
+ for r in paytop)+'</div>'
+duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
+<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
+<p class="sm">Deadline <strong>{fmt(c["deadline"])}</strong> · Pay: {esc(c["pay"])}</p>
+<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>''' for c in due)
+if not duecards: duecards='<p class="muted">No upcoming deadlines on the board right now.</p>'
+home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</h1>
+<p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets that publish criticism — each entry shows when it was last checked.</p>
 <form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Search by name, pay, or region"><button type="submit">Search</button></form>
-<nav class="status-chips" aria-label="Browse the directory"><a class="status-chip" href="/outlets/?status=open">Open now</a><a class="status-chip" href="/outlets/?sort=pay">Highest pay first</a></nav>
-{closing_html}</section>
-{subscribe_box('Open Calls, every Thursday.')}
-{sponsor_slot()}
-<section><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{table(openr[:10],'home-table')}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></section>'''
+<nav class="status-chips" aria-label="Browse the directory"><a class="status-chip" href="/outlets/?status=open">Open now</a><a class="status-chip" href="/outlets/?sort=pay">Highest pay</a></nav></section>
+<section><h2>Highest pay</h2><p class="muted sm">Top of each outlet's published pay range, converted to US dollars at approximate rates. <a href="/outlets/?sort=pay">Sort the whole directory by pay</a>.</p>{paycards}</section>
+<section class="home-lay"><div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></div>
+<aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside></section>
+<section><h2>Deadlines soon</h2><div class="due-grid">{duecards}</div><p><a href="/calls/">All calls &amp; deadlines</a></p></section>'''
 page('/',SITE,home)
 # ---------- Directory ----------
 regions=sorted({r['region'] for r in outlets})
@@ -170,13 +190,6 @@ for r in outlets:
 <a class="next-outlet" href="/outlets/{nxt['slug']}/">Next outlet: {esc(nxt['name'])} →</a>'''
     page(f'/outlets/{r["slug"]}/',r['name'],body,desc=f'{r["name"]}: pitch status, pay and word count, last checked {fmt(r["last_checked"])}.',active='/outlets/',layout='article')
 # ---------- Calls ----------
-def daysleft(c):
-    if not c['deadline']: return 'Rolling'
-    if c['opens'] and d_(c['opens'])>TODAY:
-        k=(d_(c['opens'])-TODAY).days
-        return 'Opens in %d day%s'%(k,'s' if k!=1 else '')
-    n=(d_(c['deadline'])-TODAY).days
-    return 'Deadline passed' if n<0 else 'Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'
 cl=sorted(cd['calls'],key=lambda c:(c['deadline'] is None,c['deadline'] or '9999'))
 cbody='<h1>Calls &amp; deadlines</h1><p class="muted">Reading windows and calls for criticism, with deadlines. The list is short: it includes only items we have read on the outlet\'s own page. We add themed calls as we confirm them.</p>'
 for c in cl:
