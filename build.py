@@ -140,7 +140,7 @@ dirbody=f'''<h1>Directory</h1><p class="muted">{len(outlets)} outlets. Type to s
 <form id="directory-filters" class="filters" action="/outlets/" method="get"><label>Search <input id="f-q" name="q" type="search" placeholder="e.g. translation, $200, UK"></label>
 <label>Status <select id="f-status" name="status"><option value="">Any</option><option value="open">Open</option><option value="pitch-first">Pitch first</option><option value="closed">Closed</option><option value="periodic-calls">Calls only</option><option value="no-public-guidelines">No public guidelines</option></select></label>
 <label>Region <select id="f-region" name="region"><option value="">Any</option>{"".join(f'<option>{esc(g)}</option>' for g in regions)}</select></label>
-<label>Sort <select id="f-sort" name="sort"><option value="">Default (A-Z)</option><option value="pay">Highest pay figure first</option><option value="checked">Recently checked</option></select></label>
+<label>Sort <select id="f-sort" name="sort"><option value="">Default (A-Z)</option><option value="pay">Highest pay</option><option value="checked">Recently checked</option></select></label>
 <label class="chk2"><input id="f-pay" name="pay" value="1" type="checkbox"> Pay figure recorded</label><span id="f-count" class="muted" aria-live="polite"></span></form>
 <p class="muted">Pay is shown as each outlet publishes it. To sort by pay, we convert the top of each stated range to US dollars at approximate October 2026 rates. Outlets without a converted amount sort last.</p>
 {table(outlets,'dir-table')}<noscript><p>Filtering needs JavaScript; the full table above works without it.</p></noscript>'''
