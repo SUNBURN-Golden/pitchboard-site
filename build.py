@@ -149,8 +149,8 @@ home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</
 <form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Search by name, pay, or region"><button type="submit">Search</button></form>
 <nav class="status-chips" aria-label="Browse the directory"><a class="status-chip" href="/outlets/?status=open">Open now</a><a class="status-chip" href="/outlets/?sort=pay">Highest pay</a></nav></section>
 <section><h2>Highest pay</h2><p class="muted sm">Top of each outlet's published pay range, converted to US dollars at approximate rates. <a href="/outlets/?sort=pay">Sort the whole directory by pay</a>.</p>{paycards}</section>
-<section class="home-lay"><div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></div>
-<aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside></section>
+<section class="home-lay"><aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside>
+<div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the outlet's page said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
 <section><h2>Deadlines soon</h2><div class="due-grid">{duecards}</div><p><a href="/calls/">All calls &amp; deadlines</a></p></section>'''
 page('/',SITE,home)
 # ---------- Directory ----------
