@@ -3,7 +3,7 @@
 Usage: python3 build.py [--out dist] [--today YYYY-MM-DD] [--demo-sponsor]
 Reads data/outlets.json + data/calls.json (+ optional data/sponsors.json), writes static HTML to dist/.
 """
-import json, re, shutil, sys, html, datetime as dt
+import json, re, shutil, sys, html, datetime as dt, hashlib, struct, zlib
 from pathlib import Path
 ROOT=Path(__file__).parent
 args=sys.argv[1:]
@@ -62,7 +62,7 @@ def pay_src_label(r):
     if ps: return f"From: {esc(ps)}"
     return "See notes"
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block non-browser reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
-PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls')]
+PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls'),('/app/','App')]
 MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About')]
 def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None,layout=None):
     cur=' aria-current="page"'
@@ -77,7 +77,7 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
         extra_head=f'<link rel="canonical" href="{canon}"><meta property="og:title" content="{esc(t)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{canon}"><meta property="og:type" content="website"><meta property="og:site_name" content="{SITE}">'+extra_head
     else: extra_head='<meta name="robots" content="noindex">'+extra_head
     out=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
+<title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="stylesheet" href="/static/style.css"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#8a2a1c"><link rel="icon" href="/static/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/static/icon-192.png">{extra_head}</head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
 <nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
@@ -198,6 +198,29 @@ for c in cl:
 <p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>'''
 cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'<li><strong>{esc(w["outlet"])}</strong>: {esc(w["note"])} <a href="{esc(w["link"])}" rel="noopener">page</a></li>' for w in cd['watch'])+'</ul>'
 page('/calls/','Calls & deadlines',cbody,desc="Calendar of themed calls for pitches in criticism and book reviews, with deadlines and sources.")
+# ---------- Installable app ----------
+appbody=f'''<section class="hero"><span class="kicker">Your pitching desk</span><h1>The Pitchboard app</h1>
+<p class="lead">Find an outlet, keep an eye on deadlines, and save reminders on this device.</p>
+<nav class="app-sections" aria-label="App sections"><a class="btn alt" href="#app-outlets">Find an outlet</a><a class="btn alt" href="#app-calls">Calls &amp; reminders</a></nav>
+<p class="cta-row"><button id="install-app" hidden>Install app</button></p>
+<p class="sm muted" id="install-help">To install, choose Install app or Add to Home Screen in your browser's menu. On iPhone or iPad, use Safari's Share menu.</p>
+<p id="app-connection" class="sm muted" role="status"></p></section>
+<section aria-labelledby="app-outlets"><h2 id="app-outlets">Find an outlet</h2>
+<form id="directory-filters" class="filters" action="/app/" method="get">
+<label>Search names and notes <input id="f-q" name="q" type="search" placeholder="e.g. translation, essays"></label>
+<label>Status <select id="f-status" name="status"><option value="">Any</option>{''.join(f'<option value="{k}">{v[0]}</option>' for k,v in STATUS.items())}</select></label>
+<label>Region <select id="f-region" name="region"><option value="">Any</option>{''.join(f'<option>{esc(g)}</option>' for g in regions)}</select></label>
+<label>Minimum top rate (USD) <input id="f-min-pay" name="min_pay" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 200"></label>
+<label>Sort <select id="f-sort" name="sort"><option value="">Default (A-Z)</option><option value="pay">Highest pay</option><option value="checked">Recently checked</option></select></label>
+<label class="chk2"><input id="f-pay" name="pay" value="1" type="checkbox"> Pay figure recorded</label><span id="f-count" class="muted" aria-live="polite"></span></form>
+<p class="sm muted">Minimum top rate uses the upper end of each stated range, converted to US dollars. Entries without a converted rate are excluded when a minimum is set. <a href="/methodology/">How we check</a>.</p>
+{table(outlets,'dir-table')}<p id="outlets-empty" class="muted" hidden>No outlets match these filters.</p></section>
+<section aria-labelledby="app-calls"><h2 id="app-calls">Calls &amp; reminders</h2>
+<p class="sm muted">Reminders stay on this device. Allow notifications to receive one alert in the three days before a deadline, including deadline day. We check when you open the site and every minute while it is open. Background checks depend on your browser; use a calendar reminder for a scheduled alert when the app is closed. Dates are listed without a time zone; confirm the closing time on the outlet's page.</p>
+<p class="cta-row"><button id="enable-notifications">Enable notifications</button></p><p id="reminder-status" class="sm muted" role="status"></p>
+<div id="app-call-list"><p>Loading calls… <a href="/calls/">Read all calls</a>.</p></div></section>
+<noscript><p>Search, installation controls and reminders need JavaScript. <a href="/calls/">Read calls and deadlines</a>; the outlet directory above remains available.</p></noscript>'''
+page('/app/','App',appbody,desc="Search criticism outlets, browse deadlines, and save local reminders in The Pitchboard app.")
 # ---------- Newsletter ----------
 nbody=f'''<h1>The Open Calls newsletter</h1><p class="lead">A weekly email: what opened, what's closing, and one short critical note on an outlet.</p>
 {subscribe_box('Subscribe',True)}
@@ -243,4 +266,26 @@ for f in (ROOT/'static').iterdir(): shutil.copy(f,OUT/'static'/f.name)
 (OUT/"_headers").unlink(missing_ok=True)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)))+'</urlset>\n')
 shutil.copy(ROOT/'data/outlets.json',OUT/'outlets.json')
-print(f"built {len(outlets)} outlet pages + 8 pages -> {OUT} (today={TODAY})")
+shutil.copy(ROOT/'data/calls.json',OUT/'calls.json')
+shutil.copy(ROOT/'manifest.webmanifest',OUT/'manifest.webmanifest')
+
+def write_icon(size):
+    # Dependency-free raster version of static/icon.svg: a paper P on rust.
+    def chunk(kind, data):
+        return struct.pack('!I',len(data))+kind+data+struct.pack('!I',zlib.crc32(kind+data)&0xffffffff)
+    pixels=bytearray()
+    for y in range(size):
+        pixels.append(0)  # PNG scanline filter
+        for x in range(size):
+            u,v=x/size,y/size
+            paper=(.29<=u<.40 and .23<=v<.77) or (.40<=u<.67 and (.23<=v<.34 or .46<=v<.57)) or (.59<=u<.70 and .30<=v<.50)
+            pixels.extend((250,248,244) if paper else (138,42,28))
+    png=b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('!2I5B',size,size,8,2,0,0,0))+chunk(b'IDAT',zlib.compress(bytes(pixels)))+chunk(b'IEND',b'')
+    (OUT/f'static/icon-{size}.png').write_bytes(png)
+for size in (192,512): write_icon(size)
+# Change the worker on every asset/data/app-shell update so cache-first assets refresh.
+assets=['app/index.html','static/app.js','static/style.css','static/icon.svg','static/icon-192.png','static/icon-512.png','manifest.webmanifest','outlets.json','calls.json']
+worker=(ROOT/'sw.js').read_text()
+version=hashlib.sha256(worker.encode()+b''.join((OUT/p).read_bytes() for p in assets)).hexdigest()[:16]
+(OUT/'sw.js').write_text(worker.replace('__CACHE_VERSION__',version),encoding='utf-8')
+print(f"built {len(outlets)} outlet pages + 9 pages -> {OUT} (today={TODAY})")
