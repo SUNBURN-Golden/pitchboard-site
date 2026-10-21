@@ -205,10 +205,13 @@
       return (a.deadline || '9999').localeCompare(b.deadline || '9999');
     }).map(function (call) {
       var remaining = call.deadline ? days(call.deadline) : null;
+      var untilOpen = call.opens ? days(call.opens) : null;
       var saved = reminders.some(function (r) { return r.id === call.id; });
-      var label = remaining === null ? 'Rolling' : remaining < 0 ? 'Deadline passed' : remaining === 0 ? 'Closes today' : remaining + ' days left';
+      var label = remaining !== null && remaining < 0 ? 'Deadline passed' : untilOpen > 0 ?
+        'Opens in ' + untilOpen + ' day' + (untilOpen === 1 ? '' : 's') :
+        remaining === null ? 'Rolling' : remaining === 0 ? 'Closes today' : remaining + ' days left';
       return '<article class="call" id="call-' + escape(call.id) + '"><h3>' + escape(call.title) + '</h3><p><strong>' +
-        escape(call.outlet) + '</strong> · ' + escape(call.type) + ' · <span class="badge ' + (remaining !== null && remaining < 0 ? 's-closed' : 's-open') + '">' + label + '</span></p><p>' +
+        escape(call.outlet) + '</strong> · ' + escape(call.type) + ' · <span class="badge ' + ((remaining !== null && remaining < 0) || untilOpen > 0 ? 's-closed' : 's-open') + '">' + label + '</span></p><p>' +
         (call.opens ? 'Opens ' + dateLabel(call.opens) + ' · ' : '') + (call.deadline ? 'Deadline <strong>' + dateLabel(call.deadline) + '</strong>' : 'No deadline stated') +
         ' · Pay: ' + escape(call.pay) + '</p><p>' + escape(call.details) + '</p><p class="sm"><a href="' + escape(safeLink(call.link)) +
         '" rel="noopener">Outlet page</a> · <span class="checked">Last checked ' + dateLabel(call.last_checked) + '</span></p>' +

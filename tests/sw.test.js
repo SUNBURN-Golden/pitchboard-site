@@ -4,10 +4,10 @@ const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 const vm = require('node:vm');
 
-function worker() {
+function worker(now = '2026-10-28T12:00:00Z') {
   const origin = 'https://pitchboard.test';
   const stores = new Map(), listeners = {}, notifications = [];
-  let online = true, responseStatus = 200, calls = [];
+  let online = true, responseStatus = 200, calls = [], writesFail = false;
   const key = request => new URL(typeof request === 'string' ? request : request.url, origin).href;
   const caches = {
     async open(name) {
@@ -21,14 +21,17 @@ function worker() {
           }
           return store.get(url)?.clone();
         },
-        async put(request, response) { store.set(key(request), response.clone()); },
+        async put(request, response) {
+          if (writesFail) throw new Error('Cache quota exceeded');
+          store.set(key(request), response.clone());
+        },
         async addAll(paths) { for (const path of paths) store.set(key(path), new Response('shell')); }
       };
     },
     async keys() { return [...stores.keys()]; },
     async delete(name) { return stores.delete(name); }
   };
-  const fixed = new Date('2026-10-28T12:00:00Z');
+  const fixed = new Date(now);
   class Clock extends Date {
     constructor(...args) { super(...(args.length ? args : [fixed])); }
   }
@@ -57,6 +60,7 @@ function worker() {
     setCalls(value) { calls = value; },
     setOnline(value) { online = value; },
     setStatus(value) { responseStatus = value; },
+    failWrites() { writesFail = true; },
     async sync(reminders) {
       await dispatch('message', {source: {url: origin + '/app/'}, data: {type: 'SYNC_REMINDERS', reminders}});
     },
@@ -98,6 +102,55 @@ test('cancelled, withdrawn, and changed deadlines use current call data', async 
   assert.equal(w.notifications.length, 2);
 });
 
+test('restoring an earlier deadline does not repeat an already delivered alert', async () => {
+  const w = worker(), original = call('corrected', '2026-10-30');
+  w.setCalls([original]);
+  await w.sync([original]);
+  w.setCalls([call('corrected', '2026-10-31')]);
+  await w.periodic();
+  w.setCalls([original]);
+  await w.periodic();
+  assert.equal(w.notifications.length, 2);
+});
+
+test('existing delivery markers survive the reminder history upgrade', async () => {
+  const w = worker(), original = call('existing', '2026-10-30');
+  const cache = await w.caches.open('pitchboard-reminders-v1');
+  await cache.put('/__pitchboard_reminders__', new Response(JSON.stringify({
+    reminders: [original], notified: {existing: original.deadline}
+  })));
+  w.setCalls([original]);
+  await w.periodic();
+  assert.equal(w.notifications.length, 0);
+  w.setCalls([call('existing', '2026-10-31')]);
+  await w.periodic();
+  w.setCalls([original]);
+  await w.periodic();
+  assert.equal(w.notifications.length, 1);
+});
+
+test('notifications respect local dates across UTC midnight and DST', async () => {
+  const previous = process.env.TZ;
+  try {
+    for (const [zone, now, today, thirdDay] of [
+      ['Asia/Seoul', '2026-10-27T16:00:00Z', '2026-10-28', '2026-10-31'],
+      ['America/Los_Angeles', '2026-10-29T03:00:00Z', '2026-10-28', '2026-10-31'],
+      ['America/New_York', '2026-11-01T04:30:00Z', '2026-11-01', '2026-11-04']
+    ]) {
+      process.env.TZ = zone;
+      const w = worker(now), calls = [call('today', today), call('three-days', thirdDay)];
+      w.setCalls(calls);
+      await w.sync(calls);
+      assert.equal(w.notifications.length, 2, zone);
+      assert.match(w.notifications[0].body, /closes today/);
+      assert.match(w.notifications[1].body, /closes in 3 days/);
+    }
+  } finally {
+    if (previous === undefined) delete process.env.TZ;
+    else process.env.TZ = previous;
+  }
+});
+
 test('denied permission does not mark reminders as delivered, and failures can retry', async () => {
   const w = worker(), reminder = call('retry', '2026-10-29');
   w.setCalls([reminder]);
@@ -136,4 +189,14 @@ test('server errors fall back to saved data and activation preserves reminders',
   assert.equal(w.notifications.length, 1);
   await w.activate();
   assert.deepEqual((await w.caches.keys()).sort(), ['other-app', 'pitchboard-reminders-v1', 'pitchboard-test']);
+});
+
+test('cache quota failures still return successful network responses', async () => {
+  const w = worker(), cache = await w.caches.open('pitchboard-test');
+  await cache.put('/outlets.json', new Response('stale data'));
+  await cache.put('/app/', new Response('stale page'));
+  w.failWrites();
+  assert.equal(await (await w.fetch('/outlets.json')).text(), 'fresh asset');
+  assert.equal(await (await w.fetch('/app/', 'navigate')).text(), 'fresh asset');
+  assert.equal(await (await w.fetch('/static/new.js')).text(), 'fresh asset');
 });

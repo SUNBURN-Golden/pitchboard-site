@@ -27,7 +27,8 @@ async function networkFirst(request, navigation) {
     try { response = await fetch(request, {signal: controller.signal, cache: 'no-cache'}); }
     finally { clearTimeout(timeout); }
     if (response.ok) {
-      await cache.put(request, response.clone());
+      // Cache storage can fill up; a successful live response is still usable.
+      try { await cache.put(request, response.clone()); } catch (_) { /* Best-effort offline copy. */ }
       return response;
     }
     if (response.status < 500) return response;
@@ -53,7 +54,9 @@ self.addEventListener('fetch', event => {
       const saved = await cache.match(event.request);
       if (saved) return saved;
       const response = await fetch(event.request);
-      if (response.ok) await cache.put(event.request, response.clone());
+      if (response.ok) {
+        try { await cache.put(event.request, response.clone()); } catch (_) { /* Best-effort offline copy. */ }
+      }
       return response;
     }));
   }
@@ -87,7 +90,10 @@ async function checkReminders() {
     const call = Array.isArray(calls) ? calls.find(item => item.id === reminder.id) : reminder;
     if (!call || !validReminder(call)) continue;
     const remaining = (Date.parse(call.deadline + 'T00:00:00Z') - today) / 86400000;
-    if (remaining < 0 || remaining > 3 || !Number.isFinite(remaining) || state.notified[call.id] === call.deadline) continue;
+    // Older workers saved only the latest deadline. Preserve it when adding history.
+    const previous = state.notified[call.id];
+    const delivered = Array.isArray(previous) ? previous : typeof previous === 'string' ? [previous] : [];
+    if (remaining < 0 || remaining > 3 || !Number.isFinite(remaining) || delivered.includes(call.deadline)) continue;
     try {
       await self.registration.showNotification(call.outlet + ': deadline reminder', {
         body: call.title + (remaining === 0 ? ' — closes today.' : ' — closes in ' + remaining + ' day' + (remaining === 1 ? '.' : 's.')),
@@ -95,7 +101,7 @@ async function checkReminders() {
         tag: 'pitchboard-' + call.id + '-' + call.deadline,
         data: {url: '/app/#call-' + encodeURIComponent(call.id)}
       });
-      state.notified[call.id] = call.deadline;
+      state.notified = {...state.notified, [call.id]: [...delivered, call.deadline]};
       await writeState(state);
     } catch (_) { /* Keep it eligible for a later check if the browser cannot show it. */ }
   }
