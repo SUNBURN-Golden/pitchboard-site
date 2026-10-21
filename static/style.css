@@ -63,3 +63,12 @@ a.rate-tr:hover{background:var(--surface-2)}
 .due-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.7rem}
 .due-card{margin:0}
 @media (max-width:640px){.rate-th,.rt-arrow{display:none}.rate-tr{grid-template-columns:minmax(0,1fr) minmax(0,7rem);gap:.25rem .75rem}.rt-status{grid-column:1/-1}.rt-rate{max-width:7rem}.pay-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.pay-amt{font-size:1.5rem}}
+/* App controls share the directory and call-card styles. */
+[hidden]{display:none!important}
+.filters input[type=number]{min-height:44px;padding:.4rem .5rem;border:1px solid var(--border-strong);border-radius:6px;width:11rem;font:inherit}
+.call-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.7rem}
+.calendar-download{background:var(--surface);color:var(--accent);border:1px solid var(--accent)}
+button[aria-pressed=true]{background:var(--surface-2);color:var(--text);border:1px solid var(--border-strong)}
+#app-connection:empty,#reminder-status:empty{display:none}
+.app-sections{justify-content:flex-start;margin:.8rem 0}
+@media(max-width:640px){.filters input[type=number]{width:100%;min-width:0}}
