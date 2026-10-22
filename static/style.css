@@ -63,3 +63,6 @@ a.rate-tr:hover{background:var(--surface-2)}
 .due-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.7rem}
 .due-card{margin:0}
 @media (max-width:640px){.rate-th,.rt-arrow{display:none}.rate-tr{grid-template-columns:minmax(0,1fr) minmax(0,7rem);gap:.25rem .75rem}.rt-status{grid-column:1/-1}.rt-rate{max-width:7rem}.pay-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.pay-amt{font-size:1.5rem}}
+.authbox{border:1px solid currentColor;padding:1.2rem;margin:1rem 0;max-width:34rem}
+.optin{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:1rem}
+.optin input{margin-top:.3rem}
