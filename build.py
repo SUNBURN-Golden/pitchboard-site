@@ -63,7 +63,7 @@ def pay_src_label(r):
     return "See notes"
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block non-browser reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
 PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls')]
-MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About')]
+MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About'),('/signup/','Sign up')]
 def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None,layout=None):
     cur=' aria-current="page"'
     main_cls='wrap '+layout if layout else 'wrap'
@@ -227,7 +227,7 @@ mbody=f'''<h1>Methodology</h1>
 <h2>Where the facts come from</h2><ul><li><strong>Outlet page read directly:</strong> we fetched the outlet's own guidelines page.</li><li><strong>Outlet page via search excerpt:</strong> some sites block non-browser access; we saw the outlet's own page text in a search excerpt. Confirm by hand.</li><li><strong>NBCC sheet:</strong> the National Book Critics Circle's public publications spreadsheet is used as a lead list. Pay or word counts taken from it are labeled and carry that sheet row's own last-updated date; many are 2022-vintage.</li><li><strong>Third-party only:</strong> flagged as unconfirmed.</li></ul>
 <h2>Independence</h2><p>Sponsored and featured items are always labeled. They never change any outlet's status, data, or ordering, apart from a clearly marked featured position. Outlets cannot pay to change what we report.</p>
 <h2>Limits</h2><p>Pages change without notice, some outlets do not publish pay, and we may have missed an update. Verify on the outlet's page before pitching, and <a href="/about/#corrections">send corrections</a> to '''+CONTACT_LINK+'''.</p>
-<h2 id="privacy">Privacy</h2><p>This site has no accounts and does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
+<h2 id="privacy">Privacy</h2><p>Accounts are optional and use Google sign-in only; we store your email address and your newsletter choice with Supabase, our database provider, and you can change that choice on your account page. The site does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
 page('/methodology/','Methodology',mbody,desc="How The Pitchboard checks outlets, dates every fact, labels sources, and keeps sponsorship separate from data.",layout='article')
 # ---------- About ----------
 page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent directory for people who write criticism. It is run by a critic who criticizes everything, including the market that pays for criticism. Notes on outlets will be opinionated. The data will not be.</p>
@@ -235,12 +235,23 @@ page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent dir
 <h2 id="corrections">Corrections</h2><p>Spot something out of date or wrong? Outlet editors can ask us to update or remove an entry. Email {CONTACT_LINK} with the outlet name and a link to the page that shows the correct information.</p>
 <h2 id="contact">Contact and sponsorship</h2><p>Corrections, press and sponsorship enquiries: {CONTACT_LINK}. See <a href="/advertise/">Advertise</a> for how sponsored items work.</p>
 <h2 id="privacy">Privacy</h2><p><a href="https://www.beehiiv.com" rel="noopener">beehiiv</a> handles newsletter signups; it stores your address and sends the emails. Details are on the <a href="/methodology/#privacy">methodology page</a>. Past issues: <a href="{ARCHIVE}" rel="noopener">newsletter archive</a>.</p>''',desc="About The Pitchboard, an independent directory of outlets that pay for book reviews and cultural criticism; corrections and contact.",layout='article')
+# ---------- Sign up / Account ----------
+AUTH_HEAD='<meta name="robots" content="noindex">'
+AUTH_JS='<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/static/auth-config.js"></script><script src="/static/auth.js" defer></script>'
+page('/signup/','Sign up','''<h1>Sign up or log in</h1><p class="lead">One click with your Google account. We only keep your email address.</p>
+<div class="authbox"><label class="optin"><input type="checkbox" id="newsletter-opt" checked> <span><strong>Get this week's paid pitch calls every Thursday.</strong> Open calls, deadlines and pay, in one short email. Untick anytime on your account page.</span></label>
+<button type="button" id="google-btn" class="btn">Continue with Google</button><p id="auth-msg" class="sm muted" role="status"></p></div>
+<p class="sm muted">By continuing you agree that we store your email address to run your account. See <a href="/methodology/#privacy">privacy</a>.</p>'''+AUTH_JS,desc="Sign up for The Pitchboard with Google.",extra_head=AUTH_HEAD,layout='article')
+page('/account/','Your account','''<h1>Your account</h1><p id="auth-msg" class="sm muted" role="status">Loading…</p>
+<div id="account" hidden><p>Signed in as <strong id="acct-email"></strong></p>
+<label class="optin"><input type="checkbox" id="acct-newsletter"> <span>Send me this week's paid pitch calls every Thursday.</span></label>
+<p><button type="button" id="signout" class="btn">Sign out</button></p></div>'''+AUTH_JS,desc="Your Pitchboard account.",extra_head=AUTH_HEAD,layout='article')
 page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
 # ---------- static ----------
 (OUT/'static').mkdir(parents=True,exist_ok=True)
 for f in (ROOT/'static').iterdir(): shutil.copy(f,OUT/'static'/f.name)
 (OUT/'robots.txt').write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n")
 (OUT/"_headers").unlink(missing_ok=True)
-(OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)))+'</urlset>\n')
+(OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)) if not u.endswith(('/signup/','/account/')))+'</urlset>\n')
 shutil.copy(ROOT/'data/outlets.json',OUT/'outlets.json')
 print(f"built {len(outlets)} outlet pages + 8 pages -> {OUT} (today={TODAY})")
