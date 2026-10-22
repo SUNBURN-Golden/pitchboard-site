@@ -1,13 +1,7 @@
-# Google sign-up setup
+# Google sign-up (Cloudflare Pages + D1)
 
-1. Supabase project for Pitchboard: create one (free tier) or pick one, then run `supabase/migrations/20261022_members.sql`.
-2. Google Cloud > APIs & Services > Credentials > OAuth client ID (Web application):
-   - Authorized JavaScript origins: `https://pitchboard.soulbound.co.kr`
-   - Authorized redirect URI: `https://fbtlasclhzjmoynswozl.supabase.co/auth/v1/callback` (project `pitchboard`, ref fbtlasclhzjmoynswozl, created and migrated)
-3. Supabase > Authentication > Providers > Google: paste the client ID and secret, then enable it.
-4. Supabase > Authentication > URL Configuration:
-   - Site URL: `https://pitchboard.soulbound.co.kr`
-   - Redirect URLs: `https://pitchboard.soulbound.co.kr/account/` (add `http://localhost:8000/account/` for local tests)
-5. Fill `static/auth-config.js` with the project URL and anon key, rebuild and deploy.
-
-Until step 5 the sign-up page shows "Sign-in is not open yet" and the button is disabled.
+- Code: `worker/_worker.js`, copied to `dist/_worker.js` by `build.py` (Pages advanced mode). Routes: `GET /api/auth/google`, `GET /api/auth/callback`, `GET|POST /api/auth/logout`, `GET|POST /api/me`. Everything else is served from static assets.
+- Database: D1 `pitchboard-members` (id b1a9b41f-8e75-48c8-84e4-ea6572fff56b), bound as `DB`. Schema in `migrations/0001_members.sql`.
+- Pages env (production): `GOOGLE_CLIENT_ID` (plain), `GOOGLE_CLIENT_SECRET` and `SESSION_SECRET` (secrets). Session is an HMAC-signed, HttpOnly cookie, 30 days.
+- Google client "pitchboard" (GCP project soulbound-auth) must list the redirect URI `https://pitchboard.soulbound.co.kr/api/auth/callback`.
+- The newsletter box on /signup/ is pre-checked; the choice is stored on first sign-in and editable on /account/.
