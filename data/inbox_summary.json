@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "brand": "pitchboard",
-  "snapshot_revision": 208,
-  "generated_at": "2026-10-23T04:05:25.959585+00:00",
+  "snapshot_revision": 674,
+  "generated_at": "2026-10-23T06:24:21.110217+00:00",
   "scope": "all_nonarchived_items",
   "auto_publish_enabled": false,
   "stage_counts": {
-    "candidate": 103,
-    "source_checked": 0,
-    "dedup_excluded": 0,
-    "verified_ready": 0,
+    "candidate": 14,
+    "source_checked": 34,
+    "dedup_excluded": 2,
+    "verified_ready": 45,
     "publish_pending": 0
   },
   "stage_labels": {
@@ -19,14 +19,17 @@
     "verified_ready": "검증 완료",
     "publish_pending": "공개 대기"
   },
-  "total_records": 103,
-  "has_conflict_records": 0,
-  "unresolved_conflict_records": 0,
+  "total_records": 95,
+  "has_conflict_records": 4,
+  "unresolved_conflict_records": 4,
   "sanitizer_version": "3",
-  "workload": {},
+  "workload": {
+    "done": 99,
+    "queued": 14
+  },
   "budget": {
     "day": "2026-10-23",
-    "candidates": 0,
+    "candidates": 95,
     "fetches": 0,
     "robots": 0
   },
