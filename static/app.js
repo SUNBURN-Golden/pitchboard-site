@@ -1,4 +1,32 @@
 (function(){
+  document.querySelectorAll('.pb-sub-form').forEach(function(form){
+    form.noValidate=true;
+    var input=form.querySelector('.pb-sub-input'), button=form.querySelector('.pb-sub-btn'), msg=form.querySelector('.pb-sub-msg');
+    var label=button.textContent;
+    form.addEventListener('submit',function(e){
+      input.value=input.value.trim();
+      if(!input.value||!input.checkValidity()){
+        e.preventDefault();
+        msg.textContent='Please check your email address and try again.';
+        msg.hidden=false;
+        input.focus();
+        return;
+      }
+      if(button.disabled){
+        e.preventDefault();
+        return;
+      }
+      button.disabled=true;
+      button.textContent='Submitting…';
+      msg.hidden=true;
+    });
+    window.addEventListener('pageshow',function(e){
+      if(e.persisted){
+        button.disabled=false;
+        button.textContent=label;
+      }
+    });
+  });
   var t=document.getElementById('dir-table'); if(!t) return;
   var body=t.tBodies[0];
   var rows=[].slice.call(body.rows), form=document.getElementById('directory-filters'), q=document.getElementById('f-q'), st=document.getElementById('f-status'), rg=document.getElementById('f-region'), pay=document.getElementById('f-pay'), so=document.getElementById('f-sort'), c=document.getElementById('f-count');
