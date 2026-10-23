@@ -20,9 +20,19 @@ BASE="https://pitchboard.soulbound.co.kr"
 PAGES=[]
 FORM_SCRIPT='<script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="6644fe0d-dba8-4266-a8c5-25a8155c3783"></script>'
 ATTR_SCRIPT='<script type="text/javascript" async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>'
-def subscribe_box(h='Get the weekly Open Calls email',note=True):
+def subscribe_box(h='Get the weekly Open Calls email',note=True,keep_loader=False):
     n='<p class="sm muted">Free and weekly. Unsubscribe any time. beehiiv handles email signups; see <a href="/about/#privacy">how we handle your email</a>.</p>' if note else ''
-    return f'<section class="subscribe" aria-label="Subscribe"><h2>{h}</h2>{FORM_SCRIPT}{n}</section>'
+    loader=f'<details class="bhv-embed-details"><summary class="sm muted">Direct beehiiv form</summary><div class="bhv-embed-wrap">{FORM_SCRIPT}</div></details>' if keep_loader else ''
+    return f'''<section class="subscribe" aria-label="Subscribe"><h2>{h}</h2>
+<form class="pb-sub-form" action="https://pitchboard.beehiiv.com/create" method="post" data-beehiiv-form-id="6644fe0d-dba8-4266-a8c5-25a8155c3783">
+<input type="hidden" name="sent_from_orchid" value="true">
+<input type="hidden" name="double_opt" value="false">
+<input type="hidden" name="auto_login_enabled" value="true">
+<label class="sr-only" for="pb-sub-email">Email address</label>
+<input id="pb-sub-email" class="pb-sub-input" type="email" name="email" placeholder="Enter your email" aria-label="Email address" autocomplete="email" required>
+<button class="btn pb-sub-btn" type="submit">Get weekly Open Calls</button>
+<p class="pb-sub-msg sm" role="status" aria-live="polite" hidden></p>
+</form>{loader}{n}</section>'''
 STALE_DAYS=90
 esc=lambda s: html.escape(str(s),quote=True) if s is not None else ''
 outlets=json.load(open(ROOT/'data/outlets.json'))
@@ -200,7 +210,7 @@ cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'
 page('/calls/','Calls & deadlines',cbody,desc="Calendar of themed calls for pitches in criticism and book reviews, with deadlines and sources.")
 # ---------- Newsletter ----------
 nbody=f'''<h1>The Open Calls newsletter</h1><p class="lead">A weekly email: what opened, what's closing, and one short critical note on an outlet.</p>
-{subscribe_box('Subscribe',True)}
+{subscribe_box('Subscribe',True,keep_loader=True)}
 <h2>What's in an issue</h2><ul><li><strong>Open Calls:</strong> new, changed and closing-soon outlets, each with its last-checked date.</li><li><strong>One critical note:</strong> 150-250 words on a single outlet (pay vs. work, pitch rules, who gets in).</li><li><strong>One labeled sponsor slot.</strong></li></ul>
 <h2>Archive</h2><p>Past issues appear on the <a href="{ARCHIVE}" rel="noopener">Pitchboard newsletter archive</a> (hosted by beehiiv). The first issues have not been sent yet, so it may be empty.</p>
 <p class="sm muted">Questions or corrections: {CONTACT_LINK}.</p>'''
