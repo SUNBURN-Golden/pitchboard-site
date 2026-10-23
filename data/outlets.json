@@ -2044,5 +2044,43 @@
     "pay_usd_per_word": null,
     "pipeline_stage": "published_or_expired",
     "bundle_verified": true
+  },
+  {
+    "id": 94,
+    "last_checked": "2026-10-23",
+    "nbcc_listed": false,
+    "nbcc_last_updated": null,
+    "verification": "outlet_page_fetched",
+    "name": "WritersReview",
+    "url": "https://writersreview.com",
+    "pitch_guidelines_url": "https://writersreview.com/write-for-us/",
+    "pays": "$125-$250 per review",
+    "word_count": "1,500+ words (original critical analysis)",
+    "status": "open",
+    "source_url": "https://writersreview.com/write-for-us/",
+    "pays_source": "outlet",
+    "word_count_source": "outlet",
+    "notes": "US / global. Rolling reviewer application on /write-for-us/; editors assign books in the reviewer's genre specialty across 12 genres (Literary Fiction, Sci-Fi, Biography, History, Poetry, Philosophy, etc.). Prioritizes reviewers with a published book or editing/acquisitions experience. Never charges authors or publishers for coverage ($0 fee). Contact: editorial@writersreview.com.",
+    "region": "US / global",
+    "pay_usd_max": 250,
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true,
+    "bundle_urls": [
+      "https://writersreview.com/write-for-us/",
+      "https://writersreview.com/editorial-policy/",
+      "https://writersreview.com/contact/"
+    ],
+    "general_submission": {
+      "scope": "Book review consideration (publishers, publicists, agents, authors)",
+      "fee": "$0 (no fee for review consideration; no paid reviews)",
+      "url": "https://writersreview.com/submit-a-book/"
+    },
+    "review_submission": {
+      "scope": "Paid book reviewers (rolling application, assigned by genre)",
+      "fee": "$0",
+      "pays": "$125-$250 per review (1,500+ words)",
+      "url": "https://writersreview.com/write-for-us/"
+    }
   }
 ]
