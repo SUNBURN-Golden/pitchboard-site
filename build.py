@@ -117,12 +117,20 @@ def table(rs,id_=''):
     idattr=(' id="%s"'%id_) if id_ else ''
     return f'<div class="tablewrap"><table role="table" class="outlets"{idattr}>{HEAD}<tbody role="rowgroup">{"".join(row(r) for r in rs)}</tbody></table></div>'
 cnt=lambda s:sum(1 for r in outlets if r['status']==s)
+def call_deadline(c):
+    value=c.get('deadline')
+    if not isinstance(value,str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}',value): return None
+    try:
+        return d_(value)
+    except ValueError:
+        return None
 def daysleft(c):
-    if not c['deadline']: return 'Rolling'
+    ddl=call_deadline(c)
+    if ddl is None: return 'Rolling'
     if c['opens'] and d_(c['opens'])>TODAY:
         k=(d_(c['opens'])-TODAY).days
         return 'Opens in %d day%s'%(k,'s' if k!=1 else '')
-    n=(d_(c['deadline'])-TODAY).days
+    n=(ddl-TODAY).days
     return 'Deadline passed' if n<0 else 'Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'
 # ---------- Home ----------
 openr=sorted([r for r in outlets if r['status'] in('open','pitch-first')],key=lambda r:(r['name'] not in featured,-d_(r['last_checked']).toordinal(),r['name'].lower()))
@@ -130,7 +138,7 @@ paytop=sorted((r for r in outlets if r.get('pay_usd_max') is not None),key=lambd
 due=[]
 for c in cd['calls']:
     try:
-        ddl=d_(c['deadline']) if c.get('deadline') else None
+        ddl=call_deadline(c)
         op=d_(c['opens']) if c.get('opens') else None
     except (TypeError,ValueError):
         continue
@@ -200,11 +208,51 @@ for r in outlets:
 <a class="next-outlet" href="/outlets/{nxt['slug']}/">Next outlet: {esc(nxt['name'])} →</a>'''
     page(f'/outlets/{r["slug"]}/',r['name'],body,desc=f'{r["name"]}: pitch status, pay and word count, last checked {fmt(r["last_checked"])}.',active='/outlets/',layout='article')
 # ---------- Calls ----------
-cl=sorted(cd['calls'],key=lambda c:(c['deadline'] is None,c['deadline'] or '9999'))
+dated_calls=sorted((c for c in cd['calls'] if call_deadline(c) is not None),key=lambda c:(c['deadline'],c['id']))
+ics_url=BASE+'/calls/?utm_source=ics&utm_medium=referral&utm_campaign=viral_w1'
+def ics_text(value):
+    return (str(value).replace('\\','\\\\').replace('\r\n','\n').replace('\r','\n')
+            .replace('\n',r'\n').replace(';',r'\;').replace(',',r'\,'))
+def ics_fold(line):
+    """Fold at 75 UTF-8 octets, including each continuation's leading space."""
+    parts=[]
+    part=''
+    size=0
+    for char in line:
+        char_size=len(char.encode('utf-8'))
+        if size+char_size>75:
+            parts.append(part)
+            part=' '
+            size=1
+        part+=char
+        size+=char_size
+    parts.append(part)
+    return '\r\n'.join(parts)
+ics_lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//The Pitchboard//Open Call Deadlines//EN',
+           'CALSCALE:GREGORIAN','X-WR-CALNAME:The Pitchboard — Open Call Deadlines']
+for c in dated_calls:
+    ddl=call_deadline(c)
+    title=c['title'] if c['title'].startswith(c['outlet']) else f"{c['outlet']} · {c['title']}"
+    description=(f"Pay: {c['pay']}\nDetails: {c['details']}\nSource: {c['link']}\n"
+                 f"Last checked: {c.get('last_checked') or ''}\nAll calls: {ics_url}")
+    ics_lines.extend(['BEGIN:VEVENT',f"UID:{ics_text(c['id'])}@pitchboard.soulbound.co.kr",
+                      f"DTSTAMP:{d_(c.get('last_checked') or c['deadline']).strftime('%Y%m%dT000000Z')}",
+                      f"DTSTART;VALUE=DATE:{ddl.strftime('%Y%m%d')}",
+                      f"DTEND;VALUE=DATE:{(ddl+dt.timedelta(days=1)).strftime('%Y%m%d')}",
+                      f'SUMMARY:{ics_text(title)}',f'DESCRIPTION:{ics_text(description)}',
+                      f'URL:{ics_url}','END:VEVENT'])
+ics_lines.append('END:VCALENDAR')
+ics_path=OUT/'calls/deadlines.ics'
+ics_path.parent.mkdir(parents=True,exist_ok=True)
+ics_path.write_bytes(('\r\n'.join(ics_fold(line) for line in ics_lines)+'\r\n').encode('utf-8'))
+cl=sorted(cd['calls'],key=lambda c:call_deadline(c) or dt.date.max)
 cbody='<h1>Calls &amp; deadlines</h1><p class="muted">Reading windows and calls for criticism, with deadlines. The list is short: it includes only items we have read on the outlet\'s own page. We add themed calls as we confirm them.</p>'
+cbody+=f'''<section class="calls-ics-bar" aria-label="Download all stated deadlines">
+<a class="btn calls-ics-btn" href="/calls/deadlines.ics" aria-describedby="calls-ics-note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2m-8 3h2"/></svg><span>Add deadlines to your calendar (.ics)</span></a>
+<p class="sm muted" id="calls-ics-note">{len(dated_calls)} stated deadlines · Works with Apple Calendar, Google Calendar, and Outlook</p></section>'''
 for c in cl:
     cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
-<p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if c["deadline"] else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
+<p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if call_deadline(c) is not None else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
 <p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>'''
 cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'<li><strong>{esc(w["outlet"])}</strong>: {esc(w["note"])} <a href="{esc(w["link"])}" rel="noopener">page</a></li>' for w in cd['watch'])+'</ul>'
 page('/calls/','Calls & deadlines',cbody,desc="Calendar of themed calls for pitches in criticism and book reviews, with deadlines and sources.")
