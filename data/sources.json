@@ -1,0 +1,45 @@
+{
+  "brand": "pitchboard",
+  "updated_at": "2026-10-23T10:02:00+09:00",
+  "unit_definition": "One verified multi-page bundle (discovery -> official submission guidelines -> review-specific rules -> pay/rights/AI policy -> live portal status) covering genre, word count, rate/currency, payment terms, submission fee, eligibility, deadline timezone, simultaneous/exclusivity rules, AI policy, and live status.",
+  "target_inventory_100": {
+    "outlet_decision_bundles": 60,
+    "active_or_upcoming_calls": 15,
+    "submission_condition_guides": 15,
+    "multi_outlet_comparisons": 10
+  },
+  "cadence_rules": {
+    "open_calls": "twice_weekly",
+    "closing_within_7_days": "daily",
+    "pre_recommendation_or_newsletter": "within_24_hours",
+    "standing_guidelines": "monthly_and_before_recommendation"
+  },
+  "pipeline_stages": [
+    "discovered",
+    "needs_primary_source",
+    "verified_ready",
+    "published_or_expired"
+  ],
+  "discovery_sources": [
+    {
+      "id": "nbcc-publications",
+      "name": "National Book Critics Circle - Publications List",
+      "url": "https://www.bookcritics.org/publications/",
+      "role": "discovery_only (never final proof of paid status without outlet primary page)",
+      "method": "html_fetch",
+      "robots_allowed": true,
+      "cadence": "monthly",
+      "last_success_at": "2026-10-23T08:53:00+09:00"
+    },
+    {
+      "id": "clmp-calls",
+      "name": "CLMP Calls for Submissions",
+      "url": "https://www.clmp.org/programs-opportunities/calls-for-submissions/",
+      "role": "discovery_only (verify each call on outlet primary page and submission portal)",
+      "method": "html_fetch",
+      "robots_allowed": true,
+      "cadence": "twice_weekly",
+      "last_success_at": "2026-10-23T10:02:00+09:00"
+    }
+  ]
+}

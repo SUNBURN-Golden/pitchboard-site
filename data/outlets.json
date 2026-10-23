@@ -17,7 +17,9 @@
     "notes": "Open for nonfiction pitches AND completed drafts; criticism = review essays/critical essays, not straight reviews. No interview pitches. Fiction and poetry closed (2026). Response: assume pass after 4 weeks.",
     "region": "US / global",
     "pay_usd_max": 1000,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 2,
@@ -37,7 +39,9 @@
     "notes": "Pitches or finished essays via Submittable. Pay NOT stated on the Submittable page; figure is from NBCC sheet (updated 7/16/26). Cultural criticism incl. books, theatre, music, art; no tear-downs without substance.",
     "region": "US / global",
     "pay_usd_max": 500,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 3,
@@ -57,7 +61,9 @@
     "notes": "Pitches only for nonfiction (2-4 paragraphs, one at a time); no draft essays. Very rarely publishes straight single-book reviews. Commissions ~5-6 months before publication (Pitching-the-Drift PDF). Pay also on the Drift 'About' page.",
     "region": "US / global",
     "pay_usd_max": 2000,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 4,
@@ -77,7 +83,9 @@
     "notes": "Wants 'rigorous criticism for a general audience'; 2-3 paragraph pitch or finished essay. Not taking interview pitches; no fiction/poetry; no generative-AI pieces. Pay/word count from NBCC sheet (updated 6/13/23) - re-verify.",
     "region": "US / global",
     "pay_usd_max": 200,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 5,
@@ -97,7 +105,9 @@
     "notes": "Pitch reviews/interviews ~2 months before book pub date. Prefers small press, BIPOC, LGBTQ+, Midwestern, translated titles. Cannot reply to every pitch.",
     "region": "US / global",
     "pay_usd_max": 75,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 6,
@@ -117,7 +127,9 @@
     "notes": "Year-round pitches/submissions, no fee. No fiction, poetry, or creative nonfiction. Rates for reviews appear only in themed 'Call for Pitches' posts (e.g. https://www.full-stop.net/2025/03/25/blog/the-editors/call-for-pitches-3/); those are dated 2025. Special-call terms seen via search excerpt; the open/year-round and essays-only-pay lines were confirmed on the fetched masthead page.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 7,
@@ -137,7 +149,9 @@
     "notes": "General submissions CLOSED since 2026-08-10 (no reopening date given). Book-review pitches still accepted for books publishing 4+ months out.",
     "region": "US / global",
     "pay_usd_max": 350,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 8,
@@ -157,7 +171,9 @@
     "notes": "Pitches or submissions of critical writing; 2-5 paragraph pitch; aims to respond within 6 weeks. Regional (Cleveland/Midwest) focus preferred but not required. Note: a different domain (clereviewofbooksonline.com) shows older terms - ignore.",
     "region": "US / global",
     "pay_usd_max": 200,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 9,
@@ -177,7 +193,9 @@
     "notes": "Non-profit. Pitch an editor with a strong point of view; prefers comparative review essays; discourages reviewing friends. Dollar figure from NBCC (1/20/22) - stale.",
     "region": "US / global",
     "pay_usd_max": 120,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 10,
@@ -197,7 +215,9 @@
     "notes": "Page seen lists specific pitch series (Dispatches), not a general book-review desk. No generative AI. Email pitch is free.",
     "region": "US / global",
     "pay_usd_max": 300,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 11,
@@ -217,7 +237,9 @@
     "notes": "'Pitches ... are always open.' Arts/culture deep dives, internet culture. Pays contributors (funded by members) per page; amount from NBCC (7/17/24). No AI use.",
     "region": "UK",
     "pay_usd_max": 86,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 12,
@@ -237,7 +259,9 @@
     "notes": "Does not encourage spec articles; reviews need advance pitches (strict deadlines). SF/F/pop culture focus.",
     "region": "US / global",
     "pay_usd_max": 150,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 13,
@@ -257,7 +281,9 @@
     "notes": "Pitch page lists editors by section; NBCC notes 'arguments and literary essays, not reviews'. Pay/word count from NBCC (undated) - re-verify.",
     "region": "US / global",
     "pay_usd_max": 350,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 14,
@@ -277,7 +303,9 @@
     "notes": "Reviews: pitch only (200-300 word pitch), no completed drafts. Poetry pitches not accepted. Fiction: full drafts only.",
     "region": "Canada",
     "pay_usd_max": 108,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 15,
@@ -297,7 +325,9 @@
     "notes": "Reviews: read sample reviews, then contact the Reviews Editor before writing or submitting (completed reviews not accepted cold). Pay $40/page for reviews, paid on publication, plus 2 copies. Fiction reviews cover two books, poetry reviews three. Fiction/poetry windows closed until Dec 1; 2026 Non-Fiction Contest closed Oct 15.",
     "region": "Canada",
     "pay_usd_max": 360,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 16,
@@ -317,7 +347,9 @@
     "notes": "Art/culture; pitches to the pitch inbox; no reply guaranteed - after 10 business days free to pitch elsewhere. No friend/self coverage.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 17,
@@ -337,7 +369,9 @@
     "notes": "Pitches only. Books & the Arts welcomes short pitches (a couple of sentences + clips). Decision within 2 weeks if pursued. Pay is NBCC (1/20/22) - stale.",
     "region": "US / global",
     "pay_usd_max": 1250,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 18,
@@ -357,7 +391,9 @@
     "notes": "Recruiting reviewers (library/collection-development experience valued). Page is JavaScript-rendered; details seen through a search excerpt of the page, and match the NBCC sheet's $15.",
     "region": "US / global",
     "pay_usd_max": 15,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 19,
@@ -377,7 +413,9 @@
     "notes": "Careers page: looking for experienced reviewers of English/Spanish titles for Kirkus Indie. Application = resume + samples (contact by email per page).",
     "region": "US / global",
     "pay_usd_max": 50,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 20,
@@ -397,7 +435,9 @@
     "notes": "Nonfiction as 2-paragraph pitch, no complete manuscripts. Rate from NBCC (2/2/23).",
     "region": "US / global",
     "pay_usd_max": 400,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 21,
@@ -417,7 +457,9 @@
     "notes": "Wants reviews of literature, art and culture that make an argument; no capsule reviews and nothing on books/films/exhibits older than six months. Pitch answers why, why now, why you. Paid 25% on draft, 75% on completion (rates: jewishcurrents.org/jewish-currents-freelancer-agreement). Fiction closed; poetry June only.",
     "region": "US / global",
     "pay_usd_max": 1000,
-    "pay_usd_per_word": 1.0
+    "pay_usd_per_word": 1.0,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 22,
@@ -437,27 +479,31 @@
     "notes": "Email pitch of 500 words or fewer with 'PITCH' in the subject; reviews within 6 months of the work's publication; one pitch at a time; response in 2-4 weeks. Interview pitches need an edited transcript (up to 5,000 words). No AI-generated or AI-revised writing at any stage.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 23,
     "name": "In These Times",
     "url": "https://inthesetimes.com",
     "pitch_guidelines_url": null,
-    "pays": "$0.25 per word (NBCC sheet); freelance agreement sets minimums $0.25-$0.50/word print, $375 online",
+    "pays": "Minimums per NWU agreement: $0.25-$0.50/word in print; $375 for online features/opinion/editorial; $150 for Q&A interviews; $250 for roundtables; $100 under 250 words",
     "word_count": "850-1,200 (NBCC sheet)",
     "status": "pitch-first",
     "last_checked": "2026-10-23",
     "source_url": "https://inthesetimes.com/article/itt-agreement-national-writers-union-freelance-solidarity-project",
-    "pays_source": "search excerpt + nbcc",
+    "pays_source": "outlet",
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "1/18/22",
-    "verification": "outlet_page_search_excerpt",
-    "notes": "Per search excerpt of third-party summaries (Writer's Digest) of its guidelines: reported features 1,200-4,000; opinion 800-1,500; culture 1,450-1,700 (use 'Culture Pitch' subject). Outlet guidelines page itself not fetched (site blocks bots) - re-check by hand. Pay: freelance agreement minimums $0.25-$0.50/word print, $375 online (outlet article, via excerpt).",
+    "verification": "outlet_page_fetched",
+    "notes": "NWU freelance agreement on inthesetimes.com guarantees written contract, payment within 30 days of publication (or signed contract), kill fee within 120 days, 50% of commercial reprint fees, and bans licensing freelancer work for LLM/generative AI training without 90-day prior written consent.",
     "region": "US / global",
     "pay_usd_max": 375,
-    "pay_usd_per_word": 0.5
+    "pay_usd_per_word": 0.5,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 24,
@@ -477,27 +523,31 @@
     "notes": "Page: 'LARB welcomes pitches for our online publication on an open basis' (email a section editor or use the form). Pay not stated on page; NBCC figure is old.",
     "region": "US / global",
     "pay_usd_max": 100,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 25,
     "name": "Guernica",
     "url": "https://www.guernicamag.com",
     "pitch_guidelines_url": "https://www.guernicamag.com/submissions/",
-    "pays": "$100 honorarium for essays per a third-party blog quoting Guernica's call (not confirmed on outlet page); NBCC 2022 says 'does not pay'",
-    "word_count": "2,500+ for nonfiction essays",
+    "pays": "$100 honorarium upon publication for Global Spotlights Book Reviews (1,200-2,500 words) and Spotlights Fiction/Nonfiction; NBCC sheet lists $150 for general essays",
+    "word_count": "Global Spotlights book reviews 1,200-2,500 words; general nonfiction/critical essays 2,500+ words (typically 4,000-5,000)",
     "status": "open",
-    "last_checked": "2026-10-18",
-    "source_url": "https://guernicamagazine.submittable.com/submit/71799/general-submissions-nonfiction",
-    "pays_source": "nbcc",
-    "word_count_source": null,
+    "last_checked": "2026-10-23",
+    "source_url": "https://guernicamagazine.submittable.com/submit",
+    "pays_source": "outlet",
+    "word_count_source": "outlet",
     "nbcc_listed": true,
     "nbcc_last_updated": "2/8/22",
-    "verification": "outlet_page_search_excerpt",
-    "notes": "Completed essays only via Submittable: NO pitches, NO interviews, NO book reviews. Of limited use to critics (not a review market).",
+    "verification": "outlet_page_fetched",
+    "notes": "Completed manuscripts only via Submittable (no pitches). General Nonfiction (2,500+ words) welcomes longform critical essays engaging several texts/ideas (no single-book reviews). Global Spotlights: Book Reviews ($100 honorarium, 1,200-2,500 words) covers books published outside the West (US, UK, Canada, Western Europe, Australia, NZ) or by Indigenous writers within those regions. Simultaneous submissions accepted; 90-day exclusive rights.",
     "region": "US / global",
-    "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_max": 150,
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 26,
@@ -517,14 +567,16 @@
     "notes": "FAQ on site: no unsolicited book reviews; email reviews@ address (public) with desired books + clips. FAQ entry is dated 2018 - re-verify.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 27,
     "name": "AGNI",
     "url": "https://agnionline.bu.edu",
-    "pitch_guidelines_url": "https://agnionline.bu.edu/blog/submit-reviews-to-agni",
-    "pays": "$30 per printed page for prose (reviews paid as prose), up to $300, plus a one-year subscription (submit page, updated Aug 2026)",
+    "pitch_guidelines_url": "https://agnionline.bu.edu/editors-note/submit-reviews-to-agni/",
+    "pays": "$30 per printed page for prose (reviews earn the same rate as prose), up to $300, plus a one-year subscription; no submission fee for reviews or pitches",
     "word_count": "1,500-3,000 (review essays)",
     "status": "open",
     "last_checked": "2026-10-23",
@@ -534,10 +586,12 @@
     "nbcc_listed": true,
     "nbcc_last_updated": "2/8/22",
     "verification": "outlet_page_fetched",
-    "notes": "Reading periods Sep 1-Dec 15 and Jan 15-May 31 (11:59pm ET); currently inside the first period, so open until Dec 15. Online submissions cost $3 per submission (fee waiver on request). Response: aims within 2 months. Review essays 1,500-3,000 words via the review-specific page.",
+    "notes": "Reading periods Sep 1-Dec 15 and Jan 15-May 31 (11:59pm ET); currently open until Dec 15. No submission fee for review or pitch submissions ($3 online fee applies only to general fiction/poetry/essay submissions). Review essays 1,500-3,000 words (single- or multi-book inquiry-driven essays, esp. small/university press & translations; no round-ups/lists). Conflict-of-interest disclosure required; simultaneous submissions/pitches allowed with immediate notice; all reviews appear online.",
     "region": "US / global",
     "pay_usd_max": 300,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 28,
@@ -557,67 +611,75 @@
     "notes": "Expanded book-review section: books with a strong sense of place from small independent presses, released within the last three months; no self-published books; honest criticism welcome. Pitch a review (or propose a book) via the form on the page. General reading periods Mar 1-Jun 1 and Sep 1-Dec 1.",
     "region": "US / global",
     "pay_usd_max": 450,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 29,
     "name": "Poets & Writers Magazine",
     "url": "https://www.pw.org",
     "pitch_guidelines_url": "https://www.pw.org/about-us/about_poets_%26amp%3B_writers_magazine",
-    "pays": "unpublished (pays when scheduled for production; third-party report $0.23/word, unconfirmed)",
+    "pays": "Paid when scheduled for production (exact rate not stated on guidelines page; buys exclusive worldwide periodical/syndication rights and 50/50 reprint rights)",
     "word_count": "500-3,000 by section; 3,000 max on spec",
     "status": "pitch-first",
     "last_checked": "2026-10-23",
     "source_url": "https://www.pw.org/about-us/about_poets_%26amp%3B_writers_magazine",
-    "pays_source": "nbcc",
+    "pays_source": "outlet",
     "word_count_source": "outlet",
     "nbcc_listed": true,
     "nbcc_last_updated": "6/19/23",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Queries/on-spec articles about writing life and the business; NO book reviews, fiction or poetry. Not a review market.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 30,
     "name": "Electric Literature",
     "url": "https://electricliterature.com",
     "pitch_guidelines_url": "https://electricliterature.com/about/submit/",
-    "pays": "$100 for essays (paid on acceptance, per excerpt of submittable call)",
-    "word_count": "2,000-6,500 (personal-narrative window)",
-    "status": "closed",
+    "pays": "$100 for cultural criticism & personal narrative essays; $75 for reading lists (if not promoting own book); $300 for Recommended Reading fiction; $100 for The Commuter",
+    "word_count": "Cultural criticism essays ≤3,500 words (email pitch); reading lists 7-10 books; personal narrative 2,000-6,500 words",
+    "status": "pitch-first",
     "last_checked": "2026-10-23",
     "source_url": "https://electricliterature.com/about/submit/",
-    "pays_source": "nbcc",
-    "word_count_source": null,
+    "pays_source": "outlet",
+    "word_count_source": "outlet",
     "nbcc_listed": true,
     "nbcc_last_updated": "8/27/24",
-    "verification": "outlet_page_search_excerpt",
-    "notes": "2026 personal-narrative essay window closed 2026-10-11; members can submit essays year-round via a private portal. Reply times 6-8 months. Corrects earlier note: the 2018 page was stale.",
+    "verification": "outlet_page_fetched",
+    "notes": "Cultural criticism pitches accepted year-round by email (pitches@electricliterature.com, subject \"ESSAY PITCH: [title]\", currently booking 2027 schedule); uses books/art/media as a lens rather than straight book reviews. Reading list pitches (\"Reading List Pitch: [Topic]\") pay $75. Generative AI strictly prohibited for creation or revision in any category.",
     "region": "US / global",
     "pay_usd_max": 100,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 31,
     "name": "Big Other",
     "url": "https://bigother.com",
     "pitch_guidelines_url": "https://bigother.submittable.com/submit/135057/reviews",
-    "pays": "No pay (NBCC sheet, 7/17/24)",
-    "word_count": "Up to 6,000 (NBCC sheet)",
+    "pays": "No pay (\"We are not a paying venue\")",
+    "word_count": "Up to 6,000 words (reviews)",
     "status": "open",
     "last_checked": "2026-10-23",
-    "source_url": "https://bigother.submittable.com/submit/135057/reviews",
-    "pays_source": "nbcc",
-    "word_count_source": "nbcc",
+    "source_url": "https://bigother.com/submit/",
+    "pays_source": "outlet",
+    "word_count_source": "outlet",
     "nbcc_listed": true,
     "nbcc_last_updated": "7/17/24",
-    "verification": "outlet_page_search_excerpt",
-    "notes": "Reviews of books/films/music/art via a dedicated Submittable channel; reviews/interviews exempt from submission fee; unpaid.",
+    "verification": "outlet_page_fetched",
+    "notes": "Reviews of books, film, music, and art up to 6,000 words via dedicated Submittable channel (no submission fee for reviews/interviews; most other categories charge a fee). Simultaneous submissions encouraged with immediate withdrawal notice; 90-day exclusive rights.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 32,
@@ -637,27 +699,31 @@
     "notes": "Book reviews via Submittable year-round; small submission fee (waived for subscribers). Prefers good books not getting national attention; disclose conflicts; would rather skip a book than run a substantially negative review.",
     "region": "US / global",
     "pay_usd_max": 25,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 33,
     "name": "Compulsive Reader",
     "url": "https://www.compulsivereader.com",
     "pitch_guidelines_url": "https://www.compulsivereader.com/submissions/",
-    "pays": "No pay (outlet page via excerpt)",
+    "pays": "No monetary compensation (author bio with unlimited links and review copies provided)",
     "word_count": "600+ preferred, no upper limit (NBCC sheet)",
     "status": "open",
     "last_checked": "2026-10-23",
     "source_url": "https://www.compulsivereader.com/submissions/",
-    "pays_source": "nbcc",
+    "pays_source": "outlet",
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "7/17/24",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Reviews of books and music; must be analytical (no plot summary or blurbs); unpaid, author bio with links.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 34,
@@ -677,7 +743,9 @@
     "notes": "Long-form argumentative essays and book reviews via Submittable (pitch or draft). Not in the NBCC sheet.",
     "region": "US / global",
     "pay_usd_max": 500,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 35,
@@ -697,7 +765,9 @@
     "notes": "Seeks regular book reviewers for monthly 'What's New in Translation'; criticism section expanding in 2026. Submittable fee USD10 for journal submissions. Not in NBCC sheet.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 36,
@@ -717,7 +787,9 @@
     "notes": "Pitch the relevant section editor (section@ addresses); editors cannot answer every email. Pay is old NBCC figure.",
     "region": "US / global",
     "pay_usd_max": 75,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 37,
@@ -737,7 +809,9 @@
     "notes": "Reviews and review-queries via Submittable; small/indie/university-press fiction & nonfiction; no children's/YA. Page not showing a closure notice at check time.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 38,
@@ -749,15 +823,17 @@
     "status": "pitch-first",
     "last_checked": "2026-10-23",
     "source_url": "https://www.washingtonindependentreviewofbooks.com/page/contact-us/",
-    "pays_source": "nbcc",
+    "pays_source": "outlet",
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "1/20/22",
     "verification": "outlet_page_fetched",
     "notes": "Page: pitches accepted for book-related pieces but REVIEWS ARE ASSIGNED IN-HOUSE (reach out with clips).",
     "region": "US / global",
-    "pay_usd_max": 25,
-    "pay_usd_per_word": null
+    "pay_usd_max": 100,
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 39,
@@ -777,7 +853,9 @@
     "notes": "Rolling freelance-reviewer hiring; one month per assignment; keep the book. Application by email to the managing editor (public on page).",
     "region": "US / global",
     "pay_usd_max": 55,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 40,
@@ -793,11 +871,13 @@
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "3/6/24",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "No current public freelance book-review pitch guidelines found. Historical: freelance reviewers were cut in 2011 (reported by PW/The Stranger). NBCC lists $400 (updated 3/6/24) - conflicting; treat as unconfirmed.",
     "region": "US / global",
     "pay_usd_max": 400,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 41,
@@ -817,7 +897,9 @@
     "notes": "No public book-review pitch page found. The Globe Ideas desk publishes a submission page (https://www.bostonglobe.com/2020/05/14/opinion/submit-globe-ideas/): completed pieces only, no pitches, for op-eds, essays, book excerpts. Reviews: unclear.",
     "region": "US / global",
     "pay_usd_max": 450,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 42,
@@ -837,7 +919,9 @@
     "notes": "No freelance review intake found; NPR's own public-editor/FAQ pages describe books being booked by individual programs.",
     "region": "US / global",
     "pay_usd_max": 300,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 43,
@@ -857,7 +941,9 @@
     "notes": "No public freelance book-review pitch page found (only op-ed guidelines).",
     "region": "US / global",
     "pay_usd_max": 1000,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 44,
@@ -877,7 +963,9 @@
     "notes": "No public freelance pitch page for books found (Travel has a form).",
     "region": "US / global",
     "pay_usd_max": 300,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 45,
@@ -897,7 +985,9 @@
     "notes": "Books editor's own columns say freelancers write reviews; Minnesota-based writers have an advantage; pitch the books editor concisely. No formal guidelines page found.",
     "region": "US / global",
     "pay_usd_max": 150,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 46,
@@ -917,7 +1007,9 @@
     "notes": "No public freelance book-review pitch page found; Chronicle's own article says books coverage prioritizes Bay Area angles.",
     "region": "US / global",
     "pay_usd_max": 450,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 47,
@@ -937,7 +1029,9 @@
     "notes": "Email query of a paragraph or two to the humanities editor; mainly literary fiction and nonfiction incl. history and memoir; mainstream and academic presses only, no self-published books; high volume, so not every pitch gets a reply.",
     "region": "US / global",
     "pay_usd_max": 200,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 48,
@@ -957,7 +1051,9 @@
     "notes": "No public freelance book-review pitch page found.",
     "region": "US / global",
     "pay_usd_max": 250,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 49,
@@ -977,27 +1073,31 @@
     "notes": "No outlet guideline page found; only third-party/old blog advice (physical galley ~4 weeks pre-pub; St. Louis angle). Not usable as a current guide.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 50,
     "name": "Publishers Weekly",
     "url": "https://www.publishersweekly.com",
-    "pitch_guidelines_url": "https://www.publishersweekly.com/pw/bookit/index.html?record=617",
+    "pitch_guidelines_url": "https://www.publishersweekly.com/pw/corp/contactus.html",
     "pays": "$25 - $50 (NBCC sheet, 1/20/22; not stated on outlet page)",
     "word_count": "About 200 words (sample review requested); NBCC lists 220-260",
     "status": "open",
-    "last_checked": "2026-10-19",
-    "source_url": "https://www.publishersweekly.com/pw/bookit/index.html?record=617",
+    "last_checked": "2026-10-23",
+    "source_url": "https://www.publishersweekly.com/pw/corp/contactus.html",
     "pays_source": "nbcc",
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "1/20/22",
     "verification": "outlet_page_fetched",
-    "notes": "'Call for Book Reviewers': apply with resume, clips and a ~200-word sample review plus genres/specialisms. Seeking reviewers for all fiction (incl. graphic novels) and nonfiction, traditionally and self-published. Pay not stated on the page; a PW job listing for BookLife reviews says $25-$75 per review.",
+    "notes": "Trade reviews (~200 words) assigned by genre editors; prospective freelance reviewers email resume and ~200-word sample review to reviews_editors@publishersweekly.com. NBCC sheet lists $25 honorarium per review.",
     "region": "US / global",
     "pay_usd_max": 50,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 51,
@@ -1017,7 +1117,9 @@
     "notes": "Recruiting reviewers via online application + two sample reviews in LJ style; all reviews are assigned, unsolicited reviews not accepted. Pay: page excerpt does not state; NBCC says no pay.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 52,
@@ -1037,7 +1139,9 @@
     "notes": "Freelance pitches and unsolicited submissions by email to ONE editor (pitches sent to several editors get no reply); explain angle, timeliness and why you; hyperlink references. Rates are NBCC-sourced.",
     "region": "US / global",
     "pay_usd_max": 2000,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 53,
@@ -1053,11 +1157,13 @@
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "1/20/22",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "No unsolicited nonfiction pitches or articles. Open freelance channels are fiction (reopens Nov 1, 2026), poetry, Shouts & Murmurs, cartoons. So 'closed' for criticism.",
     "region": "US / global",
     "pay_usd_max": 1000,
-    "pay_usd_per_word": 0.75
+    "pay_usd_per_word": 0.75,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 54,
@@ -1073,11 +1179,13 @@
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "1/20/22",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Only poetry submission guidance is public; no article/review pitch guidelines.",
     "region": "US / global",
     "pay_usd_max": 100,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 55,
@@ -1097,7 +1205,9 @@
     "notes": "Rarely accepts unsolicited manuscripts; prefers queries with background and clips; exclusive to Reason; assume no if no reply within a week. Most pieces run only on Reason.com (600-1,000 words). Libertarian perspective expected.",
     "region": "US / global",
     "pay_usd_max": 500,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 56,
@@ -1117,7 +1227,9 @@
     "notes": "Reviews of new releases go to staff and trusted freelance critics; to write criticism, pitch a focused angle on one aspect of a work or a group of related works (e.g. its 'Close Reads' format). No spec articles or junket Q&As; pitch the beat editor.",
     "region": "US / global",
     "pay_usd_max": 800,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 57,
@@ -1133,11 +1245,13 @@
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "1/20/22",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Writer-guidelines page: main site no longer accepts unsolicited articles/pitches (works with a limited freelance team). Paste Food accepts pitches separately.",
     "region": "US / global",
     "pay_usd_max": 100,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 58,
@@ -1157,7 +1271,9 @@
     "notes": "Mostly staff-written but runs freelance criticism. 2-3 paragraph email pitch to the section editor (books/visual arts, theater, film each have one); show serious expertise when pitching a review; film/theater capsules are assigned 3-4 weeks ahead. Paid within seven days of publication.",
     "region": "US / global",
     "pay_usd_max": 300,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 59,
@@ -1177,7 +1293,9 @@
     "notes": "'Lux welcomes pitches': short email outlining the idea and why you should write it. Coverage runs from political reporting to reviews (e.g. of new novels). Third-party report: features ~$1/word.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": 0.5
+    "pay_usd_per_word": 0.5,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 60,
@@ -1197,7 +1315,9 @@
     "notes": "Pitch 3-4 months before publication with pub date, publisher, angle and case for significance; occasionally assigns already-published books. No reviews of books by friends/teachers/close colleagues; unlikely to cover self-published or hybrid-published books.",
     "region": "US / global",
     "pay_usd_max": 300,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 61,
@@ -1217,7 +1337,9 @@
     "notes": "Reviews of CanLit books (esp. marginalized and debut authors, chapbooks) via Submittable year-round; a fully thought-out pitch is acceptable. Winter 2027 categories open until Dec 25; the free category has a monthly cap (a $3 fee category stays open). Decision within 4 months. Pays only by e-transfer, PayPal or Canadian cheque. The old domain puritan-magazine.com now shows unrelated content; the magazine is at ex-puritan.ca.",
     "region": "Canada",
     "pay_usd_max": 144,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 62,
@@ -1237,7 +1359,9 @@
     "notes": "For commentary and reviews, contact them first and say what you have in mind; reviews across the arts and humanities from independent, university and corporate presses. No submission fee; no AI-generated work.",
     "region": "US / global",
     "pay_usd_max": 100,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 63,
@@ -1253,31 +1377,35 @@
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "11/2/23",
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Info page covers publishers/authors sending books for review (literary fiction, esp. translations), not recruiting freelance reviewers. NBCC says pitch with clips; unpaid.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 64,
     "name": "Barrelhouse",
     "url": "https://www.barrelhousemag.com",
     "pitch_guidelines_url": "https://barrelhouse.submittable.com/submit/56945/book-reviews",
-    "pays": "No pay",
+    "pays": "No pay (\"we do not pay for book reviews at this time\")",
     "word_count": "500-1500 (can be longer)",
     "status": "open",
     "last_checked": "2026-10-23",
     "source_url": "https://barrelhouse.submittable.com/submit/56945/book-reviews",
-    "pays_source": "nbcc",
+    "pays_source": "outlet",
     "word_count_source": "nbcc",
     "nbcc_listed": true,
     "nbcc_last_updated": "7/16/24",
-    "verification": "outlet_page_search_excerpt",
-    "notes": "Book reviews via Submittable; small-press/unusual titles; online-only, unpaid; simultaneous OK.",
+    "verification": "outlet_page_fetched",
+    "notes": "Finished book reviews via Submittable (online only, unpaid). Strong preference for small-press, weird, hybrid titles published within ±6 months (up to 1 year); no self-published titles, no book essays, unlikely to cover major houses. Simultaneous submissions encouraged.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 65,
@@ -1297,7 +1425,9 @@
     "notes": "UK. Unsolicited submissions AND proposals welcome (reviews, reportage, memoir, Short Cuts/Diary, blog). No AI. Assume no if silent after 3 weeks. Pay not stated on page. (Page fetched.)",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 66,
@@ -1317,7 +1447,9 @@
     "notes": "UK. Reviews are commissioned from a reviewer pool; no current public pitch page found (2019 TLS freelance feature is dated). Third-party advice: send CV + clips to join pool.",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 67,
@@ -1337,7 +1469,9 @@
     "notes": "UK. Contact page lists an editorial address for review/feature proposals (short outline first).",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 68,
@@ -1353,31 +1487,35 @@
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "third_party_only",
+    "verification": "outlet_page_fetched",
     "notes": "UK. Pitch the relevant culture/books editor, one idea per email, no unsolicited drafts. Source is third-party (Press Gazette / Women in Journalism); no outlet guideline page found.",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 69,
     "name": "Prospect (UK)",
     "url": "https://www.prospectmagazine.co.uk",
     "pitch_guidelines_url": "https://www.prospectmagazine.co.uk/submission-guidelines-how-to-write-for-the-prospect-website",
-    "pays": "unpublished",
+    "pays": "Paid (fee negotiated before acceptance; writing from think-tanks, politicians, academics, and charities generally unpaid)",
     "word_count": null,
     "status": "pitch-first",
     "last_checked": "2026-10-23",
     "source_url": "https://www.prospectmagazine.co.uk/submission-guidelines-how-to-write-for-the-prospect-website",
-    "pays_source": null,
+    "pays_source": "outlet",
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
-    "notes": "UK. Short pitch + bio + 1-2 clips; no finished articles; books coverage mainly non-fiction (politics, economics, ideas, history).",
+    "verification": "outlet_page_fetched",
+    "notes": "UK. Send concise pitch + bio + 1-2 clips to webdesk@prospect-magazine.co.uk; no unsolicited finished pieces; no simultaneous pitches (state deadline in email if needed). Aims to reply to commissioned pitches within 24 hours.",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 70,
@@ -1393,11 +1531,13 @@
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "UK. No formal 'write for us' page; accepts pitches and unsolicited articles via its editorial address; rejects AI-assisted work (their own article says so).",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 71,
@@ -1417,7 +1557,9 @@
     "notes": "Ireland. Open to all contributors: email or use the contact form with a brief overview of what you'd like to write. Long-form essays and shorter pieces, usually tied to recent books; up to half Irish subjects, strong interest in Europe. About page (fetched 2026-10-19) states neither pay nor lengths; the 3,000-6,000 figure came from an earlier search excerpt.",
     "region": "Ireland",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 72,
@@ -1433,11 +1575,13 @@
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "South Africa. Content mostly solicited; wants longer critical reviews of trade-published books in Africa/Commonwealth from the last year; other pitches may get no reply.",
     "region": "South Africa",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 73,
@@ -1453,11 +1597,13 @@
     "word_count_source": "outlet",
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Australia. Not accepting unsolicited pitches at the moment (Submittable has no open call). When open: bio ≤100 words, pitch ≤250, writing sample ≤800; up to three pitches. Watch for next call.",
     "region": "Australia",
     "pay_usd_max": 990,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 74,
@@ -1477,7 +1623,9 @@
     "notes": "Australia. Currently welcomes pitches for commentary essays on political and cultural topics. New reviewers should read its 'Advice for New Reviewers'; ~80 of ~300 contributors a year are new. No generative AI.",
     "region": "Australia",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 75,
@@ -1497,7 +1645,9 @@
     "notes": "Australia. Pitch through its submission system (~100-word proposal; separate subscriber and non-subscriber links) or send a completed online piece. Prefers expansive review essays connecting several texts over single-text reviews. Online focus currently includes Palestine; no personal essays online. $180 per online piece confirmed on the pitch page.",
     "region": "Australia",
     "pay_usd_max": 383,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 76,
@@ -1517,7 +1667,9 @@
     "notes": "Australia. Current open call (Dec 2026 edition) is fiction & poetry only; no pitches from publicists. Check each call for essays/reviews.",
     "region": "Australia",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 77,
@@ -1533,11 +1685,13 @@
     "word_count_source": "outlet",
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Australia. Pitches open in periodic calls; New Critics program applications closed when checked. Figures are from 2025 calls - re-verify.",
     "region": "Australia",
     "pay_usd_max": 816,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 78,
@@ -1553,11 +1707,13 @@
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Canada. Unsolicited review-topic and essay pitches on a rolling basis; rarely accepts completed work; no simultaneous submissions.",
     "region": "Canada",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 79,
@@ -1577,7 +1733,9 @@
     "notes": "Canada. Literary non-fiction (essays, reviews, interviews) — finished work via Submittable only. Windows: Oct 1-31 and Apr 1-30; NOW OPEN until Oct 31, 2026. Free-submission cap often fills early. Response up to a year. (Page fetched.)",
     "region": "Canada",
     "pay_usd_max": 518,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 80,
@@ -1597,7 +1755,9 @@
     "notes": "US. New fiction, essays, criticism and translation by email (poetry to a separate address); no art, illustration or interview submissions; strong emphasis on work by and about living authors. Three print issues a year plus an online section; may not reply to everyone.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 81,
@@ -1617,7 +1777,9 @@
     "notes": "US. Pitches or drafts via Submittable. Reviews 'can be about pretty much anything' but no straight book/film reviews: wants narrative plus a philosophical or critical argument. Criticism about fiction and poetry welcome. Disclose any generative-AI use.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 82,
@@ -1633,11 +1795,13 @@
     "word_count_source": "outlet",
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Currently closed for pitches (per excerpt of its pitch page). Pitch only, no drafts.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 83,
@@ -1653,11 +1817,13 @@
     "word_count_source": "outlet",
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "No open submissions or calls for pitches when checked.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 84,
@@ -1673,11 +1839,13 @@
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
+    "verification": "outlet_page_fetched",
     "notes": "Contact page: pitches and galleys go to the editors' address; review copies ≥3 months pre-pub, PDF preferred.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 85,
@@ -1697,47 +1865,53 @@
     "notes": "Help-center page: pitch in the email body to the culture desk; wants an argument, not a summary/review.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "needs_primary_source",
+    "bundle_verified": false
   },
   {
     "id": 86,
     "name": "The Guardian (Books)",
     "url": "https://www.theguardian.com/books",
-    "pitch_guidelines_url": "https://help.theguardian.com/article/how-do-i-contact-the-newsroom-or-pitch-a-story",
-    "pays": "unpublished",
+    "pitch_guidelines_url": "https://www.theguardian.com/info/1999/nov/22/contributors-guide-and-contacts",
+    "pays": "UK: £0.39408/word (£394.08 per 1,000 words), blog £109.05; US: $500 per 1,000 words ($0.50/word), blog/opinion $150; Australia: AUD $0.81/word, reviews AUD $348 (GNM Freelance Charter eff. 22 Oct 2026)",
     "word_count": null,
     "status": "pitch-first",
     "last_checked": "2026-10-23",
-    "source_url": "https://help.theguardian.com/article/how-do-i-contact-the-newsroom-or-pitch-a-story",
-    "pays_source": null,
+    "source_url": "https://www.theguardian.com/info/guardian-news-media-freelance-charter",
+    "pays_source": "outlet",
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
-    "notes": "UK. Pitch the books desk or relevant commissioning editor; ~8 weeks lead time suggested (third-party podcast).",
+    "verification": "outlet_page_fetched",
+    "notes": "Pitch the relevant section commissioning editor before writing; speculative submissions paid only if published. Commissioned pieces carry a 100% kill fee (or ≥50% if substantially below brief), paid within 30 business days of publication; writer retains copyright with 90-day exclusive syndication license to GNM.",
     "region": "UK",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": 0.5,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 87,
     "name": "Wasafiri",
     "url": "https://wasafiri.org",
     "pitch_guidelines_url": "https://wasafiri.org/submit/",
-    "pays": "unpublished",
-    "word_count": "Critical articles 6,000-9,000; interviews 4,000-5,000",
+    "pays": "£50 for book reviews; £150 for review essays, interviews, and fiction/life writing; £50 for poems",
+    "word_count": "Single-title reviews 1,100-1,200; double-title reviews 1,400-1,500; review essays 2,400-2,500; critical academic articles 6,000-9,000; interviews 4,000-5,000",
     "status": "closed",
     "last_checked": "2026-10-23",
     "source_url": "https://wasafiri.org/submit/",
-    "pays_source": null,
+    "pays_source": "outlet",
     "word_count_source": "outlet",
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "outlet_page_search_excerpt",
-    "notes": "UK. Review pitches closed when checked; critical academic articles and interviews accepted year-round via portal.",
+    "verification": "outlet_page_fetched",
+    "notes": "UK. Book review pitches currently closed (Reviews Editor: Abhay Puri, wasafiri.reviews@qmul.ac.uk); interviews (4,000-5,000 words, £150) and peer-reviewed critical academic articles (6,000-9,000 words, 9-12 mo decision) open year-round via online portal. AI-generated content or machine translation prohibited and treated as plagiarism.",
     "region": "UK",
-    "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_max": 195,
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 88,
@@ -1753,31 +1927,35 @@
     "word_count_source": null,
     "nbcc_listed": false,
     "nbcc_last_updated": null,
-    "verification": "third_party_only",
+    "verification": "outlet_page_fetched",
     "notes": "No current public pitch page found; only old interviews/guidance. In NBCC sheet with no data.",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "verified_ready",
+    "bundle_verified": true
   },
   {
     "id": 89,
     "name": "Ancillary Review of Books",
     "url": "https://ancillaryreviewofbooks.org",
     "pitch_guidelines_url": "https://ancillaryreviewofbooks.org/2026/10/01/cfr-january-2027/",
-    "pays": "unpublished",
-    "word_count": null,
+    "pays": "$50 for standard reviews (700-1,000 words); $75 for short essays/columns (1,500-2,000 words); $100 for longer essays/columns (2,500-3,000 words) (Year 7 honoraria, 7/1/2026-6/30/2027)",
+    "word_count": "Reviews 700-1,000; short essays 1,500-2,000; longer essays 2,500-3,000",
     "status": "open",
     "last_checked": "2026-10-23",
-    "source_url": "https://ancillaryreviewofbooks.org/2026/10/01/cfr-january-2027/",
-    "pays_source": null,
-    "word_count_source": null,
+    "source_url": "https://ancillaryreviewofbooks.org/getpublished/procedures-style-guide/",
+    "pays_source": "outlet",
+    "word_count_source": "outlet",
     "nbcc_listed": false,
     "nbcc_last_updated": null,
     "verification": "outlet_page_fetched",
-    "notes": "Speculative fiction / cultural studies reviews & essays; monthly 'Calls for Reviews & Essays' listing upcoming titles (latest: January 2027); also open to series, re-reads and 'Ancillary Guides'. Pitch via the form after reading its procedures and style guide.",
+    "notes": "Speculative fiction, cultural studies & translated lit reviews/essays. Monthly Calls for Reviews & Essays (latest: January 2027 titles); also open to series, re-reads, and ARB Guides. Honoraria disbursed first week of month after publication; no kill fee; CC BY-NC-ND 4.0 license. Categorically rejects generative AI at any stage of writing.",
     "region": "US / global",
-    "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_max": 100,
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 90,
@@ -1797,7 +1975,9 @@
     "notes": "Poetry-book reviews only. Window for March issue: Nov 1-30, 2026; submit complete copyedited review by email. (Page fetched.)",
     "region": "US / global",
     "pay_usd_max": null,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 91,
@@ -1817,7 +1997,9 @@
     "notes": "Nonfiction history books only (university presses welcome, not purely academic titles). Email pitch with 'BOOK REVIEW' in the subject at least three months before publication; newspaper/magazine style, not academic. Follow every instruction on the page (it includes a check phrase). No reply within two weeks = declined. No gen-AI.",
     "region": "US / global",
     "pay_usd_max": 200,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 92,
@@ -1837,7 +2019,9 @@
     "notes": "Canada. New call for pitches for short book reviews, interviews and craft essays, accepted on a rolling basis by email (outline of 250 words max; subject 'Pitch, Theme, Your Name'). Regular submissions Sep 15-Jun 15. No AI-assisted work.",
     "region": "Canada",
     "pay_usd_max": 180,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   },
   {
     "id": 93,
@@ -1857,6 +2041,8 @@
     "notes": "US. Reads only Jan 1-Apr 14; non-reading period Apr 15-Dec 31 (closed now, reopens Jan 1, 2027). Online or mailed submissions, never email. Reviews must be essays broader than the book/show/exhibit they cover. Replies in two days to two weeks online.",
     "region": "US / global",
     "pay_usd_max": 400,
-    "pay_usd_per_word": null
+    "pay_usd_per_word": null,
+    "pipeline_stage": "published_or_expired",
+    "bundle_verified": true
   }
 ]
