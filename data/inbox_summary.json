@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "brand": "pitchboard",
+  "snapshot_revision": 208,
+  "generated_at": "2026-10-23T04:05:25.959585+00:00",
+  "scope": "all_nonarchived_items",
+  "auto_publish_enabled": false,
+  "stage_counts": {
+    "candidate": 103,
+    "source_checked": 0,
+    "dedup_excluded": 0,
+    "verified_ready": 0,
+    "publish_pending": 0
+  },
+  "stage_labels": {
+    "candidate": "후보",
+    "source_checked": "원문 확인",
+    "dedup_excluded": "중복 제외",
+    "verified_ready": "검증 완료",
+    "publish_pending": "공개 대기"
+  },
+  "total_records": 103,
+  "has_conflict_records": 0,
+  "unresolved_conflict_records": 0,
+  "sanitizer_version": "3",
+  "workload": {},
+  "budget": {
+    "day": "2026-10-23",
+    "candidates": 0,
+    "fetches": 0,
+    "robots": 0
+  },
+  "halted_domains": 0,
+  "path_health": {
+    "auto_discovery": "requires_configured_public_seeds",
+    "browser_extract": "browser_unavailable",
+    "manual_clip": "receiver_requires_pairing"
+  }
+}
