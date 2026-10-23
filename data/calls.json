@@ -1,139 +1,151 @@
 {
- "calls": [
-  {
-   "id": "brick-oct-2026",
-   "title": "Brick: literary non-fiction window (essays, reviews, interviews)",
-   "outlet": "Brick (Canada)",
-   "type": "Reading window",
-   "opens": "2026-10-01",
-   "deadline": "2026-10-31",
-   "pay": "CAD $65-$720 plus two copies and a one-year subscription",
-   "details": "Finished, polished work only, via Submittable; free-submission cap often fills early; replies can take up to a year. Next window Apr 1-30, 2027.",
-   "link": "https://brickmag.com/submissions/",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "agni-fall-2026",
-   "title": "AGNI: fall reading period (includes review essays)",
-   "outlet": "AGNI",
-   "type": "Reading window",
-   "opens": "2026-09-01",
-   "deadline": "2026-12-15",
-   "pay": "$30 per printed page for prose (reviews included), up to $300, plus a one-year subscription",
-   "details": "Deadline 11:59pm ET. $3 fee per online submission (waiver on request). Reopens Jan 15 - May 31, 2027. Review essays 1,500-3,000 words via the review-specific page.",
-   "link": "https://agnionline.bu.edu/submit/",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "still-point-nov-2026",
-   "title": "Still Point: poetry-book reviews (March issue)",
-   "outlet": "Still Point: Poetry & Culture",
-   "type": "Reading window",
-   "opens": "2026-11-01",
-   "deadline": "2026-11-30",
-   "pay": "Unpaid",
-   "details": "Complete, copyedited review of a recent poetry collection, 750-1,500 words, by email.",
-   "link": "https://stillpointpoetry.squarespace.com/approach",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "wire-new-voices-2026",
-   "title": "The Wire: New Voices competition for emerging music critics",
-   "outlet": "The Wire (UK)",
-   "type": "Competition",
-   "opens": null,
-   "deadline": "2026-12-07",
-   "pay": "Winner: £250, publication in the March 2027 issue and a digital subscription; free to enter",
-   "details": "Send a 500-word review (recent album, book, festival, gig, film or exhibition in The Wire's territory) plus a 500-word opinion piece on 'Music criticism is irrelevant in contemporary culture'. For writers with no more than three paid music pieces published. One entry each, attachments only (.doc/.rtf/.pdf), no AI. Closes midnight GMT.",
-   "link": "https://www.thewire.co.uk/in-writing/essays/introducing-the-wire-new-voices",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "threepenny-2027",
-   "title": "The Threepenny Review: reading period (critical articles)",
-   "outlet": "The Threepenny Review",
-   "type": "Reading window",
-   "opens": "2027-01-01",
-   "deadline": "2027-04-14",
-   "pay": "$400 per article; $200 per Table Talk piece",
-   "details": "Critical articles about 1,200-2,500 words on books, films, theater, art: each review should read as an essay broader than its occasion. Online or mailed submissions only, never email. Closed Apr 15-Dec 31.",
-   "link": "https://www.threepennyreview.com/submissions/",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "common-reviews-rolling",
-   "title": "The Common: expanded book-review section wants reviewers",
-   "outlet": "The Common",
-   "type": "Rolling call",
-   "opens": null,
-   "deadline": null,
-   "pay": "$250 (~800 words) or $450 (~1,500 words)",
-   "details": "Reviews of place-centred books from small independent presses released within the last three months; no self-published books. Pitch a review or propose a book via the form on the page.",
-   "link": "https://www.thecommononline.org/book-reviews/",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "drafting-past-rolling",
-   "title": "Drafting the Past: history book reviews (pitching Dec 2026 / Jan 2027 titles)",
-   "outlet": "Drafting the Past",
-   "type": "Rolling call",
-   "opens": null,
-   "deadline": null,
-   "pay": "$200 per single-book review; more for review essays",
-   "details": "Nonfiction history only. Pitch at least three months before publication; as of its latest note it is taking pitches for books out in December 2026/January 2027 or later. Up to 1,000 words (essays up to 1,500).",
-   "link": "https://www.draftingthepast.com/pitch-us/",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "grain-reviews-rolling",
-   "title": "Grain: call for pitches for short book reviews",
-   "outlet": "Grain Magazine (Canada)",
-   "type": "Rolling call",
-   "opens": null,
-   "deadline": null,
-   "pay": "CAD $50 per printed page (max $250)",
-   "details": "450-word book reviews (also 900-word interviews and craft essays). Email pitch, 250-word outline max; rolling.",
-   "link": "https://grainmagazine.ca/submit",
-   "last_checked": "2026-10-19"
-  },
-  {
-   "id": "arb-jan-2027",
-   "title": "Ancillary Review of Books: calls for reviews & essays, January 2027 titles",
-   "outlet": "Ancillary Review of Books",
-   "type": "Rolling call",
-   "opens": null,
-   "deadline": null,
-   "pay": "Not stated",
-   "details": "Speculative fiction, cultural studies and related nonfiction; the call lists January 2027 titles and also invites series, re-reads and 'Ancillary Guides'. Pitch via the form after reading the style guide. (December 2026 list also still up.)",
-   "link": "https://ancillaryreviewofbooks.org/2026/10/01/cfr-january-2027/",
-   "last_checked": "2026-10-19"
-  }
- ],
- "watch": [
-  {
-   "outlet": "Electric Literature",
-   "note": "Personal-narrative essay window closed 2026-10-11; members can submit year-round.",
-   "link": "https://electricliterature.com/about/submit/"
-  },
-  {
-   "outlet": "Sydney Review of Books",
-   "note": "Still not accepting pitches (checked 2026-10-19); $1,500 flat for longform when it reopens. Watch its Write for SRB page.",
-   "link": "https://sydneyreviewofbooks.com/write-for-srb"
-  },
-  {
-   "outlet": "Words Without Borders",
-   "note": "General submissions closed since 2026-08-10; book-review pitches (4+ months before publication) still accepted at $175.",
-   "link": "https://wordswithoutborders.org/submissions/"
-  },
-  {
-   "outlet": "EVENT",
-   "note": "Fiction & poetry windows closed (reopen Dec 1); 2026 Non-Fiction Contest closed Oct 15. Reviews are pitch-only year-round (contact the reviews editor first).",
-   "link": "https://eventmagazine.ca/submit/"
-  },
-  {
-   "outlet": "Ancillary Review of Books",
-   "note": "November 2026 titles call superseded by the December 2026 and January 2027 lists.",
-   "link": "https://ancillaryreviewofbooks.org/2026/09/02/calls-for-reviews-essays-december-2026/"
-  }
- ]
+  "calls": [
+    {
+      "id": "brick-oct-2026",
+      "title": "Brick: literary non-fiction window (essays, reviews, interviews)",
+      "outlet": "Brick (Canada)",
+      "type": "Reading window",
+      "opens": "2026-10-01",
+      "deadline": "2026-10-31",
+      "pay": "CAD $65-$720 plus two copies and a one-year subscription",
+      "details": "Finished, polished work only, via Submittable; free-submission cap often fills early; replies can take up to a year. Next window Apr 1-30, 2027.",
+      "link": "https://brickmag.com/submissions/",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "agni-fall-2026",
+      "title": "AGNI: fall reading period (includes review essays)",
+      "outlet": "AGNI",
+      "type": "Reading window",
+      "opens": "2026-09-01",
+      "deadline": "2026-12-15",
+      "pay": "$30 per printed page for prose (reviews included), up to $300, plus a one-year subscription",
+      "details": "Deadline 11:59pm ET. $3 fee per online submission (waiver on request). Reopens Jan 15 - May 31, 2027. Review essays 1,500-3,000 words via the review-specific page.",
+      "link": "https://agnionline.bu.edu/submit/",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "still-point-nov-2026",
+      "title": "Still Point: poetry-book reviews (March issue)",
+      "outlet": "Still Point: Poetry & Culture",
+      "type": "Reading window",
+      "opens": "2026-11-01",
+      "deadline": "2026-11-30",
+      "pay": "Unpaid",
+      "details": "Complete, copyedited review of a recent poetry collection, 750-1,500 words, by email.",
+      "link": "https://stillpointpoetry.squarespace.com/approach",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "wire-new-voices-2026",
+      "title": "The Wire: New Voices competition for emerging music critics",
+      "outlet": "The Wire (UK)",
+      "type": "Competition",
+      "opens": null,
+      "deadline": "2026-12-07",
+      "pay": "Winner: £250, publication in the March 2027 issue and a digital subscription; free to enter",
+      "details": "Send a 500-word review (recent album, book, festival, gig, film or exhibition in The Wire's territory) plus a 500-word opinion piece on 'Music criticism is irrelevant in contemporary culture'. For writers with no more than three paid music pieces published. One entry each, attachments only (.doc/.rtf/.pdf), no AI. Closes midnight GMT.",
+      "link": "https://www.thewire.co.uk/in-writing/essays/introducing-the-wire-new-voices",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "threepenny-2027",
+      "title": "The Threepenny Review: reading period (critical articles)",
+      "outlet": "The Threepenny Review",
+      "type": "Reading window",
+      "opens": "2027-01-01",
+      "deadline": "2027-04-14",
+      "pay": "$400 per article; $200 per Table Talk piece",
+      "details": "Critical articles about 1,200-2,500 words on books, films, theater, art: each review should read as an essay broader than its occasion. Online or mailed submissions only, never email. Closed Apr 15-Dec 31.",
+      "link": "https://www.threepennyreview.com/submissions/",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "common-reviews-rolling",
+      "title": "The Common: expanded book-review section wants reviewers",
+      "outlet": "The Common",
+      "type": "Rolling call",
+      "opens": null,
+      "deadline": null,
+      "pay": "$250 (~800 words) or $450 (~1,500 words)",
+      "details": "Reviews of place-centred books from small independent presses released within the last three months; no self-published books. Pitch a review or propose a book via the form on the page.",
+      "link": "https://www.thecommononline.org/book-reviews/",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "drafting-past-rolling",
+      "title": "Drafting the Past: history book reviews (pitching Dec 2026 / Jan 2027 titles)",
+      "outlet": "Drafting the Past",
+      "type": "Rolling call",
+      "opens": null,
+      "deadline": null,
+      "pay": "$200 per single-book review; more for review essays",
+      "details": "Nonfiction history only. Pitch at least three months before publication; as of its latest note it is taking pitches for books out in December 2026/January 2027 or later. Up to 1,000 words (essays up to 1,500).",
+      "link": "https://www.draftingthepast.com/pitch-us/",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "grain-reviews-rolling",
+      "title": "Grain: call for pitches for short book reviews",
+      "outlet": "Grain Magazine (Canada)",
+      "type": "Rolling call",
+      "opens": null,
+      "deadline": null,
+      "pay": "CAD $50 per printed page (max $250)",
+      "details": "450-word book reviews (also 900-word interviews and craft essays). Email pitch, 250-word outline max; rolling.",
+      "link": "https://grainmagazine.ca/submit",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "arb-jan-2027",
+      "title": "Ancillary Review of Books: calls for reviews & essays, January 2027 titles",
+      "outlet": "Ancillary Review of Books",
+      "type": "Rolling call",
+      "opens": null,
+      "deadline": null,
+      "pay": "Not stated",
+      "details": "Speculative fiction, cultural studies and related nonfiction; the call lists January 2027 titles and also invites series, re-reads and 'Ancillary Guides'. Pitch via the form after reading the style guide. (December 2026 list also still up.)",
+      "link": "https://ancillaryreviewofbooks.org/2026/10/01/cfr-january-2027/",
+      "last_checked": "2026-10-19"
+    },
+    {
+      "id": "markaz-mistranslation-2026",
+      "title": "The Markaz Review: MIS/TRANSLATION themed issue (essays, translator's notes, reviews)",
+      "outlet": "The Markaz Review",
+      "type": "Themed issue",
+      "opens": null,
+      "deadline": "2026-11-20",
+      "pay": "Honorarium paid within 30 days of publication (NBCC sheet lists $120)",
+      "details": "Works in translation and essays about the craft of translation, mistranslation, and translator's notes via Duosuma. Regular weekly book review pitches remain open year-round.",
+      "link": "https://themarkaz.org/submissions/",
+      "last_checked": "2026-10-23"
+    }
+  ],
+  "watch": [
+    {
+      "outlet": "Electric Literature",
+      "note": "Personal-narrative essay window closed 2026-10-11; members can submit year-round.",
+      "link": "https://electricliterature.com/about/submit/"
+    },
+    {
+      "outlet": "Sydney Review of Books",
+      "note": "Still not accepting pitches (checked 2026-10-19); $1,500 flat for longform when it reopens. Watch its Write for SRB page.",
+      "link": "https://sydneyreviewofbooks.com/write-for-srb"
+    },
+    {
+      "outlet": "Words Without Borders",
+      "note": "General submissions closed since 2026-08-10; book-review pitches (4+ months before publication) still accepted at $175.",
+      "link": "https://wordswithoutborders.org/submissions/"
+    },
+    {
+      "outlet": "EVENT",
+      "note": "Fiction & poetry windows closed (reopen Dec 1); 2026 Non-Fiction Contest closed Oct 15. Reviews are pitch-only year-round (contact the reviews editor first).",
+      "link": "https://eventmagazine.ca/submit/"
+    },
+    {
+      "outlet": "Ancillary Review of Books",
+      "note": "November 2026 titles call superseded by the December 2026 and January 2027 lists.",
+      "link": "https://ancillaryreviewofbooks.org/2026/09/02/calls-for-reviews-essays-december-2026/"
+    }
+  ]
 }
