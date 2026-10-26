@@ -163,14 +163,14 @@ duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
 <p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>''' for c in due)
 if not duecards: duecards='<p class="muted">No upcoming deadlines on the board right now.</p>'
 home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</h1>
-<p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets that publish criticism — each entry shows when it was last checked.</p>
-<form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Search by name, pay, or region"><button type="submit">Search</button></form>
-<nav class="status-chips" aria-label="Browse the directory"><a class="status-chip" href="/outlets/?status=open">Open now</a><a class="status-chip" href="/outlets/?sort=pay">Highest pay</a></nav></section>
+<p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets.</p>
+<form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Name, pay, or region"><button type="submit">Search</button></form>
+</section>
 <section><h2>Highest pay</h2><p class="muted sm">Top of each outlet's stated pay range, in US dollars at approximate October 2026 exchange rates. <a href="/outlets/?sort=pay">Sort the whole directory by pay</a>.</p>{paycards}</section>
 <section class="home-lay"><aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside>
 <div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p class="home-links"><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a><a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
 <section><h2>Deadlines soon</h2><div class="due-grid">{duecards}</div><p><a href="/calls/">All calls &amp; deadlines</a></p></section>'''
-page('/',SITE,home)
+page('/',SITE,home,layout='home')
 # ---------- Directory ----------
 regions=sorted({r['region'] for r in outlets})
 opts=lambda vals,al:''.join(f'<option value="{esc(v)}">{esc(l)}</option>' for v,l in vals)
