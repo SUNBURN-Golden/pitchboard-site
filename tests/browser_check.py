@@ -42,7 +42,15 @@ def main():
         page.set_default_navigation_timeout(60000)
         page.route('**/*', local_route)
         errors = []
+        console_errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
+        def check_console(message):
+            # /account/ probes the worker API, which is absent in this static
+            # fixture. The unchanged worker has its own tests; all other
+            # console errors, including missing static assets, are failures.
+            if message.type == 'error' and message.location.get('url') != 'http://pitchboard.test/api/me':
+                console_errors.append(message.text)
+        page.on('console', check_console)
         for theme in ('light', 'dark'):
             page.emulate_media(color_scheme=theme)
             for width in (320, 390, 768, 1024, 1440):
@@ -70,6 +78,7 @@ def main():
         page.locator('#f-status').select_option('open')
         assert page.locator('#dir-table tbody tr:visible').count() > 0
         assert not errors, errors
+        assert not console_errors, console_errors
         browser.close()
         print('Search, directory filters, More menu, and JS errors: passed')
 

@@ -4,7 +4,7 @@ Barlow Condensed SemiBold (600), IBM Plex Sans (width 100, weights 400–600), a
 
 Sources: https://github.com/google/fonts/tree/main/ofl/barlowcondensed, https://github.com/google/fonts/tree/main/ofl/ibmplexsans, https://github.com/google/fonts/tree/main/ofl/ibmplexmono. Retrieved 2026-10-26; full upstream OFL 1.1 licences accompany the files. The supplied mockup subsets lacked ← → ≤ ≥; regenerated with fontTools from the corresponding upstream TTFs to cover all current generated page text. Subset range: U+0020–00FF, U+2010–2027, U+2190, U+2192, U+2264, U+2265 (only glyphs present upstream are retained). Total WOFF2 size is about 65 KB.
 
-The IBM subsets have internal family/PostScript names Pitchboard Sans / Pitchboard Mono because the upstream licence reserves “Plex”. Their outlines are IBM Plex Sans / Mono. Copyright and licence metadata are retained. Barlow has no reserved name in its licence.
+The IBM subsets have internal family/PostScript names Pitchboard Sans / Pitchboard Mono because the upstream licence reserves “Plex”. The variable font’s instance PostScript names and variation prefix use Pitchboard Sans as well. Their outlines are IBM Plex Sans / Mono. Copyright and licence metadata are retained. Barlow has no reserved name in its licence.
 
 Upstream TTF SHA-256:
 
