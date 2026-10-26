@@ -177,8 +177,7 @@ home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</
 </section>
 <div class="boards"><section class="board" aria-labelledby="h-due"><h2 id="h-due"><a href="/calls/">Deadlines soon</a></h2>{dueboard}</section>
 <section class="pay" aria-labelledby="h-pay"><h2 id="h-pay"><a href="/outlets/?sort=pay">Highest pay</a></h2>{paytable}</section></div>
-<section class="home-lay"><aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside>
-<div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p class="home-links"><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a><a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
+<section class="next" aria-labelledby="open-now"><div class="home-main"><h2 id="open-now"><a href="/outlets/?status=open">Open or pitch-first now</a></h2><p class="muted">Most recently checked first.</p><p class="more"><a href="/methodology/">What the statuses mean</a></p>{ratetbl}{sponsor_slot()}<p class="home-links"><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a><a href="/outlets/">Full directory ({len(outlets)})</a></p></div><div class="mail"><a href="/newsletter/">Get weekly Open Calls</a></div></section>
 '''
 page('/',SITE,home,layout='home')
 # ---------- Directory ----------

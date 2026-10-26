@@ -108,7 +108,14 @@ def main():
                 for row in page.locator('.dep').all():
                     assert row.bounding_box()['height'] >= 64
                 assert page.locator('.flap span').first.evaluate('e => getComputedStyle(e).animationName') == 'none'
-                check_targets(page, 'header a, header summary, .hero input, .hero button, .pay a, .board a')
+                gap = page.evaluate('''() => {
+                    const box = selector => document.querySelector(selector).getBoundingClientRect();
+                    return [box('.hero').top - box('.top').bottom,
+                            box('.boards').top - box('.hero').bottom,
+                            box('.next').top - box('.boards').bottom];
+                }''')
+                assert gap == ([28, 48, 72] if width <= 860 else [72, 128, 168]), gap
+                check_targets(page, 'main a, main input, main button, header a, header summary')
                 assert page.locator('.pay th').last.evaluate('e => e.getBoundingClientRect().height') < 44
                 pay_link = page.locator('.pay a.cell').first
                 pay_link.focus()
@@ -166,6 +173,11 @@ def main():
         page.goto('http://pitchboard.test/')
         page.emulate_media(reduced_motion='no-preference')
         assert page.locator('.flap span').first.evaluate('e => getComputedStyle(e).animationName') == 'flip'
+        page.goto('http://pitchboard.test/newsletter/')
+        page.locator('.pb-sub-input').fill('invalid')
+        page.locator('.pb-sub-btn').click()
+        assert page.locator('.pb-sub-msg').is_visible()
+        assert page.locator('.pb-sub-input').evaluate('e => e === document.activeElement')
         check_countdowns(browser)
         assert not errors, errors
         assert not console_errors, console_errors
