@@ -35,6 +35,13 @@ def check_width(page, path, width):
     assert actual <= width, (path, width, actual)
 
 
+def check_targets(page, selector):
+    small = page.locator(selector).evaluate_all('''elements => elements
+        .filter(e => {const r=e.getBoundingClientRect(); return r.width>0 && r.height>0 && (r.width<44 || r.height<44)})
+        .map(e => [e.tagName, e.textContent, e.getBoundingClientRect().width, e.getBoundingClientRect().height])''')
+    assert not small, small
+
+
 def main():
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -54,9 +61,33 @@ def main():
         for theme in ('light', 'dark'):
             page.emulate_media(color_scheme=theme)
             for width in (320, 390, 768, 1024, 1440):
-                page.set_viewport_size({'width': width, 'height': 900})
+                height = 844 if width <= 390 else 900
+                page.set_viewport_size({'width': width, 'height': height})
                 for path in ('/', '/outlets/', '/calls/', '/newsletter/', '/advertise/'):
                     check_width(page, path, width)
+                    if path == '/outlets/':
+                        current = page.locator('.bar nav a[aria-current]').first
+                        expected = 'rgb(122, 82, 0)' if theme == 'light' else 'rgb(255, 194, 26)'
+                        assert current.evaluate('e => getComputedStyle(e).borderBottomColor') == expected
+                check_width(page, '/', width)
+                check_targets(page, 'header a, header summary, .hero input, .hero button')
+                nav = page.locator('.bar nav > a').first
+                nav.hover()
+                assert nav.evaluate('e => getComputedStyle(e).borderBottomColor') == expected
+                page.mouse.move(0, 0)
+                if '--capture' in sys.argv and width in (320, 390, 1440):
+                    name = {320: 'narrow', 390: 'mobile', 1440: 'desktop'}[width]
+                    shots = ROOT / 'shots'
+                    shots.mkdir(exist_ok=True)
+                    page.evaluate('document.activeElement.blur()')
+                    page.screenshot(path=str(shots / f'implementation-{name}-{theme}.png'), full_page=True)
+                    if '--reference' in sys.argv:
+                        source = Path(sys.argv[sys.argv.index('--reference') + 1]).resolve()
+                        ref = browser.new_page(viewport={'width': width, 'height': height}, color_scheme=theme, reduced_motion='reduce', device_scale_factor=1)
+                        ref.goto(source.as_uri())
+                        ref.evaluate('document.fonts.ready')
+                        ref.screenshot(path=str(shots / f'reference-{name}-{theme}.png'), full_page=True)
+                        ref.close()
                 print(f'{theme} {width}px: no document overflow')
         if '--all-pages' in sys.argv:
             page.set_viewport_size({'width': 320, 'height': 844})
