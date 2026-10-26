@@ -87,7 +87,7 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
         extra_head=f'<link rel="canonical" href="{canon}"><meta property="og:title" content="{esc(t)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{canon}"><meta property="og:type" content="website"><meta property="og:site_name" content="{SITE}">'+extra_head
     else: extra_head='<meta name="robots" content="noindex">'+extra_head
     out=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
+<title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="preload" href="/static/fonts/barlowcondensed-600.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
 <nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
@@ -307,7 +307,9 @@ page('/account/','Your account','''<h1>Your account</h1><p id="auth-msg" class="
 page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
 # ---------- static ----------
 (OUT/'static').mkdir(parents=True,exist_ok=True)
-for f in (ROOT/'static').iterdir(): shutil.copy(f,OUT/'static'/f.name)
+for f in (ROOT/'static').iterdir():
+    if f.is_dir(): shutil.copytree(f,OUT/'static'/f.name,dirs_exist_ok=True)
+    else: shutil.copy(f,OUT/'static'/f.name)
 (OUT/'robots.txt').write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n")
 (OUT/"_headers").unlink(missing_ok=True)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)) if not u.endswith(('/signup/','/account/')))+'</urlset>\n')
