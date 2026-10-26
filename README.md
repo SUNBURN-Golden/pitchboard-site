@@ -14,6 +14,11 @@ Data lives in `data/outlets.json`, `data/calls.json`, and optional `data/sponsor
 - Contact address in the footer: pitchboard@soulbound.co.kr.
 - English-language site. Do not touch outlet data wording; the pitchboard bot owns the data.
 
+## Frontend checks
+Run `python3 build.py` and `node tests/worker.test.mjs` for each change. Optional browser checks: `python3 tests/browser_check.py --all-pages` (requires Playwright in the development environment). They use local request routing, start no server, and isolate third-party newsletter resources.
+
+The approved 2026-10-26 home redesign and superseded visual rules are recorded in `docs/longblack-structure-spec.md`. Fonts are self-hosted static assets with licences in `static/fonts/`; the build remains dependency-free.
+
 ## Deploy
 Cloudflare Pages project `pitchboard` (default URL pitchboard-4bu.pages.dev). Deploys are done by the pitchboard bot (it holds the upload flow), so send it a note when a frontend change is ready: it will rebuild and deploy. The build output is not committed.
 
