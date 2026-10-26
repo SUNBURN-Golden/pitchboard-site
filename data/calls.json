@@ -118,7 +118,7 @@
       "pay": "Honorarium paid within 30 days of publication (NBCC sheet lists $120)",
       "details": "Works in translation and essays about the craft of translation, mistranslation, and translator's notes via Duosuma. Regular weekly book review pitches remain open year-round.",
       "link": "https://themarkaz.org/submissions/",
-      "last_checked": "2026-10-23"
+      "last_checked": "2026-10-26"
     },
     {
       "id": "writersreview-rolling",
@@ -131,6 +131,30 @@
       "details": "Rolling reviewer application on /write-for-us/. Minimum 1,500 words of original critical analysis across 12 genres (Literary Fiction, Sci-Fi, Biography, History, Poetry, Philosophy & more). Prioritizes reviewers with a published book or editing/acquisitions experience; editors assign books in your specialty. $0 fee.",
       "link": "https://writersreview.com/write-for-us/",
       "last_checked": "2026-10-23"
+    },
+    {
+      "id": "strange-horizons-criticism-2027",
+      "title": "Strange Horizons: 2027 criticism special (essays, long reviews, roundtables)",
+      "outlet": "Strange Horizons",
+      "type": "Themed issue",
+      "opens": null,
+      "deadline": null,
+      "pay": "Standing rates: $150 original essay; $60 review (1,000+ words); $20 per roundtable contributor",
+      "details": "Annual SF/fantasy criticism special publishing at the end of January 2027. Call (posted on its Bluesky 16 Oct 2026) invites essays, long reviews, roundtables or any \"critical thing\" - email reviews@strangehorizons.com. No firm deadline stated; pitch soon given the late-January publication.",
+      "link": "https://bsky.app/profile/strangehorizons.bsky.social/post/3mxz6ejaid22j",
+      "last_checked": "2026-10-26"
+    },
+    {
+      "id": "mqr-online-rolling",
+      "title": "MQR Online: year-round pitches for book reviews, essays, interviews",
+      "outlet": "Michigan Quarterly Review (MQR Online)",
+      "type": "Rolling call",
+      "opens": null,
+      "deadline": null,
+      "pay": "$50 per MQR Online contribution",
+      "details": "Brief pitch or submission via the free MQR Online Submittable form; the Online Editor invites selected pitches to submit a full piece of up to 3,000 words.",
+      "link": "https://mqr.submittable.com/submit",
+      "last_checked": "2026-10-26"
     }
   ],
   "watch": [
@@ -146,7 +170,7 @@
     },
     {
       "outlet": "Words Without Borders",
-      "note": "General submissions closed since 2026-08-10; book-review pitches (4+ months before publication) still accepted at $175.",
+      "note": "General submissions closed since 2026-08-10 (still closed 2026-10-26); book-review pitches (4+ months before publication) still accepted at $175.",
       "link": "https://wordswithoutborders.org/submissions/"
     },
     {
@@ -160,5 +184,5 @@
       "link": "https://ancillaryreviewofbooks.org/2026/09/02/calls-for-reviews-essays-december-2026/"
     }
   ],
-  "updated": "2026-10-23"
+  "updated": "2026-10-26"
 }
