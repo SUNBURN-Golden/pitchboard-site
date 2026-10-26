@@ -70,7 +70,12 @@ def main():
                         expected = 'rgb(122, 82, 0)' if theme == 'light' else 'rgb(255, 194, 26)'
                         assert current.evaluate('e => getComputedStyle(e).borderBottomColor') == expected
                 check_width(page, '/', width)
-                check_targets(page, 'header a, header summary, .hero input, .hero button')
+                check_targets(page, 'header a, header summary, .hero input, .hero button, .pay a')
+                assert page.locator('.pay th').last.evaluate('e => e.getBoundingClientRect().height') < 44
+                pay_link = page.locator('.pay a.cell').first
+                pay_link.focus()
+                assert pay_link.evaluate('e => getComputedStyle(e).outlineStyle') == 'none'
+                assert pay_link.evaluate('e => getComputedStyle(e, "::after").outlineStyle') == 'solid'
                 nav = page.locator('.bar nav > a').first
                 nav.hover()
                 assert nav.evaluate('e => getComputedStyle(e).borderBottomColor') == expected
@@ -108,6 +113,13 @@ def main():
         page.locator('#f-q').fill('')
         page.locator('#f-status').select_option('open')
         assert page.locator('#dir-table tbody tr:visible').count() > 0
+        page.goto('http://pitchboard.test/')
+        amount = page.locator('.pay tbody tr:first-child .amt')
+        href = amount.locator('..').locator('a').get_attribute('href')
+        amount.scroll_into_view_if_needed()
+        box = amount.bounding_box()
+        page.mouse.click(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
+        page.wait_for_url('http://pitchboard.test' + href)
         assert not errors, errors
         assert not console_errors, console_errors
         browser.close()

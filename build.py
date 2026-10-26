@@ -35,9 +35,9 @@ def subscribe_box(h='Get the weekly Open Calls email',note=True,keep_loader=Fals
 </form>{loader}{n}</section>'''
 STALE_DAYS=90
 esc=lambda s: html.escape(str(s),quote=True) if s is not None else ''
-outlets=json.loads((ROOT/'data/outlets.json').read_text())
-cd=json.loads((ROOT/'data/calls.json').read_text())
-sponsors=json.loads((ROOT/'data/sponsors.json').read_text()) if (ROOT/'data/sponsors.json').exists() else {"featured":[],"digest_slot":None}
+outlets=json.load(open(ROOT/'data/outlets.json'))
+cd=json.load(open(ROOT/'data/calls.json'))
+sponsors=json.load(open(ROOT/'data/sponsors.json')) if (ROOT/'data/sponsors.json').exists() else {"featured":[],"digest_slot":None}
 if DEMO:
     sponsors={"featured":[{"outlet":"The Yale Review","label":"DEMO - not a real sponsorship"}],"digest_slot":{"sponsor":"Example MFA Program (demo)","text":"This is a demo of how a paid sponsor slot is labeled. Not a real advertiser.","link":"#"}}
 def slug(n): return re.sub(r'[^a-z0-9]+','-',n.lower()).strip('-')
