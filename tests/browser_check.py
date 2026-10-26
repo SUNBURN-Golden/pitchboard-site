@@ -58,7 +58,7 @@ def check_countdowns(browser):
         context = browser.new_context(timezone_id='America/Los_Angeles')
         probe = context.new_page()
         probe.route('**/*', local_route)
-        probe.clock.install(time=now)
+        probe.clock.set_fixed_time(now)
         probe.goto('http://pitchboard.test/')
         left = probe.locator('.dep .left').first
         assert left.inner_text() == expected, (now, left.inner_text())
