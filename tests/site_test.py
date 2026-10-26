@@ -65,6 +65,34 @@ class SiteTest(unittest.TestCase):
         for outlet in expected:
             self.assertIn(self.site['pay_row'](outlet), self.home)
 
+    def test_board_dates_countdowns_and_destinations_are_in_one_link(self):
+        for call in self.site['due']:
+            html = self.site['departure_row'](call)
+            parsed = Markup(html)
+            links = [attrs for tag, attrs in parsed.tags if tag == 'a']
+            self.assertEqual(len(links), 1)
+            countdown = next(attrs for tag, attrs in parsed.tags if attrs.get('class') == 'left')
+            self.assertEqual(countdown['data-deadline'], call['deadline'])
+            self.assertEqual(countdown['data-opens'], call.get('opens') or '')
+            self.assertEqual(links[0]['href'], '/calls/#' + call['id'])
+            self.assertNotIn('aria-hidden', html)
+            self.assertNotIn('tabindex', html)
+            text = ' '.join(''.join(parsed.text).split())
+            date = dt.date.fromisoformat(call['deadline'])
+            self.assertIn(date.strftime('%d %b'), text)
+            self.assertIn(self.site['daysleft'](call), text)
+            self.assertIn(call['outlet'], text)
+            self.assertIn(f'datetime="{date}"', html)
+
+    def test_board_retains_list_semantics(self):
+        self.assertIn('<ol role="list">', self.site['dueboard'])
+
+    def test_board_countdown_handles_today_and_singular(self):
+        call = dict(self.site['due'][0], opens=None, deadline='2026-10-26')
+        self.assertIn('Closes today', self.site['departure_row'](call))
+        call['deadline'] = '2026-10-27'
+        self.assertIn('<b>1</b> day left', self.site['departure_row'](call))
+
 
 if __name__ == '__main__':
     unittest.main()

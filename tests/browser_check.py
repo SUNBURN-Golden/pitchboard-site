@@ -3,7 +3,9 @@
 Requires Playwright in the developer environment, never in the static build.
 Serves files through Playwright routing: no server or external network needed.
 """
+import datetime as dt
 import mimetypes
+import re
 import sys
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -42,6 +44,36 @@ def check_targets(page, selector):
     assert not small, small
 
 
+def check_countdowns(browser):
+    # Visit build-day HTML around Seoul midnight, from a different browser timezone.
+    html = (DIST / 'index.html').read_text()
+    deadline = dt.date.fromisoformat(re.search(r'class="left" data-deadline="([^"]+)"', html)[1])
+    start = dt.datetime.combine(deadline, dt.time(), tzinfo=dt.timezone.utc) - dt.timedelta(hours=9)
+    cases = ((start - dt.timedelta(days=2), '2 days left'),
+             (start - dt.timedelta(seconds=1), '1 day left'),
+             (start, 'Closes today'),
+             (start + dt.timedelta(days=1, seconds=-1), 'Closes today'),
+             (start + dt.timedelta(days=1), 'Closed'))
+    for now, expected in cases:
+        context = browser.new_context(timezone_id='America/Los_Angeles')
+        probe = context.new_page()
+        probe.route('**/*', local_route)
+        probe.clock.set_fixed_time(now)
+        probe.goto('http://pitchboard.test/')
+        left = probe.locator('.dep .left').first
+        assert left.inner_text() == expected, (now, left.inner_text())
+        if expected[0].isdigit():
+            assert left.locator('b').inner_text() == expected.split()[0]
+        assert probe.locator('.dep time').first.get_attribute('datetime') == deadline.isoformat()
+        # A synthetic future opening exercises the same hook without editing source data.
+        opens = (deadline + dt.timedelta(days=3)).isoformat()
+        left.evaluate('(el, opens) => el.dataset.opens = opens', opens)
+        probe.add_script_tag(path=str(ROOT / 'static/app.js'))
+        assert left.inner_text().startswith('Opens in ')
+        context.close()
+    print('Live board countdowns: plural, singular, Seoul midnight, closed, and future opening passed')
+
+
 def main():
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -70,7 +102,13 @@ def main():
                         expected = 'rgb(122, 82, 0)' if theme == 'light' else 'rgb(255, 194, 26)'
                         assert current.evaluate('e => getComputedStyle(e).borderBottomColor') == expected
                 check_width(page, '/', width)
-                check_targets(page, 'header a, header summary, .hero input, .hero button, .pay a')
+                for link in page.locator('.board a').all():
+                    link.focus()
+                    assert link.evaluate('e => getComputedStyle(e).outlineColor') == 'rgb(255, 194, 26)'
+                for row in page.locator('.dep').all():
+                    assert row.bounding_box()['height'] >= 64
+                assert page.locator('.flap span').first.evaluate('e => getComputedStyle(e).animationName') == 'none'
+                check_targets(page, 'header a, header summary, .hero input, .hero button, .pay a, .board a')
                 assert page.locator('.pay th').last.evaluate('e => e.getBoundingClientRect().height') < 44
                 pay_link = page.locator('.pay a.cell').first
                 pay_link.focus()
@@ -120,6 +158,15 @@ def main():
         box = amount.bounding_box()
         page.mouse.click(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
         page.wait_for_url('http://pitchboard.test' + href)
+        page.goto('http://pitchboard.test/')
+        href = page.locator('.dep').first.get_attribute('href')
+        page.locator('.dep').first.click()
+        page.wait_for_url('http://pitchboard.test' + href)
+        assert page.locator(':target').count() == 1
+        page.goto('http://pitchboard.test/')
+        page.emulate_media(reduced_motion='no-preference')
+        assert page.locator('.flap span').first.evaluate('e => getComputedStyle(e).animationName') == 'flip'
+        check_countdowns(browser)
         assert not errors, errors
         assert not console_errors, console_errors
         browser.close()
