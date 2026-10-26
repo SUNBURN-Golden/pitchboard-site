@@ -158,7 +158,7 @@ paycards='<div class="pay-strip">'+''.join(
  f'<a class="pay-card" href="{esc("/outlets/"+r["slug"]+"/")}"><span class="pay-amt">${int(r["pay_usd_max"]):,}</span><b>{esc(r["name"])}</b><span class="muted sm">Checked {fmt(r["last_checked"])}</span></a>'
  for r in paytop)+'</div>'
 duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
-<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
+<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
 <p class="sm">Deadline <strong>{fmt(c["deadline"])}</strong> · Pay: {esc(c["pay"])}</p>
 <p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>''' for c in due)
 if not duecards: duecards='<p class="muted">No upcoming deadlines on the board right now.</p>'
@@ -251,7 +251,7 @@ cbody+=f'''<section class="calls-ics-bar" aria-label="Download all stated deadli
 <a class="btn calls-ics-btn" href="/calls/deadlines.ics" aria-describedby="calls-ics-note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2m-8 3h2"/></svg><span>Add deadlines to your calendar (.ics)</span></a>
 <p class="sm muted" id="calls-ics-note">{len(dated_calls)} stated deadlines · Works with Apple Calendar, Google Calendar, and Outlook</p></section>'''
 for c in cl:
-    cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open">{daysleft(c)}</span></p>
+    cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
 <p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if call_deadline(c) is not None else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
 <p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>'''
 cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'<li><strong>{esc(w["outlet"])}</strong>: {esc(w["note"])} <a href="{esc(w["link"])}" rel="noopener">page</a></li>' for w in cd['watch'])+'</ul>'

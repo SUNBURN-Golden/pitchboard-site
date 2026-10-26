@@ -44,3 +44,24 @@
     c.textContent=n+' of '+rows.length+' shown';}
   [q,st,rg,pay,so].forEach(function(e){e.addEventListener('input',run);e.addEventListener('change',run)}); run();
 })();
+
+// Live countdowns on call badges (Asia/Seoul; a call closes at the end of its deadline day).
+(function(){
+  function seoulToday(){
+    var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+    return Date.parse(p+'T00:00:00Z');
+  }
+  function day(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||'')?Date.parse(s+'T00:00:00Z'):NaN;}
+  function pl(n){return n+' day'+(n===1?'':'s');}
+  try{
+    var t=seoulToday();
+    document.querySelectorAll('[data-deadline]').forEach(function(el){
+      var d=day(el.getAttribute('data-deadline'));
+      if(isNaN(d))return;
+      var o=day(el.getAttribute('data-opens'));
+      if(!isNaN(o)&&o>t){el.textContent='Opens in '+pl(Math.round((o-t)/864e5));return;}
+      var n=Math.round((d-t)/864e5);
+      el.textContent=n<0?'Closed':n===0?'Closes today':pl(n)+' left';
+    });
+  }catch(e){}
+})();
