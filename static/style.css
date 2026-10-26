@@ -59,11 +59,6 @@ main.article>dl.facts>dt,main.article>dl.facts>dd{border-top:1px solid var(--bor
 .outlets td.chk .badge{font-size:.62rem;padding:.05rem .3rem}.sponsor,.subscribe{max-width:100%;overflow:visible}
 main.article>h1{font-size:32px;line-height:44px}main.article>h2{font-size:22px;line-height:28px}main.article dl.facts{grid-template-columns:1fr}main.article dl.facts>dd{border-top:0;padding-top:0}}
 
-/* Home: two-column layout (table + sticky signup) */
-.home-lay{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-top:1.5rem}
-.home-main,.home-side{min-width:0}
-.home-side .subscribe{margin:0}
-@media (min-width:960px){.home-lay{grid-template-columns:minmax(0,1fr) 330px;grid-template-areas:"main signup"}.home-main{grid-area:main}.home-side{grid-area:signup}.home-side .sticky{position:sticky;top:1rem}}
 /* Home: rate/status table rows (each row is a link) */
 .rate-tbl{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .rate-tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,9.5rem) 5.5rem;gap:.9rem;align-items:center;min-width:0;min-height:44px;padding:.6rem .85rem;border-bottom:1px solid var(--border);color:var(--text);text-decoration:none}
@@ -73,8 +68,6 @@ a.rate-tr:hover{background:var(--surface-2)}
 .rt-outlet{display:flex;flex-direction:column;min-width:0}
 .rt-rate{min-width:0;max-width:9.5rem;overflow:hidden;text-align:right}.rt-rate b{font-size:1.2rem;white-space:nowrap}
 .rt-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.8rem;font-weight:400;line-height:1.3;color:var(--text-muted)}
-/* Subscribe card kicker */
-.kicker{display:block;margin-bottom:.15rem;font-size:.72rem;font-weight:600;color:var(--accent-ink)}
 @media (max-width:640px){.rate-th{display:none}.rate-tr{grid-template-columns:minmax(0,1fr) minmax(0,7rem);gap:.25rem .75rem}.rt-status{grid-column:1/-1}.rt-rate{max-width:7rem}}
 .authbox{border:1px solid currentColor;padding:1.2rem;margin:1rem 0;max-width:34rem}
 .optin{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:1rem}
@@ -183,3 +176,14 @@ main.home{padding-top:0;padding-bottom:0}
  .dep{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"when dest" "when left";row-gap:2px;min-height:64px;padding:8px 10px}
 }
 @media(prefers-reduced-motion:reduce){.flap span{animation:none}}
+
+/* The newsletter form stays on /newsletter/; home has one below-fold link. */
+.next{border-top:2px solid var(--text);margin-top:168px;padding:48px 0 96px;display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:24px 48px}
+.home-main{min-width:0}
+.next p{margin:0;color:var(--text-muted);max-width:60ch}
+.next .more{margin-top:4px}
+.next a:not(.rate-tr){display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+.next .more a{padding-right:4px;font-weight:600}
+.mail{align-self:start;border-left:4px solid var(--accent);padding:2px 0 2px 16px}
+.mail a{font-weight:600}
+@media(max-width:860px){.next{grid-template-columns:minmax(0,1fr);margin-top:72px;padding:32px 0 64px}}

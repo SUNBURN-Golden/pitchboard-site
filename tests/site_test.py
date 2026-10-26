@@ -34,6 +34,7 @@ class SiteTest(unittest.TestCase):
         with patch.object(sys, 'argv', ['build.py', '--out', output.name, '--today', '2026-10-26']):
             cls.site = runpy.run_path(str(ROOT / 'build.py'))
         cls.home = (Path(output.name) / 'index.html').read_text()
+        cls.newsletter = (Path(output.name) / 'newsletter/index.html').read_text()
 
     def test_stale_boundary_in_both_date_formats(self):
         for compact in (False, True):
@@ -92,6 +93,13 @@ class SiteTest(unittest.TestCase):
         self.assertIn('Closes today', self.site['departure_row'](call))
         call['deadline'] = '2026-10-27'
         self.assertIn('<b>1</b> day left', self.site['departure_row'](call))
+
+    def test_newsletter_form_stays_on_newsletter_page(self):
+        self.assertNotIn('class="pb-sub-form"', self.home)
+        self.assertIn('class="mail"', self.home)
+        self.assertIn('href="/newsletter/">Get weekly Open Calls</a>', self.home)
+        self.assertIn(self.site['subscribe_box']('Subscribe', True, keep_loader=True), self.newsletter)
+        self.assertIn(self.site['FORM_SCRIPT'], self.newsletter)
 
 
 if __name__ == '__main__':
