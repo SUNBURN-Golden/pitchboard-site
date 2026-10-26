@@ -55,10 +55,13 @@ def age(r): return (TODAY-d_(r['last_checked'])).days
 def badge(r):
     l,c,t=STATUS.get(r['status'],('Unknown','s-none',''))
     return f'<span class="badge {c}" title="{esc(t)}">{l}</span>'
-def checked(r,long=False):
+def checked(r,long=False,compact=False):
     a=age(r); stale=a>STALE_DAYS
-    s=f'<span class="checked{" stale" if stale else ""}">Last checked <time datetime="{r["last_checked"]}">{fmt(r["last_checked"])}</time>'
-    s+=f' <span class="ago">({a} day{"s" if a!=1 else ""} ago)</span>' if long or True else ''
+    date=d_(r['last_checked'])
+    label=f"{date.day} {date.strftime('%b')}" if compact else fmt(r['last_checked'])
+    prefix='' if compact else 'Last checked '
+    s=f'<span class="checked{" stale" if stale else ""}">{prefix}<time datetime="{r["last_checked"]}">{label}</time>'
+    if not compact: s+=f' <span class="ago">({a} day{"s" if a!=1 else ""} ago)</span>'
     if stale: s+=' <span class="badge s-stale">Stale: re-check</span>'
     return s+'</span>'
 def short(s,n=70):
@@ -154,9 +157,12 @@ def rate_row(r):
      f'<span class="rt-rate">{toprate(r)}</span><span class="rt-status">{badge(r)}</span></a>')
 ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet, length, checked</span><span>Top rate</span><span>Status</span></div>'
  +''.join(rate_row(r) for r in openr[:8])+'</div>')
-paycards='<div class="pay-strip">'+''.join(
- f'<a class="pay-card" href="{esc("/outlets/"+r["slug"]+"/")}"><span class="pay-amt">${int(r["pay_usd_max"]):,}</span><b>{esc(r["name"])}</b><span class="muted sm">Checked {fmt(r["last_checked"])}</span></a>'
- for r in paytop)+'</div>'
+def pay_row(r):
+    return (f'<tr><td class="amt"><span>${int(r["pay_usd_max"]):,}</span></td>'
+     f'<td class="who"><a class="cell" href="/outlets/{r["slug"]}/">{esc(r["name"])}</a></td>'
+     f'<td class="chk">{checked(r,compact=True)}</td></tr>')
+paytable=('<table><thead><tr><th scope="col">USD</th><th scope="col"><span class="sr">Outlet</span></th><th scope="col">Checked</th></tr></thead>'
+ +'<tbody>'+''.join(pay_row(r) for r in paytop)+'</tbody></table>')
 duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
 <p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
 <p class="sm">Deadline <strong>{fmt(c["deadline"])}</strong> · Pay: {esc(c["pay"])}</p>
@@ -166,7 +172,7 @@ home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</
 <p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets.</p>
 <form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Name, pay, or region"><button type="submit">Search</button></form>
 </section>
-<section><h2>Highest pay</h2><p class="muted sm">Top of each outlet's stated pay range, in US dollars at approximate October 2026 exchange rates. <a href="/outlets/?sort=pay">Sort the whole directory by pay</a>.</p>{paycards}</section>
+<section class="pay" aria-labelledby="h-pay"><h2 id="h-pay"><a href="/outlets/?sort=pay">Highest pay</a></h2>{paytable}</section>
 <section class="home-lay"><aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside>
 <div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p class="home-links"><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a><a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
 <section><h2>Deadlines soon</h2><div class="due-grid">{duecards}</div><p><a href="/calls/">All calls &amp; deadlines</a></p></section>'''

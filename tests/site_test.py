@@ -1,0 +1,70 @@
+"""Static rendering regressions: python3 tests/site_test.py (stdlib only)."""
+import datetime as dt
+import re
+import runpy
+import sys
+import tempfile
+import unittest
+from html.parser import HTMLParser
+from pathlib import Path
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class Markup(HTMLParser):
+    def __init__(self, html):
+        super().__init__()
+        self.tags = []
+        self.text = []
+        self.feed(html)
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append((tag, dict(attrs)))
+
+    def handle_data(self, text):
+        self.text.append(text)
+
+
+class SiteTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        output = tempfile.TemporaryDirectory(prefix='.site-test-', dir=ROOT)
+        cls.addClassCleanup(output.cleanup)
+        with patch.object(sys, 'argv', ['build.py', '--out', output.name, '--today', '2026-10-26']):
+            cls.site = runpy.run_path(str(ROOT / 'build.py'))
+        cls.home = (Path(output.name) / 'index.html').read_text()
+
+    def test_stale_boundary_in_both_date_formats(self):
+        for compact in (False, True):
+            for days in (89, 90, 91):
+                date = dt.date(2026, 10, 26) - dt.timedelta(days=days)
+                html = self.site['checked']({'last_checked': date.isoformat()}, compact=compact)
+                self.assertEqual('Stale: re-check' in html, days > 90)
+                self.assertIn(f'datetime="{date}"', html)
+                self.assertEqual('Last checked' in html, not compact)
+
+    def test_pay_row_exposes_amount_and_date_outside_its_only_link(self):
+        outlet = dict(self.site['paytop'][0], last_checked='2026-01-01')
+        html = self.site['pay_row'](outlet)
+        parsed = Markup(html)
+        self.assertEqual(sum(tag == 'a' for tag, _ in parsed.tags), 1)
+        self.assertEqual(sum(tag == 'td' for tag, _ in parsed.tags), 3)
+        self.assertNotIn('aria-hidden', html)
+        self.assertIn(f'${int(outlet["pay_usd_max"]):,}', ''.join(parsed.text))
+        self.assertIn('Stale: re-check', html)
+        link = re.search(r'<a .*?</a>', html).group()
+        self.assertNotIn('<time', link)
+        self.assertNotIn('$', link)
+
+    def test_pay_order_and_home_uses_source_amounts(self):
+        outlets = self.site['outlets']
+        expected = sorted((r for r in outlets if r.get('pay_usd_max') is not None),
+                          key=lambda r: (-r['pay_usd_max'], r['name'].lower()))[:4]
+        self.assertEqual(self.site['paytop'], expected)
+        for outlet in expected:
+            self.assertIn(self.site['pay_row'](outlet), self.home)
+
+
+if __name__ == '__main__':
+    unittest.main()
