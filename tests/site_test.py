@@ -101,6 +101,18 @@ class SiteTest(unittest.TestCase):
         self.assertIn(self.site['subscribe_box']('Subscribe', True, keep_loader=True), self.newsletter)
         self.assertIn(self.site['FORM_SCRIPT'], self.newsletter)
 
+    def test_open_now_has_separate_readable_checked_cells(self):
+        table = self.site['ratetbl']
+        self.assertIn('<th scope="col" role="columnheader">Checked</th>', table)
+        for outlet in self.site['openr'][:8]:
+            html = self.site['rate_row'](dict(outlet, last_checked='2026-01-01'))
+            parsed = Markup(html)
+            self.assertEqual(sum(tag == 'a' for tag, _ in parsed.tags), 1)
+            self.assertEqual(sum(tag == 'td' for tag, _ in parsed.tags), 4)
+            self.assertIn('Stale: re-check', html)
+            self.assertNotIn('<time', re.search(r'<a .*?</a>', html).group())
+            self.assertNotIn('aria-hidden', html)
+
 
 if __name__ == '__main__':
     unittest.main()

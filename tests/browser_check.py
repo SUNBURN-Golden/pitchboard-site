@@ -121,6 +121,10 @@ def main():
                 pay_link.focus()
                 assert pay_link.evaluate('e => getComputedStyle(e).outlineStyle') == 'none'
                 assert pay_link.evaluate('e => getComputedStyle(e, "::after").outlineStyle') == 'solid'
+                rate_link = page.locator('.rate-tbl a.cell').first
+                rate_link.focus()
+                assert rate_link.evaluate('e => getComputedStyle(e).outlineStyle') == 'none'
+                assert rate_link.evaluate('e => getComputedStyle(e, "::after").outlineStyle') == 'solid'
                 nav = page.locator('.bar nav > a').first
                 nav.hover()
                 assert nav.evaluate('e => getComputedStyle(e).borderBottomColor') == expected
@@ -163,6 +167,13 @@ def main():
         href = amount.locator('..').locator('a').get_attribute('href')
         amount.scroll_into_view_if_needed()
         box = amount.bounding_box()
+        page.mouse.click(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
+        page.wait_for_url('http://pitchboard.test' + href)
+        page.goto('http://pitchboard.test/')
+        checked = page.locator('.rate-tbl tbody tr:first-child .rt-checked')
+        href = checked.locator('..').locator('a').get_attribute('href')
+        checked.scroll_into_view_if_needed()
+        box = checked.bounding_box()
         page.mouse.click(box['x'] + box['width'] / 2, box['y'] + box['height'] / 2)
         page.wait_for_url('http://pitchboard.test' + href)
         page.goto('http://pitchboard.test/')

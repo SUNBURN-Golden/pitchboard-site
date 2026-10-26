@@ -152,11 +152,13 @@ def toprate(r):
     v=r.get('pay_usd_max')
     return f'<b>${int(v):,}</b>' if v is not None else f'<span class="rt-text">{short(r.get("pays"),80)}</span>'
 def rate_row(r):
-    return (f'<a class="rate-tr" href="{esc("/outlets/"+r["slug"]+"/")}">'
-     f'<span class="rt-outlet"><b>{esc(r["name"])}</b><span class="muted sm">{short(r.get("word_count"),40)}</span><span class="muted sm">Checked {fmt(r["last_checked"])}</span></span>'
-     f'<span class="rt-rate">{toprate(r)}</span><span class="rt-status">{badge(r)}</span></a>')
-ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet, length, checked</span><span>Top rate</span><span>Status</span></div>'
- +''.join(rate_row(r) for r in openr[:8])+'</div>')
+    return (f'<tr role="row"><td role="cell" class="rt-outlet"><a class="cell" href="/outlets/{r["slug"]}/">'
+     f'<b>{esc(r["name"])}</b><span class="muted sm">{short(r.get("word_count"),40)}</span></a></td>'
+     f'<td role="cell" class="rt-rate">{toprate(r)}</td><td role="cell" class="rt-status">{badge(r)}</td>'
+     f'<td role="cell" class="rt-checked">{checked(r,compact=True)}</td></tr>')
+ratetbl=('<table class="rate-tbl" role="table"><thead role="rowgroup"><tr role="row">'
+ +'<th scope="col" role="columnheader">Outlet</th><th scope="col" role="columnheader">Top rate</th><th scope="col" role="columnheader">Status</th><th scope="col" role="columnheader">Checked</th></tr></thead>'
+ +'<tbody role="rowgroup">'+''.join(rate_row(r) for r in openr[:8])+'</tbody></table>')
 def pay_row(r):
     return (f'<tr><td class="amt"><span>${int(r["pay_usd_max"]):,}</span></td>'
      f'<td class="who"><a class="cell" href="/outlets/{r["slug"]}/">{esc(r["name"])}</a></td>'
