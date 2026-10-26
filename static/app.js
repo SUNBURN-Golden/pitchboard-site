@@ -53,15 +53,24 @@
   }
   function day(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||'')?Date.parse(s+'T00:00:00Z'):NaN;}
   function pl(n){return n+' day'+(n===1?'':'s');}
+  function countdown(el,text){
+    el.textContent=text;
+    var n=text.match(/^(\d+)(.*)$/);
+    if(el.classList.contains('left')&&n){
+      var b=document.createElement('b');
+      b.textContent=n[1];
+      el.replaceChildren(b,document.createTextNode(n[2]));
+    }
+  }
   try{
     var t=seoulToday();
     document.querySelectorAll('[data-deadline]').forEach(function(el){
       var d=day(el.getAttribute('data-deadline'));
       if(isNaN(d))return;
       var o=day(el.getAttribute('data-opens'));
-      if(!isNaN(o)&&o>t){el.textContent='Opens in '+pl(Math.round((o-t)/864e5));return;}
+      if(!isNaN(o)&&o>t){countdown(el,'Opens in '+pl(Math.round((o-t)/864e5)));return;}
       var n=Math.round((d-t)/864e5);
-      el.textContent=n<0?'Closed':n===0?'Closes today':pl(n)+' left';
+      countdown(el,n<0?'Closed':n===0?'Closes today':pl(n)+' left');
     });
   }catch(e){}
 })();

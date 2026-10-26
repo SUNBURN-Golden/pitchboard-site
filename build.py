@@ -163,19 +163,23 @@ def pay_row(r):
      f'<td class="chk">{checked(r,compact=True)}</td></tr>')
 paytable=('<table><thead><tr><th scope="col">USD</th><th scope="col"><span class="sr">Outlet</span></th><th scope="col">Checked</th></tr></thead>'
  +'<tbody>'+''.join(pay_row(r) for r in paytop)+'</tbody></table>')
-duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
-<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
-<p class="sm">Deadline <strong>{fmt(c["deadline"])}</strong> · Pay: {esc(c["pay"])}</p>
-<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>''' for c in due)
-if not duecards: duecards='<p class="muted">No upcoming deadlines on the board right now.</p>'
+def departure_row(c):
+    date=call_deadline(c)
+    countdown=re.sub(r'^(\d+)', r'<b>\1</b>', esc(daysleft(c)))
+    return (f'<li><a class="dep" href="/calls/#{esc(c["id"])}">'
+     f'<time class="flap" datetime="{c["deadline"]}"><span>{date:%d}</span> <span class="mo">{date:%b}</span></time> '
+     f'<span class="left" data-deadline="{esc(c.get("deadline") or "")}" data-opens="{esc(c.get("opens") or "")}">{countdown}</span> <span class="dest">{esc(c["outlet"])}</span></a></li>')
+dueboard=('<ol role="list">'+''.join(departure_row(c) for c in due)+'</ol>' if due
+          else '<p class="board-empty">No upcoming deadlines on the board right now.</p>')
 home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</h1>
 <p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets.</p>
 <form class="home-search" action="/outlets/" method="get" role="search"><label class="sr" for="home-q">Search outlets</label><input id="home-q" name="q" type="search" placeholder="Name, pay, or region"><button type="submit">Search</button></form>
 </section>
-<section class="pay" aria-labelledby="h-pay"><h2 id="h-pay"><a href="/outlets/?sort=pay">Highest pay</a></h2>{paytable}</section>
+<div class="boards"><section class="board" aria-labelledby="h-due"><h2 id="h-due"><a href="/calls/">Deadlines soon</a></h2>{dueboard}</section>
+<section class="pay" aria-labelledby="h-pay"><h2 id="h-pay"><a href="/outlets/?sort=pay">Highest pay</a></h2>{paytable}</section></div>
 <section class="home-lay"><aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside>
 <div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p class="home-links"><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a><a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
-<section><h2>Deadlines soon</h2><div class="due-grid">{duecards}</div><p><a href="/calls/">All calls &amp; deadlines</a></p></section>'''
+'''
 page('/',SITE,home,layout='home')
 # ---------- Directory ----------
 regions=sorted({r['region'] for r in outlets})
