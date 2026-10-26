@@ -92,8 +92,8 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
 <nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
 <main id="main" class="{main_cls}">{body}</main>
-<footer class="wrap foot"><p>Data last built {fmt(TODAY.isoformat())}. Facts come from each outlet's public pages and are dated; always confirm on the outlet's own page before pitching. <a href="/methodology/">How we check</a> · <a href="/advertise/">Sponsored items are always labeled</a></p>
-<p class="sm">Corrections or sponsorship: {CONTACT_LINK} · <a href="{ARCHIVE}" rel="noopener">Newsletter archive</a> · <a href="/newsletter/">Subscribe</a></p></footer>
+<footer class="wrap foot"><p>Data last built {fmt(TODAY.isoformat())}. Facts come from each outlet's public pages and are dated; always confirm on the outlet's own page before pitching.</p><div class="footer-links"><a href="/methodology/">How we check</a><a href="/advertise/">Sponsored items are always labeled</a></div>
+<p class="sm">Corrections or sponsorship: {CONTACT_LINK}</p><div class="footer-links"><a href="{ARCHIVE}" rel="noopener">Newsletter archive</a><a href="/newsletter/">Subscribe</a></div></footer>
 <script src="/static/app.js" defer></script>{ATTR_SCRIPT}</body></html>'''
     p=OUT/path.strip('/')/'index.html' if path!='/404' else OUT/'404.html'
     p.parent.mkdir(parents=True,exist_ok=True); p.write_text(out,encoding='utf-8')
@@ -107,7 +107,7 @@ def paymax(r):
 def row(r):
     f=r['name'] in featured
     hay=' '.join(str(r.get(k) or '') for k in ('name','pays','word_count','notes','region','status')).lower()
-    star=' <span class="label sm">Featured · Sponsored</span>' if f else ''
+    star=' <span class="label sm">Featured (Sponsored)</span>' if f else ''
     return (f'<tr role="row" data-status="{esc(r["status"])}" data-region="{esc(r["region"])}" data-pay="{"1" if r.get("pays") and r["pays"]!="unpublished" else "0"}" data-paymax="{paymax(r)}" data-checked="{esc(r["last_checked"])}" data-featured="{"1" if f else "0"}" data-text="{esc(hay)}">'
      f'<td role="cell" data-label="Outlet" class="n"><a href="/outlets/{r["slug"]}/">{esc(r["name"])}</a>{star}<div class="muted sm">{esc(r["region"])}</div></td>'
      f'<td role="cell" data-label="Status">{badge(r)}</td><td role="cell" data-label="Pay (as published)">{short(r.get("pays"))}</td><td role="cell" data-label="Word count">{short(r.get("word_count"),40)}</td><td role="cell" data-label="Last checked" class="chk">{checked(r)}</td></tr>')
@@ -150,9 +150,9 @@ def toprate(r):
     return f'<b>${int(v):,}</b>' if v is not None else f'<span class="rt-text">{short(r.get("pays"),80)}</span>'
 def rate_row(r):
     return (f'<a class="rate-tr" href="{esc("/outlets/"+r["slug"]+"/")}">'
-     f'<span class="rt-outlet"><b>{esc(r["name"])}</b><span class="muted sm">{short(r.get("word_count"),40)} · checked {fmt(r["last_checked"])}</span></span>'
-     f'<span class="rt-rate">{toprate(r)}</span><span class="rt-status">{badge(r)}</span><span class="rt-arrow" aria-hidden="true">→</span></a>')
-ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet · length · checked</span><span>Top rate</span><span>Status</span><span></span></div>'
+     f'<span class="rt-outlet"><b>{esc(r["name"])}</b><span class="muted sm">{short(r.get("word_count"),40)}</span><span class="muted sm">Checked {fmt(r["last_checked"])}</span></span>'
+     f'<span class="rt-rate">{toprate(r)}</span><span class="rt-status">{badge(r)}</span></a>')
+ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet, length, checked</span><span>Top rate</span><span>Status</span></div>'
  +''.join(rate_row(r) for r in openr[:8])+'</div>')
 paycards='<div class="pay-strip">'+''.join(
  f'<a class="pay-card" href="{esc("/outlets/"+r["slug"]+"/")}"><span class="pay-amt">${int(r["pay_usd_max"]):,}</span><b>{esc(r["name"])}</b><span class="muted sm">Checked {fmt(r["last_checked"])}</span></a>'
@@ -168,7 +168,7 @@ home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</
 <nav class="status-chips" aria-label="Browse the directory"><a class="status-chip" href="/outlets/?status=open">Open now</a><a class="status-chip" href="/outlets/?sort=pay">Highest pay</a></nav></section>
 <section><h2>Highest pay</h2><p class="muted sm">Top of each outlet's stated pay range, in US dollars at approximate October 2026 exchange rates. <a href="/outlets/?sort=pay">Sort the whole directory by pay</a>.</p>{paycards}</section>
 <section class="home-lay"><aside class="home-side"><div class="sticky">{subscribe_box('<span class="kicker">Every Thursday</span>Open Calls')}</div></aside>
-<div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a> · <a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
+<div class="home-main"><h2 id="open-now">Open or pitch-first now</h2><p class="muted">Most recently checked first. Status is what the source noted on each entry said on the check date. <a href="/methodology/">What the statuses mean</a>.</p>{ratetbl}{sponsor_slot()}<p class="home-links"><a href="/outlets/?status=open">See all {cnt('open')} open outlets</a><a href="/outlets/">Full directory ({len(outlets)})</a></p></div></section>
 <section><h2>Deadlines soon</h2><div class="due-grid">{duecards}</div><p><a href="/calls/">All calls &amp; deadlines</a></p></section>'''
 page('/',SITE,home)
 # ---------- Directory ----------
@@ -195,7 +195,7 @@ for r in outlets:
     cta_row=f'<p class="cta-row">{pitch_cta}{home_btn}</p>' if (pitch_cta or home_btn) else ''
     nxt=next_outlet[r['slug']]
     body=f'''<p class="crumb"><a href="/outlets/">← Directory</a></p>
-<h1>{esc(r["name"])} {badge(r)}</h1>{'<p><span class="label">Featured · Sponsored</span> This listing is a paid placement; the data below is unaffected.</p>' if f else ''}
+<h1>{esc(r["name"])} {badge(r)}</h1>{'<p><span class="label">Featured (Sponsored)</span> This listing is a paid placement; the data below is unaffected.</p>' if f else ''}
 <p class="checkline">{checked(r,True)} · {esc(VER.get(r["verification"],r["verification"]))}</p>
 {cta_row}
 <dl class="facts"><dt>Status</dt><dd>{esc(STATUS.get(r["status"],("","",""))[2])}</dd>
@@ -273,7 +273,7 @@ abody='''<h1>Advertise</h1><p class="lead">Reach writers who pitch criticism. Ev
 <tr><td>Featured listing, 90 days</td><td>$120</td><td>$250</td><td>$400</td></tr>
 <tr><td>Themed-call boost (pinned on Calls + one digest mention)</td><td>$30</td><td>$60</td><td>$100</td></tr></tbody></table></div>
 <p class="sm muted">Anchor: CLMP's published newsletter ad rates to a 13,000+ reader list: $100-$125 classified, $240-$300 sponsored content (<a href="https://www.clmp.org/advertise-with-us/" rel="noopener">clmp.org</a>, checked 18 Oct 2026). We price below that until our list is comparable.</p>
-<h2>How sponsored items appear</h2>'''+sponsor_slot()+'''<p>Featured listings carry a <span class="label sm">Featured · Sponsored</span> label in tables and on the outlet page. The outlet's status, pay and notes stay exactly as we found them.</p>
+<h2>How sponsored items appear</h2>'''+sponsor_slot()+'''<p>Featured listings carry a <span class="label sm">Featured (Sponsored)</span> label in tables and on the outlet page. The outlet's status, pay and notes stay exactly as we found them.</p>
 <h2>Who it's for</h2><p>MFA and low-residency programs, writing tools, small presses, literary organizations, and magazines recruiting reviewers.</p>
 <h2>Book a slot or ask a question</h2><p>Email '''+CONTACT_LINK+''' with what you want to promote and the dates you have in mind. Nothing is for sale until we confirm by reply.</p>'''+subscribe_box('Or see the newsletter first',False)
 page('/advertise/','Advertise',abody,desc="Sponsor The Pitchboard: labeled newsletter slots and featured outlet listings for writers who pitch criticism.",layout='article')
