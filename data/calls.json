@@ -1,18 +1,6 @@
 {
   "calls": [
     {
-      "id": "brick-oct-2026",
-      "title": "Brick: literary non-fiction window (essays, reviews, interviews)",
-      "outlet": "Brick (Canada)",
-      "type": "Reading window",
-      "opens": "2026-10-01",
-      "deadline": "2026-10-31",
-      "pay": "CAD $65-$720 plus two copies and a one-year subscription",
-      "details": "Finished, polished work only, via Submittable; free-submission cap often fills early; replies can take up to a year. Next window Apr 1-30, 2027.",
-      "link": "https://brickmag.com/submissions/",
-      "last_checked": "2026-10-19"
-    },
-    {
       "id": "agni-fall-2026",
       "title": "AGNI: fall reading period (includes review essays)",
       "outlet": "AGNI",
@@ -22,7 +10,7 @@
       "pay": "$30 per printed page for prose (reviews paid as prose), up to $300, plus a one-year subscription; free to submit reviews/pitches",
       "details": "Deadline Dec 15, 11:59pm ET (reopens Jan 15 - May 31, 2027). No submission fee for book reviews or review pitches ($3 online fee applies only to general non-review submissions). Review essays 1,500-3,000 words; simultaneous submissions ok with notice; conflict-of-interest disclosure required.",
       "link": "https://agnionline.bu.edu/editors-note/submit-reviews-to-agni/",
-      "last_checked": "2026-10-23"
+      "last_checked": "2026-11-02"
     },
     {
       "id": "still-point-nov-2026",
@@ -34,7 +22,7 @@
       "pay": "Unpaid",
       "details": "Complete, copyedited review of a recent poetry collection, 750-1,500 words, by email.",
       "link": "https://stillpointpoetry.squarespace.com/approach",
-      "last_checked": "2026-10-19"
+      "last_checked": "2026-11-02"
     },
     {
       "id": "wire-new-voices-2026",
@@ -46,7 +34,7 @@
       "pay": "Winner: £250, publication in the March 2027 issue and a digital subscription; free to enter",
       "details": "Send a 500-word review (recent album, book, festival, gig, film or exhibition in The Wire's territory) plus a 500-word opinion piece on 'Music criticism is irrelevant in contemporary culture'. For writers with no more than three paid music pieces published. One entry each, attachments only (.doc/.rtf/.pdf), no AI. Closes midnight GMT.",
       "link": "https://www.thewire.co.uk/in-writing/essays/introducing-the-wire-new-voices",
-      "last_checked": "2026-10-19"
+      "last_checked": "2026-11-02"
     },
     {
       "id": "threepenny-2027",
@@ -70,7 +58,7 @@
       "pay": "$250 (~800 words) or $450 (~1,500 words)",
       "details": "Reviews of place-centred books from small independent presses released within the last three months; no self-published books. Pitch a review or propose a book via the form on the page.",
       "link": "https://www.thecommononline.org/book-reviews/",
-      "last_checked": "2026-10-19"
+      "last_checked": "2026-11-02"
     },
     {
       "id": "drafting-past-rolling",
@@ -118,7 +106,7 @@
       "pay": "Honorarium paid within 30 days of publication (NBCC sheet lists $120)",
       "details": "Works in translation and essays about the craft of translation, mistranslation, and translator's notes via Duosuma. Regular weekly book review pitches remain open year-round.",
       "link": "https://themarkaz.org/submissions/",
-      "last_checked": "2026-10-26"
+      "last_checked": "2026-11-02"
     },
     {
       "id": "writersreview-rolling",
@@ -154,7 +142,55 @@
       "pay": "$50 per MQR Online contribution",
       "details": "Brief pitch or submission via the free MQR Online Submittable form; the Online Editor invites selected pitches to submit a full piece of up to 3,000 words.",
       "link": "https://mqr.submittable.com/submit",
-      "last_checked": "2026-10-26"
+      "last_checked": "2026-11-02"
+    },
+    {
+      "id": "srb-juncture-2026",
+      "title": "Sydney Review of Books: JUNCTURE Fellowship for mid-career critics (3 x $7,000)",
+      "outlet": "Sydney Review of Books",
+      "type": "Fellowship",
+      "opens": null,
+      "deadline": "2026-11-23",
+      "pay": "AUD $7,000 per fellow: three longform essays at $2,000 each plus $1,000 editorial fee; Varuna residency Feb 1-8, 2027",
+      "details": "Closes noon Monday Nov 23 (Sydney time). Australian residents and Australian nationals abroad; mid-career = 3-4+ years of strong critical publications. Apply via SRB Submittable with cover letter (up to 1,000 words, sketching three essay pitches on Australian literature), 3 writing samples and a CV of up to 3 pages. One fellowship prioritised for a First Nations and/or CaLD writer. Each fellow also commissions and edits one longform piece.",
+      "link": "https://sydneyreviewofbooks.com/news-and-events/callout-2026-2027-juncture-fellowship",
+      "last_checked": "2026-11-02"
+    },
+    {
+      "id": "thinkingdance-ewf-2027",
+      "title": "thINKingDANCE: 2027 Emerging Writer's Fellowship (dance criticism, US undergraduates)",
+      "outlet": "thINKingDANCE",
+      "type": "Fellowship",
+      "opens": "2026-10-15",
+      "deadline": "2026-11-15",
+      "pay": "$500 unrestricted stipend plus publication and 3 hours of 1:1 mentorship",
+      "details": "Two US-based undergraduates. Apply with one writing sample (arts analysis, performance criticism or creative writing, 500 words max) and a brief cover letter; any dance genre; hybrid forms welcome. Fellows either develop the sample or pitch a new piece, published by end of Spring 2027. Selections announced early December 2026.",
+      "link": "https://thinkingdance.net/articles/2026/10/19/applications-for-thinkingdances-2027-emerging-writers-fellowship-are-open/",
+      "last_checked": "2026-11-02"
+    },
+    {
+      "id": "ex-puritan-winter-2027",
+      "title": "The Ex-Puritan: book reviews for the Winter 2027 issue",
+      "outlet": "The Ex-Puritan (formerly The Puritan)",
+      "type": "Reading window",
+      "opens": null,
+      "deadline": "2026-12-25",
+      "pay": "CAD $100 per review",
+      "details": "Reviews of Canadian literature (esp. marginalized and debut authors) via Submittable; a fully thought-out pitch is acceptable instead of a draft. Free category has a monthly cap; a $3 fee category stays open. Submissions received by Dec 25 are considered for the February issue; decisions within 4 months. Pays in CAD by e-transfer, PayPal or cheque only.",
+      "link": "https://puritan-magazine.submittable.com/submit",
+      "last_checked": "2026-11-02"
+    },
+    {
+      "id": "rp-critical-writing-2026",
+      "title": "RP Critical Writing Prize 2026 (writing on contemporary portrait painting)",
+      "outlet": "Royal Society of Portrait Painters (UK)",
+      "type": "Competition",
+      "opens": null,
+      "deadline": "2026-11-02",
+      "pay": "First prize £500; two special mentions £250 each; publication in the RP Annual Exhibition catalogue (May 2027); free to enter",
+      "details": "Deadline midnight Nov 2, 2026 (UK); no extensions. Send the title and first 200 words of a proposed text on any aspect of contemporary painted or drawn portraiture (review, critical essay or creative/experimental text); three shortlisted writers submit the full ~1,000-1,500-word piece. Open worldwide, in English.",
+      "link": "https://therp.co.uk/the-rp-writing-prize/",
+      "last_checked": "2026-11-02"
     }
   ],
   "watch": [
@@ -182,7 +218,12 @@
       "outlet": "Ancillary Review of Books",
       "note": "November 2026 titles call superseded by the December 2026 and January 2027 lists.",
       "link": "https://ancillaryreviewofbooks.org/2026/09/02/calls-for-reviews-essays-december-2026/"
+    },
+    {
+      "outlet": "Brick (Canada)",
+      "note": "October 2026 window closed Oct 31; next window Apr 1-30, 2027 (checked 2026-11-02).",
+      "link": "https://brickmag.com/submissions/"
     }
   ],
-  "updated": "2026-10-26"
+  "updated": "2026-11-02"
 }
