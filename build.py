@@ -306,8 +306,7 @@ page('/account/','Your account','''<h1>Your account</h1><p id="auth-msg" class="
 <p><button type="button" id="signout" class="btn">Sign out</button></p></div>'''+AUTH_JS,desc="Your Pitchboard account.",extra_head=AUTH_HEAD,layout='article')
 page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
 # ---------- static ----------
-(OUT/'static').mkdir(parents=True,exist_ok=True)
-for f in (ROOT/'static').iterdir(): shutil.copy(f,OUT/'static'/f.name)
+shutil.copytree(ROOT/'static',OUT/'static',dirs_exist_ok=True)
 (OUT/'robots.txt').write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n")
 (OUT/"_headers").unlink(missing_ok=True)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)) if not u.endswith(('/signup/','/account/')))+'</urlset>\n')
