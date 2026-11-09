@@ -181,16 +181,28 @@
       "last_checked": "2026-11-02"
     },
     {
-      "id": "rp-critical-writing-2026",
-      "title": "RP Critical Writing Prize 2026 (writing on contemporary portrait painting)",
-      "outlet": "Royal Society of Portrait Painters (UK)",
-      "type": "Competition",
+      "id": "another-chicago-reviews-dec-2026",
+      "title": "Another Chicago Magazine: book reviews (small & university presses)",
+      "outlet": "Another Chicago Magazine",
+      "type": "Reading window",
       "opens": null,
-      "deadline": "2026-11-02",
-      "pay": "First prize £500; two special mentions £250 each; publication in the RP Annual Exhibition catalogue (May 2027); free to enter",
-      "details": "Deadline midnight Nov 2, 2026 (UK); no extensions. Send the title and first 200 words of a proposed text on any aspect of contemporary painted or drawn portraiture (review, critical essay or creative/experimental text); three shortlisted writers submit the full ~1,000-1,500-word piece. Open worldwide, in English.",
-      "link": "https://therp.co.uk/the-rp-writing-prize/",
-      "last_checked": "2026-11-02"
+      "deadline": "2026-12-01",
+      "pay": null,
+      "details": "Reviews of fiction and creative nonfiction books/collections from small and university presses, forthcoming or released within the calendar year; no children's/YA. Pay not stated on the page. Deadline Dec 1 per the submissions page.",
+      "link": "https://anotherchicagomagazine.net/submissions/",
+      "last_checked": "2026-11-09"
+    },
+    {
+      "id": "aica-usa-fellowship-2027",
+      "title": "AICA-USA Art Critic Fellowship 2027 (emerging art critics, US/Puerto Rico, age 24+)",
+      "outlet": "AICA-USA",
+      "type": "Fellowship",
+      "opens": null,
+      "deadline": "2026-11-22",
+      "pay": "$750 stipend plus $250 on publication; free to attend; mentorship and workshops Jan 10 - Apr 4, 2027",
+      "details": "Develop a piece of art criticism with a mentor for publication on the AICA-USA site; hybrid program; US/Puerto Rico residents 24+; W-9 eligible. Finalists notified mid-December 2026. Deadline Nov 22 is from the Call for Curators listing; the AICA-USA page itself did not show it in the fetch.",
+      "link": "https://aicausa.org/art-critic-fellowship2027",
+      "last_checked": "2026-11-09"
     }
   ],
   "watch": [
@@ -225,5 +237,5 @@
       "link": "https://brickmag.com/submissions/"
     }
   ],
-  "updated": "2026-11-02"
+  "updated": "2026-11-09"
 }
