@@ -27,16 +27,17 @@ On the first live dispatch after enabling alerts, a member only gets matches wit
 | Pages variable | Value |
 | --- | --- |
 | `ALERTS_CRON_SECRET` | Secret used in the `X-Pitchboard-Cron` header for every internal endpoint. |
+| `ALLOW_D1_MIGRATE` | Set to `on` temporarily to enable the D1 migration endpoint. Leave it unset for normal operation. |
 | `RESEND_API_KEY` | Secret for the Resend HTTP API. Verify the sending domain in Resend for `The Pitchboard <pitchboard@soulbound.co.kr>`. |
 | `ALERTS_SENDING` | Set to `on` to send. Sending also requires the Resend key and the existing `SESSION_SECRET`. |
 | `IP_HASH_SALT` | Secret used to hash client IPs for pay-report limits and corroboration. Keep it stable so the same connection continues to count as one. |
 
-The existing `DB` binding and `0001_members.sql` schema remain in use. After uploading a build with the new worker, take a backup and run the migration endpoint before using the features. Store the backup privately because it includes member addresses and stored IP hashes.
+The existing `DB` binding and `0001_members.sql` schema remain in use. If the database still needs the alerts and pay reports schema, take a backup, set `ALLOW_D1_MIGRATE` to `on` in the Pages environment, and call the migration endpoint. Remove `ALLOW_D1_MIGRATE` after the migration succeeds. Store the backup privately because it includes member addresses and stored IP hashes.
 
 | Method and path | Behavior |
 | --- | --- |
 | `GET /api/internal/backup` | JSON arrays for `members`, `alert_prefs`, `alert_sends`, `pay_reports`, and `alert_call_seen`. Missing tables return empty arrays. |
-| `POST /api/internal/migrate` | Idempotently applies `migrations/0002_alerts_and_pay_reports.sql`, embedded in the worker. |
+| `POST /api/internal/migrate` | Idempotently applies `migrations/0002_alerts_and_pay_reports.sql`, embedded in the worker. Authenticated requests receive `404` with `{"error":"not_found"}` unless `ALLOW_D1_MIGRATE` is `on`. |
 | `POST /api/internal/alerts/dispatch` | Run daily from the external scheduler. Add `?dry_run=1` to preview. |
 | `GET /api/internal/pay-reports` | Lists reports for review and includes the distinct connection count per outlet. |
 | `POST /api/internal/pay-reports/<id>` | Sets a report's status using a JSON body with `status` set to `approved` or `rejected`. |
