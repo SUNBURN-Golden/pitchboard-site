@@ -72,7 +72,7 @@ def pay_src_label(r):
     if ps: return f"From: {esc(ps)}"
     return "See notes"
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block non-browser reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
-PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls')]
+PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls'),('/alerts/','Alerts')]
 MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About'),('/signup/','Sign up')]
 def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None,layout=None):
     cur=' aria-current="page"'
@@ -160,6 +160,81 @@ def outlet_calls(name):
     items=''.join(f'''<li data-call><a href="/calls/#{esc(c['id'])}">{esc(c['title'])}</a> {call_badge(c)}
 <div class="sm">{call_dates(c)}</div></li>''' for c in calls)
     return f'<h2>Calls &amp; deadlines</h2><ul>{items}</ul>'
+
+# The call kind is the source type. The established choices survive a quiet season.
+CALL_KINDS=sorted({c['type'] for c in cd['calls']} | {
+    'Reading window', 'Competition', 'Rolling call', 'Themed issue', 'Fellowship', 'Rolling applications',
+})
+ALERT_GENRES={
+    'books': ('Books & reviews', r'books?|literar\w+|literature|novels?|review essays?|presses'),
+    'arts': ('Arts & visual culture', r'arts?|artists?|visual culture|exhibitions?|galler(?:y|ies)|museums?|photography'),
+    'film-tv': ('Film & TV', r'films?|cinema|television|tv|documentar(?:y|ies)'),
+    'music': ('Music', r'music|albums?|gigs?|recordings?'),
+    'poetry': ('Poetry', r'poetry|poems?|poets?|verse'),
+    'culture': ('General culture', r'cultur\w+|criticism|commentary|creative nonfiction'),
+}
+ALERT_REGIONS={
+    'worldwide': ('Open to writers anywhere', r'global|worldwide|international'),
+    'US': ('United States', r'u\.?s\.?a?|united states'),
+    'UK': ('United Kingdom', r'u\.?k|united kingdom'),
+    'Canada': ('Canada', r'canada'),
+    'Australia': ('Australia', r'australia'),
+    'Ireland': ('Ireland', r'ireland'),
+    'South Africa': ('South Africa', r'south africa'),
+    'other': ('Other regions', None),
+}
+
+def alert_feed():
+    catalog={r['name']:r for r in outlets}
+    calls=[]
+    for call in cd['calls']:
+        outlet=catalog.get(call['outlet'], {})
+        keywords=' '.join((call['outlet'], outlet.get('notes') or '', call['title'], call.get('details') or ''))
+        genres=[key for key, (_, pattern) in ALERT_GENRES.items() if re.search(rf'\b(?:{pattern})\b', keywords, re.I)]
+        region=outlet.get('region') or call['outlet']
+        regions=[key for key, (_, pattern) in ALERT_REGIONS.items() if pattern and re.search(rf'\b(?:{pattern})\b', region, re.I)]
+        pay=call.get('pay')
+        pay_usd=0 if re.fullmatch(r'unpaid|no pay', (pay or '').strip(), re.I) else outlet.get('pay_usd_max')
+        opens=iso_date(call.get('opens'))
+        deadline=call_deadline(call)
+        calls.append({
+            'id':call['id'], 'title':call['title'], 'outlet_id':outlet.get('id'), 'outlet':call['outlet'],
+            'url':call['link'], 'outlet_url':f"/outlets/{outlet['slug']}/" if outlet else f"/calls/#{call['id']}",
+            'kind':call['type'], 'genres':genres or ['culture'], 'regions':regions or ['other'],
+            'worldwide':'worldwide' in regions, 'pay_usd':pay_usd, 'pay':pay or outlet.get('pays'),
+            'opens':opens.isoformat() if opens else None, 'deadline':deadline.isoformat() if deadline else None,
+        })
+    return {
+        'calls':calls, 'genres':list(ALERT_GENRES), 'kinds':CALL_KINDS, 'regions':list(ALERT_REGIONS),
+        'outlets':{r['id']:{'pay_usd_max':r.get('pay_usd_max')} for r in outlets},
+    }
+
+def choices(options):
+    return ''.join(f'<option value="{esc(value)}">{esc(label)}</option>' for value,label in options)
+
+def alert_choices(name, title, options, note='Leave all unchecked for Any.'):
+    boxes=''.join(f'<label><input type="checkbox" name="{name}" value="{esc(key)}"> {esc(label)}</label>'
+                  for key,label in options)
+    return f'<fieldset><legend>{title}</legend><p class="sm muted">{note}</p><div class="form-options">{boxes}</div></fieldset>'
+
+def pay_report_box(outlet):
+    currencies=[(c,c) for c in ('USD','GBP','EUR','CAD','AUD','KRW')]+[('other','Other')]
+    years=range(TODAY.year,2017,-1)
+    return f'''<section class="member-panel" aria-labelledby="pay-report-heading">
+<h2 id="pay-report-heading">Critic-reported pay (unverified)</h2>
+<div data-pay-summary aria-live="polite"><p class="sm muted">Loading reports…</p></div>
+<details><summary>Report what you were paid</summary>
+<p class="sm muted">No sign-in needed. We publish figures under the <a href="/methodology/#critic-pay">pay report rules</a>.</p>
+<form class="member-form" id="pay-report" data-outlet="{outlet['id']}" method="post">
+<div class="form-options">
+<label>Amount <input name="amount" type="number" inputmode="decimal" step="any" min="0" required></label>
+<label>Currency <select name="currency">{choices(currencies)}</select></label>
+<label>Unit <select name="unit"><option value="piece">Per piece</option><option value="word">Per word</option></select></label>
+<label>Piece type <select name="piece_type">{choices((t.lower(),t) for t in ('Review','Essay','Interview','Other'))}</select></label>
+<label>Year <select name="year">{choices((y,y) for y in years)}</select></label>
+</div><div hidden><label>Leave blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+<p><button type="submit" disabled>Submit pay report</button></p><p class="sm" role="status"></p>
+</form></details><noscript><p>Pay reports require JavaScript.</p></noscript></section>'''
 # ---------- Home ----------
 openr=sorted([r for r in outlets if r['status'] in('open','pitch-first')],key=lambda r:(r['name'] not in featured,-d_(r['last_checked']).toordinal(),r['name'].lower()))
 paytop=sorted((r for r in outlets if r.get('pay_usd_max') is not None),key=lambda r:(-r['pay_usd_max'],r['name'].lower()))[:4]
@@ -231,6 +306,7 @@ for r in outlets:
 <dt>Word count</dt><dd>{esc(r.get("word_count")) if r.get("word_count") else '<span class="muted">not recorded</span>'}</dd>
 <dt>Region</dt><dd>{esc(r["region"])}</dd>
 {f'<dt>Links</dt><dd>{" · ".join(links)}</dd>' if links else ''}</dl>
+{pay_report_box(r)}
 {outlet_calls(r['name'])}
 <h2>Pitch notes</h2><p>{esc(r.get("notes") or "No notes yet.")}</p>
 <p class="note">Spot something out of date? <a href="/about/#corrections">Tell us</a>. Always confirm on the outlet's own page before pitching; pages change without notice.</p>
@@ -312,9 +388,13 @@ mbody=f'''<h1>Methodology</h1>
 <h2>Statuses</h2><dl class="facts">{"".join(f'<dt>{badge({"status":k})}</dt><dd>{esc(v[2])}</dd>' for k,v in STATUS.items())}</dl>
 <h2>Last-checked dates and staleness</h2><p>Every outlet shows the date we last read its page. Entries older than {STALE_DAYS} days get a <span class="badge s-stale">Stale: re-check</span> badge. We re-check entries on a rotating schedule, oldest first, and show the last-checked date on every row.</p>
 <h2>Where the facts come from</h2><ul><li><strong>Outlet page read directly:</strong> we fetched the outlet's own guidelines page.</li><li><strong>Outlet page via search excerpt:</strong> some sites block non-browser access; we saw the outlet's own page text in a search excerpt. Confirm by hand.</li><li><strong>NBCC sheet:</strong> the National Book Critics Circle's public publications spreadsheet is used as a lead list. Pay or word counts taken from it are labeled and carry that sheet row's own last-updated date; many are 2022-vintage.</li><li><strong>Third-party only:</strong> flagged as unconfirmed.</li></ul>
+<h2 id="critic-pay">Critic-reported pay</h2><p>Report what you were paid without signing in. We use a salted code made from your IP address to limit repeat submissions and check that reports come from different connections. We store that code and the report details.</p>
+<p>Reports can appear once we have at least two eligible reports from different connections for the same outlet and pay unit, covering this year and the previous two calendar years. We hold unusually high or low amounts for review by comparing them with the outlet’s recorded per-piece rate and with similar reports. A report approved by a reviewer can appear on its own, including older reports. Rejected reports stay out of the figures.</p>
+<p>We show the number of reports, median, range, and latest year in US dollars, with per-piece and per-word rates shown separately. We use approximate exchange rates. Reports in other currencies are kept for review. The directory’s pay field and sorting use the published rates.</p>
 <h2>Independence</h2><p>Sponsored and featured items are always labeled. They never change any outlet's status, data, or ordering, apart from a clearly marked featured position. Outlets cannot pay to change what we report.</p>
 <h2>Limits</h2><p>Pages change without notice, some outlets do not publish pay, and we may have missed an update. Verify on the outlet's page before pitching, and <a href="/about/#corrections">send corrections</a> to '''+CONTACT_LINK+'''.</p>
-<h2 id="privacy">Privacy</h2><p>Accounts are optional and use Google sign-in only; we store your email address and your newsletter choice on Cloudflare, which hosts this site, and you can change that choice on your account page. The site does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
+<h2 id="privacy">Privacy</h2><p>Accounts are optional and use Google sign-in only. We store your email address and preferences on Cloudflare, which hosts this site. You can change your newsletter choice on your account page. We send custom alerts through Resend to members who turn them on, and each email has an unsubscribe link.</p>
+<p>The site does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
 page('/methodology/','Methodology',mbody,desc="How The Pitchboard checks outlets, dates every fact, labels sources, and keeps sponsorship separate from data.",layout='article')
 # ---------- About ----------
 page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent directory for people who write criticism. It is run by a critic who criticizes everything, including the market that pays for criticism. Notes on outlets will be opinionated. The data will not be.</p>
@@ -325,14 +405,29 @@ page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent dir
 # ---------- Sign up / Account ----------
 AUTH_HEAD='<meta name="robots" content="noindex">'
 AUTH_JS='<script src="/static/auth.js" defer></script>'
-page('/signup/','Sign up','''<h1>Sign up or log in</h1><p class="lead">One click with your Google account. We only keep your email address.</p>
+page('/signup/','Sign up','''<h1>Sign up or log in</h1><p class="lead">Continue with your Google account.</p>
 <div class="authbox"><label class="optin"><input type="checkbox" id="newsletter-opt" checked> <span><strong>Get this week's paid pitch calls every Thursday.</strong> Open calls, deadlines and pay, in one short email. Untick anytime on your account page.</span></label>
 <button type="button" id="google-btn" class="btn">Continue with Google</button><p id="auth-msg" class="sm muted" role="status"></p></div>
 <p class="sm muted">By continuing you agree that we store your email address to run your account. See <a href="/methodology/#privacy">privacy</a>.</p>'''+AUTH_JS,desc="Sign up for The Pitchboard with Google.",extra_head=AUTH_HEAD,layout='article')
 page('/account/','Your account','''<h1>Your account</h1><p id="auth-msg" class="sm muted" role="status">Loading…</p>
 <div id="account" hidden><p>Signed in as <strong id="acct-email"></strong></p>
 <label class="optin"><input type="checkbox" id="acct-newsletter"> <span>Send me this week's paid pitch calls every Thursday.</span></label>
+<p><a href="/alerts/">Manage custom email alerts</a></p>
 <p><button type="button" id="signout" class="btn">Sign out</button></p></div>'''+AUTH_JS,desc="Your Pitchboard account.",extra_head=AUTH_HEAD,layout='article')
+page('/alerts/','Email alerts',f'''<h1>Custom email alerts</h1>
+<p class="lead">Get an email when a matching call opens, and reminders 7 and 2 days before its deadline. We group new matches into one email each time we check.</p>
+<p id="alerts-loading" class="sm" role="status">Loading your preferences…</p>
+<p id="alerts-signin" hidden><a class="btn" href="/signup/">Sign in to set up alerts</a></p>
+<form class="member-form" id="alert-prefs" method="post" hidden>
+<label class="optin"><input type="checkbox" name="enabled"> Email me matching calls</label>
+{alert_choices('genres','Genres',((k,v[0]) for k,v in ALERT_GENRES.items()),'Genres come from words in the listing. Leave all unchecked for Any.')}
+{alert_choices('kinds','Kind of call',((k,k) for k in CALL_KINDS))}
+{alert_choices('regions','Where you’re eligible',((k,v[0]) for k,v in ALERT_REGIONS.items()),'Choose “Open to writers anywhere” for worldwide calls only. Selecting a country includes worldwide calls too. Leave all unchecked for Any.')}
+<p><label>Minimum pay in USD per piece <input name="min_pay_usd" type="number" min="0" max="20000" step="0.01" inputmode="decimal" required value="0"></label></p>
+<label class="optin"><input type="checkbox" name="include_unstated_pay" checked> Include calls without a stated per-piece rate</label>
+<p><button type="submit">Save preferences</button></p><p class="sm" role="status"></p>
+</form><noscript><p>Managing alerts requires JavaScript. <a href="/signup/">Sign in</a>.</p></noscript>''',
+     desc="Choose which calls and deadlines The Pitchboard emails you about.",layout='article')
 page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
 # ---------- static ----------
 shutil.copytree(ROOT/'static',OUT/'static',dirs_exist_ok=True)
@@ -340,5 +435,6 @@ shutil.copytree(ROOT/'static',OUT/'static',dirs_exist_ok=True)
 (OUT/"_headers").unlink(missing_ok=True)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)) if not u.endswith(('/signup/','/account/')))+'</urlset>\n')
 shutil.copy(ROOT/'data/outlets.json',OUT/'outlets.json')
+(OUT/'alerts-feed.json').write_text(json.dumps(alert_feed(),ensure_ascii=False)+'\n',encoding='utf-8')
 shutil.copy(ROOT/'worker/_worker.js',OUT/'_worker.js')
-print(f"built {len(outlets)} outlet pages + 8 pages -> {OUT} (today={TODAY})")
+print(f"built {len(PAGES)-len(outlets)} site pages and {len(outlets)} outlet pages -> {OUT} (today={TODAY})")

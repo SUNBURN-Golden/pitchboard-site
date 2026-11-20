@@ -68,3 +68,129 @@
     if(!isNaN(age))el.textContent='('+pl(age)+' ago)';
   });
 })();
+
+(async function(){
+  const form = document.getElementById('alert-prefs');
+  if (!form) return;
+  const loading = document.getElementById('alerts-loading');
+  try {
+    const response = await fetch('/api/alerts/prefs');
+    if (response.status === 401) {
+      loading.hidden = true;
+      document.getElementById('alerts-signin').hidden = false;
+      return;
+    }
+    if (!response.ok) throw new Error();
+    const prefs = await response.json();
+    for (const box of form.querySelectorAll('input[type=checkbox]')) {
+      box.checked = Array.isArray(prefs[box.name]) ? prefs[box.name].includes(box.value) : prefs[box.name];
+    }
+    form.elements.min_pay_usd.value = prefs.min_pay_usd;
+    form.hidden = false;
+    loading.hidden = true;
+  } catch {
+    loading.textContent = 'Could not load preferences. Please reload the page.';
+    return;
+  }
+
+  const button = form.querySelector('button');
+  const status = form.querySelector('[role=status]');
+  form.addEventListener('submit', async function(event){
+    event.preventDefault();
+    button.disabled = true;
+    status.textContent = 'Saving…';
+    const data = new FormData(form);
+    try {
+      const response = await fetch('/api/alerts/prefs', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          genres: data.getAll('genres'),
+          kinds: data.getAll('kinds'),
+          regions: data.getAll('regions'),
+          min_pay_usd: Number(data.get('min_pay_usd')),
+          include_unstated_pay: data.has('include_unstated_pay'),
+          enabled: data.has('enabled')
+        })
+      });
+      if (response.status === 401) {
+        document.getElementById('alerts-signin').hidden = false;
+        status.textContent = 'Your session expired. Sign in again to save.';
+      } else {
+        status.textContent = response.ok ? 'Preferences saved.' : 'Could not save preferences. Please try again.';
+      }
+    } catch {
+      status.textContent = 'Could not save preferences. Please try again.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+
+(function(){
+  const form = document.getElementById('pay-report');
+  if (!form) return;
+  const outlet = Number(form.dataset.outlet);
+  const summary = document.querySelector('[data-pay-summary]');
+  const button = form.querySelector('button');
+  const status = form.querySelector('[role=status]');
+
+  async function showSummary(){
+    try {
+      const response = await fetch('/api/pay-reports/summary?outlet=' + outlet, { credentials: 'omit' });
+      if (!response.ok) throw new Error();
+      const result = await response.json();
+      if (!result.shown) {
+        summary.textContent = 'Not enough reports yet.';
+        return;
+      }
+      const list = document.createElement('ul');
+      for (const row of result.units) {
+        const usd = new Intl.NumberFormat('en-US', {
+          style: 'currency', currency: 'USD', maximumFractionDigits: row.unit === 'word' ? 6 : 2
+        });
+        const item = document.createElement('li');
+        const count = row.count + (row.count === 1 ? ' report' : ' reports');
+        item.textContent = usd.format(row.median) + ' USD median per ' + row.unit +
+          ' · ' + usd.format(row.min) + '–' + usd.format(row.max) +
+          ' · ' + count + ' · Latest year ' + row.latest_year;
+        list.appendChild(item);
+      }
+      summary.replaceChildren(list);
+    } catch {
+      summary.textContent = 'Could not load pay reports.';
+    }
+  }
+
+  button.disabled = false;
+  showSummary();
+  form.addEventListener('submit', async function(event){
+    event.preventDefault();
+    button.disabled = true;
+    status.textContent = 'Submitting…';
+    const data = Object.fromEntries(new FormData(form));
+    try {
+      const response = await fetch('/api/pay-reports', {
+        method: 'POST',
+        credentials: 'omit',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({...data, outlet_id: outlet, amount: Number(data.amount), year: Number(data.year)})
+      });
+      if (response.ok) {
+        status.textContent = 'Thanks for sharing your pay.';
+        form.reset();
+        await showSummary();
+      } else if (response.status === 429) {
+        status.textContent = 'You’ve reached the report limit. Please try again later.';
+      } else if (response.status === 400) {
+        status.textContent = 'Check the amount, currency, pay unit, and year.';
+      } else {
+        throw new Error();
+      }
+    } catch {
+      status.textContent = 'Could not submit your report. Please try again.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();

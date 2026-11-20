@@ -97,3 +97,14 @@ a.rate-tr:hover{background:var(--surface-2)}
 .optin input{margin-top:.3rem}
 /* Apple-style smooth card corners where supported; other browsers keep border-radius. */
 @supports (corner-shape:squircle){.pay-card,.call,.facts,.subscribe,.calls-ics-bar,.rate-tbl,.tablewrap,.notice,.sponsor,.outlets tr{corner-shape:var(--corner-card)}}
+
+.member-panel{margin:1.5rem 0;padding:1rem 1.2rem;background:var(--surface);border:1px solid var(--border-strong);border-radius:8px}
+.member-panel h2{margin:0 0 .5rem}
+.member-panel summary{width:fit-content;min-height:44px;padding:.55rem 0;cursor:pointer;color:var(--accent)}
+.member-panel details{margin-top:.65rem}
+.member-form fieldset{min-width:0;margin:1rem 0;padding:.6rem .9rem .85rem;border:1px solid var(--border);border-radius:8px}
+.member-form legend{padding:0 .25rem;font-weight:600}
+.member-form fieldset p{margin:.15rem 0 .45rem}
+.form-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.4rem .85rem}
+.form-options label{display:block;min-width:0}
+.member-form input[type=number],.member-form select{display:block;width:100%;max-width:15rem;min-height:44px;padding:.4rem .55rem;background:var(--surface);color:var(--text);border:1px solid var(--border-strong);border-radius:6px;font:inherit}
