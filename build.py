@@ -55,10 +55,10 @@ def age(r): return (TODAY-d_(r['last_checked'])).days
 def badge(r):
     l,c,t=STATUS.get(r['status'],('Unknown','s-none',''))
     return f'<span class="badge {c}" title="{esc(t)}">{l}</span>'
-def checked(r,long=False):
+def checked(r):
     a=age(r); stale=a>STALE_DAYS
-    s=f'<span class="checked{" stale" if stale else ""}">Last checked <time datetime="{r["last_checked"]}">{fmt(r["last_checked"])}</time>'
-    s+=f' <span class="ago">({a} day{"s" if a!=1 else ""} ago)</span>' if long or True else ''
+    s=f'<span class="checked{" stale" if stale else ""}">Last checked {date_time(r["last_checked"])}'
+    s+=f' <span class="ago" data-checked-age="{r["last_checked"]}">({max(a, 0)} day{"s" if a!=1 else ""} ago)</span>'
     if stale: s+=' <span class="badge s-stale">Stale: re-check</span>'
     return s+'</span>'
 def short(s,n=70):
@@ -117,21 +117,49 @@ def table(rs,id_=''):
     idattr=(' id="%s"'%id_) if id_ else ''
     return f'<div class="tablewrap"><table role="table" class="outlets"{idattr}>{HEAD}<tbody role="rowgroup">{"".join(row(r) for r in rs)}</tbody></table></div>'
 cnt=lambda s:sum(1 for r in outlets if r['status']==s)
-def call_deadline(c):
-    value=c.get('deadline')
+def iso_date(value):
     if not isinstance(value,str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}',value): return None
     try:
         return d_(value)
     except ValueError:
         return None
-def daysleft(c):
+def call_deadline(c):
+    return iso_date(c.get('deadline'))
+
+def call_status(c):
     ddl=call_deadline(c)
-    if ddl is None: return 'Rolling'
-    if c['opens'] and d_(c['opens'])>TODAY:
-        k=(d_(c['opens'])-TODAY).days
-        return 'Opens in %d day%s'%(k,'s' if k!=1 else '')
+    opens=iso_date(c.get('opens'))
+    if ddl and ddl<TODAY: return 'Closed', 's-closed'
+    if opens and opens>TODAY:
+        k=(opens-TODAY).days
+        return f'Opens in {k} day{"s" if k!=1 else ""}', 's-calls'
+    if not ddl: return 'Rolling', 's-open'
     n=(ddl-TODAY).days
-    return 'Deadline passed' if n<0 else 'Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'
+    return ('Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'), 's-open'
+
+def date_time(date, attr=''):
+    return f'<time datetime="{date}"{attr}>{fmt(date)}</time>'
+
+def call_badge(c):
+    label, style=call_status(c)
+    return f'<span class="badge {style}" data-call-status data-opens="{esc(c.get("opens"))}">{label}</span>'
+
+def call_dates(c):
+    dates=[]
+    if iso_date(c.get('opens')): dates.append('Opens '+date_time(c['opens']))
+    dates.append('Deadline '+date_time(c['deadline'], ' data-deadline') if call_deadline(c) else 'No deadline stated')
+    return ' · '.join(dates)
+
+calls_by_outlet={}
+for c in cd['calls']:
+    calls_by_outlet.setdefault(c['outlet'], []).append(c)
+
+def outlet_calls(name):
+    calls=calls_by_outlet.get(name, [])
+    if not calls: return ''
+    items=''.join(f'''<li data-call><a href="/calls/#{esc(c['id'])}">{esc(c['title'])}</a> {call_badge(c)}
+<div class="sm">{call_dates(c)}</div></li>''' for c in calls)
+    return f'<h2>Calls &amp; deadlines</h2><ul>{items}</ul>'
 # ---------- Home ----------
 openr=sorted([r for r in outlets if r['status'] in('open','pitch-first')],key=lambda r:(r['name'] not in featured,-d_(r['last_checked']).toordinal(),r['name'].lower()))
 paytop=sorted((r for r in outlets if r.get('pay_usd_max') is not None),key=lambda r:(-r['pay_usd_max'],r['name'].lower()))[:4]
@@ -157,10 +185,10 @@ ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet · len
 paycards='<div class="pay-strip">'+''.join(
  f'<a class="pay-card" href="{esc("/outlets/"+r["slug"]+"/")}"><span class="pay-amt">${int(r["pay_usd_max"]):,}</span><b>{esc(r["name"])}</b><span class="muted sm">Checked {fmt(r["last_checked"])}</span></a>'
  for r in paytop)+'</div>'
-duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
-<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
-<p class="sm">Deadline <strong>{fmt(c["deadline"])}</strong> · Pay: {esc(c["pay"])}</p>
-<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>''' for c in due)
+duecards=''.join(f'''<article class="call due-card" data-call><h3>{esc(c["title"])}</h3>
+<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · {call_badge(c)}</p>
+<p class="sm">{call_dates(c)} · Pay: {esc(c["pay"])}</p>
+<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · {checked(c)}</p></article>''' for c in due)
 if not duecards: duecards='<p class="muted">No upcoming deadlines on the board right now.</p>'
 home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</h1>
 <p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets that publish criticism — each entry shows when it was last checked.</p>
@@ -196,13 +224,14 @@ for r in outlets:
     nxt=next_outlet[r['slug']]
     body=f'''<p class="crumb"><a href="/outlets/">← Directory</a></p>
 <h1>{esc(r["name"])} {badge(r)}</h1>{'<p><span class="label">Featured · Sponsored</span> This listing is a paid placement; the data below is unaffected.</p>' if f else ''}
-<p class="checkline">{checked(r,True)} · {esc(VER.get(r["verification"],r["verification"]))}</p>
+<p class="checkline">{checked(r)} · {esc(VER.get(r["verification"],r["verification"]))}</p>
 {cta_row}
 <dl class="facts"><dt>Status</dt><dd>{esc(STATUS.get(r["status"],("","",""))[2])}</dd>
 <dt>Pay (as published)</dt><dd>{esc(r.get("pays")) if r.get("pays") else '<span class="muted">not recorded</span>'}<div class="sm muted">{pay_src_label(r)}</div></dd>
 <dt>Word count</dt><dd>{esc(r.get("word_count")) if r.get("word_count") else '<span class="muted">not recorded</span>'}</dd>
 <dt>Region</dt><dd>{esc(r["region"])}</dd>
 {f'<dt>Links</dt><dd>{" · ".join(links)}</dd>' if links else ''}</dl>
+{outlet_calls(r['name'])}
 <h2>Pitch notes</h2><p>{esc(r.get("notes") or "No notes yet.")}</p>
 <p class="note">Spot something out of date? <a href="/about/#corrections">Tell us</a>. Always confirm on the outlet's own page before pitching; pages change without notice.</p>
 <a class="next-outlet" href="/outlets/{nxt['slug']}/">Next outlet: {esc(nxt['name'])} →</a>'''
@@ -251,16 +280,16 @@ cbody+=f'''<section class="calls-ics-bar" aria-label="Download all stated deadli
 <a class="btn calls-ics-btn" href="/calls/deadlines.ics" aria-describedby="calls-ics-note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2m-8 3h2"/></svg><span>Add deadlines to your calendar (.ics)</span></a>
 <p class="sm muted" id="calls-ics-note">{len(dated_calls)} stated deadlines · Works with Apple Calendar, Google Calendar, and Outlook</p></section>'''
 for c in cl:
-    cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
-<p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if call_deadline(c) is not None else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
-<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>'''
+    cbody+=f'''<article class="call" id="{esc(c["id"])}" data-call><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · {call_badge(c)}</p>
+<p>{call_dates(c)} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
+<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · {checked(c)}</p></article>'''
 cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'<li><strong>{esc(w["outlet"])}</strong>: {esc(w["note"])} <a href="{esc(w["link"])}" rel="noopener">page</a></li>' for w in cd['watch'])+'</ul>'
 page('/calls/','Calls & deadlines',cbody,desc="Calendar of themed calls for pitches in criticism and book reviews, with deadlines and sources.")
 # ---------- Newsletter ----------
 nbody=f'''<h1>The Open Calls newsletter</h1><p class="lead">A weekly email: what opened, what's closing, and one short critical note on an outlet.</p>
 {subscribe_box('Subscribe',True,keep_loader=True)}
 <h2>What's in an issue</h2><ul><li><strong>Open Calls:</strong> new, changed and closing-soon outlets, each with its last-checked date.</li><li><strong>One critical note:</strong> 150-250 words on a single outlet (pay vs. work, pitch rules, who gets in).</li><li><strong>One labeled sponsor slot.</strong></li></ul>
-<h2>Archive</h2><p>Past issues appear on the <a href="{ARCHIVE}" rel="noopener">Pitchboard newsletter archive</a> (hosted by beehiiv). The first issues have not been sent yet, so it may be empty.</p>
+<h2>Archive</h2><p>Issues go out weekly. Read past issues in the <a href="{ARCHIVE}" rel="noopener">Pitchboard newsletter archive</a>.</p>
 <p class="sm muted">Questions or corrections: {CONTACT_LINK}.</p>'''
 page('/newsletter/','Newsletter',nbody,desc="Free weekly Open Calls email: which criticism outlets are taking pitches now, with deadlines.",layout='article')
 # ---------- Advertise ----------

@@ -45,23 +45,26 @@
   [q,st,rg,pay,so].forEach(function(e){e.addEventListener('input',run);e.addEventListener('change',run)}); run();
 })();
 
-// Live countdowns on call badges (Asia/Seoul; a call closes at the end of its deadline day).
+// Compare calendar dates in the reader's timezone without DST affecting the day count.
 (function(){
-  function seoulToday(){
-    var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-    return Date.parse(p+'T00:00:00Z');
-  }
   function day(s){return /^\d{4}-\d{2}-\d{2}$/.test(s||'')?Date.parse(s+'T00:00:00Z'):NaN;}
   function pl(n){return n+' day'+(n===1?'':'s');}
-  try{
-    var t=seoulToday();
-    document.querySelectorAll('[data-deadline]').forEach(function(el){
-      var d=day(el.getAttribute('data-deadline'));
-      if(isNaN(d))return;
-      var o=day(el.getAttribute('data-opens'));
-      if(!isNaN(o)&&o>t){el.textContent='Opens in '+pl(Math.round((o-t)/864e5));return;}
-      var n=Math.round((d-t)/864e5);
-      el.textContent=n<0?'Closed':n===0?'Closes today':pl(n)+' left';
-    });
-  }catch(e){}
+  var now=new Date();
+  var today=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+  document.querySelectorAll('[data-call]').forEach(function(call){
+    var badge=call.querySelector('[data-call-status]');
+    var deadline=call.querySelector('time[data-deadline]');
+    var left=(day(deadline&&deadline.dateTime)-today)/864e5;
+    var untilOpen=(day(badge.dataset.opens)-today)/864e5;
+    var closed=left<0, upcoming=!closed&&untilOpen>0;
+    badge.classList.toggle('s-closed',closed);
+    badge.classList.toggle('s-calls',upcoming);
+    badge.classList.toggle('s-open',!closed&&!upcoming);
+    badge.textContent=closed?'Closed':upcoming?'Opens in '+pl(untilOpen):
+      isNaN(left)?'Rolling':left===0?'Closes today':pl(left)+' left';
+  });
+  document.querySelectorAll('[data-checked-age]').forEach(function(el){
+    var age=Math.max(0,(today-day(el.dataset.checkedAge))/864e5);
+    if(!isNaN(age))el.textContent='('+pl(age)+' ago)';
+  });
 })();
