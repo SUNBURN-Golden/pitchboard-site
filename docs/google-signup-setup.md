@@ -5,3 +5,4 @@
 - Pages env (production): `GOOGLE_CLIENT_ID` (plain), `GOOGLE_CLIENT_SECRET` and `SESSION_SECRET` (secrets). Session is an HMAC-signed, HttpOnly cookie, 30 days.
 - Google client "pitchboard" (GCP project soulbound-auth) must list the redirect URI `https://pitchboard.soulbound.co.kr/api/auth/callback`.
 - The newsletter box on /signup/ is pre-checked; the choice is stored on first sign-in and editable on /account/.
+- Custom alerts and anonymous pay reports share the Pages worker and D1 database. See [alert configuration and internal endpoints](alerts.md#production-configuration) and [pay report moderation](pay-reports.md).

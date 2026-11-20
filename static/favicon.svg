@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="The Pitchboard favicon">
+<title>The Pitchboard favicon</title>
+
+<rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7" fill="#faf8f4" stroke="#1c1b19" stroke-width="1.7"/>
+<g class="pin"><path d="M12.80 17.08 L16.00 26.48 L19.20 17.08 Z" fill="#8a2a1c"/><circle cx="16.00" cy="13.14" r="5.46" fill="#8a2a1c"/><circle cx="16.00" cy="13.14" r="1.73" fill="#faf8f4"/></g>
+</svg>

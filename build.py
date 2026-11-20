@@ -55,10 +55,10 @@ def age(r): return (TODAY-d_(r['last_checked'])).days
 def badge(r):
     l,c,t=STATUS.get(r['status'],('Unknown','s-none',''))
     return f'<span class="badge {c}" title="{esc(t)}">{l}</span>'
-def checked(r,long=False):
+def checked(r):
     a=age(r); stale=a>STALE_DAYS
-    s=f'<span class="checked{" stale" if stale else ""}">Last checked <time datetime="{r["last_checked"]}">{fmt(r["last_checked"])}</time>'
-    s+=f' <span class="ago">({a} day{"s" if a!=1 else ""} ago)</span>' if long or True else ''
+    s=f'<span class="checked{" stale" if stale else ""}">Last checked {date_time(r["last_checked"])}'
+    s+=f' <span class="ago" data-checked-age="{r["last_checked"]}">({max(a, 0)} day{"s" if a!=1 else ""} ago)</span>'
     if stale: s+=' <span class="badge s-stale">Stale: re-check</span>'
     return s+'</span>'
 def short(s,n=70):
@@ -72,7 +72,7 @@ def pay_src_label(r):
     if ps: return f"From: {esc(ps)}"
     return "See notes"
 VER={'outlet_page_fetched':'Outlet page read directly','outlet_page_search_excerpt':"Outlet page text seen via a search excerpt (site may block non-browser reads)",'third_party_only':'Only third-party sources found; treat as unconfirmed','nbcc_only':'NBCC sheet only; not checked on the outlet page'}
-PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls')]
+PRIMARY_NAV=[('/outlets/','Directory'),('/calls/','Calls'),('/alerts/','Alerts')]
 MORE_NAV=[('/newsletter/','Newsletter'),('/advertise/','Advertise'),('/methodology/','Methodology'),('/about/','About'),('/signup/','Sign up')]
 def page(path,title,body,desc="Where to pitch book reviews and cultural criticism: pay, word counts, pitch rules, and open/closed status with last-checked dates.",extra_head='',active=None,layout=None):
     cur=' aria-current="page"'
@@ -81,13 +81,35 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
     nav=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in PRIMARY_NAV)
     more=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in MORE_NAV)
     t=f'{title} · {SITE}' if title!=SITE else f'{SITE}: paid book review & criticism outlets, with last-checked dates'
-    canon=BASE+(path if path.endswith('/') else path+'/') if path!='/404' else None
-    if canon:
+    if path=='/404':
+        canon=BASE+path
+        extra_head='<meta name="robots" content="noindex">'+extra_head
+    else:
+        canon=BASE+path.rstrip('/')+'/'
         PAGES.append(canon)
-        extra_head=f'<link rel="canonical" href="{canon}"><meta property="og:title" content="{esc(t)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{canon}"><meta property="og:type" content="website"><meta property="og:site_name" content="{SITE}">'+extra_head
-    else: extra_head='<meta name="robots" content="noindex">'+extra_head
+    title_html, desc_html, canon_html=esc(t), esc(desc), esc(canon)
+    image_html=esc(BASE+'/static/og-image.png')
     out=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
+<title>{title_html}</title><meta name="description" content="{desc_html}">
+<link rel="canonical" href="{canon_html}">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{esc(SITE)}">
+<meta property="og:title" content="{title_html}">
+<meta property="og:description" content="{desc_html}">
+<meta property="og:url" content="{canon_html}">
+<meta property="og:image" content="{image_html}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Pitchboard — Where to pitch, and what it pays.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title_html}">
+<meta name="twitter:description" content="{desc_html}">
+<meta name="twitter:image" content="{image_html}">
+<link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
 <nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
@@ -117,21 +139,124 @@ def table(rs,id_=''):
     idattr=(' id="%s"'%id_) if id_ else ''
     return f'<div class="tablewrap"><table role="table" class="outlets"{idattr}>{HEAD}<tbody role="rowgroup">{"".join(row(r) for r in rs)}</tbody></table></div>'
 cnt=lambda s:sum(1 for r in outlets if r['status']==s)
-def call_deadline(c):
-    value=c.get('deadline')
+def iso_date(value):
     if not isinstance(value,str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}',value): return None
     try:
         return d_(value)
     except ValueError:
         return None
-def daysleft(c):
+def call_deadline(c):
+    return iso_date(c.get('deadline'))
+
+def call_status(c):
     ddl=call_deadline(c)
-    if ddl is None: return 'Rolling'
-    if c['opens'] and d_(c['opens'])>TODAY:
-        k=(d_(c['opens'])-TODAY).days
-        return 'Opens in %d day%s'%(k,'s' if k!=1 else '')
+    opens=iso_date(c.get('opens'))
+    if ddl and ddl<TODAY: return 'Closed', 's-closed'
+    if opens and opens>TODAY:
+        k=(opens-TODAY).days
+        return f'Opens in {k} day{"s" if k!=1 else ""}', 's-calls'
+    if not ddl: return 'Rolling', 's-open'
     n=(ddl-TODAY).days
-    return 'Deadline passed' if n<0 else 'Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'
+    return ('Closes today' if n==0 else f'{n} day{"s" if n!=1 else ""} left'), 's-open'
+
+def date_time(date, attr=''):
+    return f'<time datetime="{date}"{attr}>{fmt(date)}</time>'
+
+def call_badge(c):
+    label, style=call_status(c)
+    return f'<span class="badge {style}" data-call-status data-opens="{esc(c.get("opens"))}">{label}</span>'
+
+def call_dates(c):
+    dates=[]
+    if iso_date(c.get('opens')): dates.append('Opens '+date_time(c['opens']))
+    dates.append('Deadline '+date_time(c['deadline'], ' data-deadline') if call_deadline(c) else 'No deadline stated')
+    return ' · '.join(dates)
+
+calls_by_outlet={}
+for c in cd['calls']:
+    calls_by_outlet.setdefault(c['outlet'], []).append(c)
+
+def outlet_calls(name):
+    calls=calls_by_outlet.get(name, [])
+    if not calls: return ''
+    items=''.join(f'''<li data-call><a href="/calls/#{esc(c['id'])}">{esc(c['title'])}</a> {call_badge(c)}
+<div class="sm">{call_dates(c)}</div></li>''' for c in calls)
+    return f'<h2>Calls &amp; deadlines</h2><ul>{items}</ul>'
+
+# The call kind is the source type. The established choices survive a quiet season.
+CALL_KINDS=sorted({c['type'] for c in cd['calls']} | {
+    'Reading window', 'Competition', 'Rolling call', 'Themed issue', 'Fellowship', 'Rolling applications',
+})
+ALERT_GENRES={
+    'books': ('Books & reviews', r'books?|literar\w+|literature|novels?|review essays?|presses'),
+    'arts': ('Arts & visual culture', r'arts?|artists?|visual culture|exhibitions?|galler(?:y|ies)|museums?|photography'),
+    'film-tv': ('Film & TV', r'films?|cinema|television|tv|documentar(?:y|ies)'),
+    'music': ('Music', r'music|albums?|gigs?|recordings?'),
+    'poetry': ('Poetry', r'poetry|poems?|poets?|verse'),
+    'culture': ('General culture', r'cultur\w+|criticism|commentary|creative nonfiction'),
+}
+ALERT_REGIONS={
+    'worldwide': ('Open to writers anywhere', r'global|worldwide|international'),
+    'US': ('United States', r'u\.?s\.?a?|united states'),
+    'UK': ('United Kingdom', r'u\.?k|united kingdom'),
+    'Canada': ('Canada', r'canada'),
+    'Australia': ('Australia', r'australia'),
+    'Ireland': ('Ireland', r'ireland'),
+    'South Africa': ('South Africa', r'south africa'),
+    'other': ('Other regions', None),
+}
+
+def alert_feed():
+    catalog={r['name']:r for r in outlets}
+    calls=[]
+    for call in cd['calls']:
+        outlet=catalog.get(call['outlet'], {})
+        keywords=' '.join((call['outlet'], outlet.get('notes') or '', call['title'], call.get('details') or ''))
+        genres=[key for key, (_, pattern) in ALERT_GENRES.items() if re.search(rf'\b(?:{pattern})\b', keywords, re.I)]
+        region=outlet.get('region') or call['outlet']
+        regions=[key for key, (_, pattern) in ALERT_REGIONS.items() if pattern and re.search(rf'\b(?:{pattern})\b', region, re.I)]
+        pay=call.get('pay')
+        pay_usd=0 if re.fullmatch(r'unpaid|no pay', (pay or '').strip(), re.I) else outlet.get('pay_usd_max')
+        opens=iso_date(call.get('opens'))
+        deadline=call_deadline(call)
+        calls.append({
+            'id':call['id'], 'title':call['title'], 'outlet_id':outlet.get('id'), 'outlet':call['outlet'],
+            'url':call['link'], 'outlet_url':f"/outlets/{outlet['slug']}/" if outlet else f"/calls/#{call['id']}",
+            'kind':call['type'], 'genres':genres or ['culture'], 'regions':regions or ['other'],
+            'worldwide':'worldwide' in regions, 'pay_usd':pay_usd, 'pay':pay or outlet.get('pays'),
+            'opens':opens.isoformat() if opens else None, 'deadline':deadline.isoformat() if deadline else None,
+        })
+    return {
+        'calls':calls, 'genres':list(ALERT_GENRES), 'kinds':CALL_KINDS, 'regions':list(ALERT_REGIONS),
+        'outlets':{r['id']:{'pay_usd_max':r.get('pay_usd_max')} for r in outlets},
+    }
+
+def choices(options):
+    return ''.join(f'<option value="{esc(value)}">{esc(label)}</option>' for value,label in options)
+
+def alert_choices(name, title, options, note='Leave all unchecked for Any.'):
+    boxes=''.join(f'<label><input type="checkbox" name="{name}" value="{esc(key)}"> {esc(label)}</label>'
+                  for key,label in options)
+    return f'<fieldset><legend>{title}</legend><p class="sm muted">{note}</p><div class="form-options">{boxes}</div></fieldset>'
+
+def pay_report_box(outlet):
+    currencies=[(c,c) for c in ('USD','GBP','EUR','CAD','AUD','KRW')]+[('other','Other')]
+    years=range(TODAY.year,2017,-1)
+    return f'''<section class="member-panel" aria-labelledby="pay-report-heading">
+<h2 id="pay-report-heading">Critic-reported pay (unverified)</h2>
+<div data-pay-summary aria-live="polite"><p class="sm muted">Loading reports…</p></div>
+<details><summary>Report what you were paid</summary>
+<p class="sm muted">No sign-in needed. We publish figures under the <a href="/methodology/#critic-pay">pay report rules</a>.</p>
+<form class="member-form" id="pay-report" data-outlet="{outlet['id']}" method="post">
+<div class="form-options">
+<label>Amount <input name="amount" type="number" inputmode="decimal" step="any" min="0" required></label>
+<label>Currency <select name="currency">{choices(currencies)}</select></label>
+<label>Unit <select name="unit"><option value="piece">Per piece</option><option value="word">Per word</option></select></label>
+<label>Piece type <select name="piece_type">{choices((t.lower(),t) for t in ('Review','Essay','Interview','Other'))}</select></label>
+<label>Year <select name="year">{choices((y,y) for y in years)}</select></label>
+</div><div hidden><label>Leave blank <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+<p><button type="submit" disabled>Submit pay report</button></p><p class="sm" role="status"></p>
+</form></details><noscript><p>Pay reports require JavaScript.</p></noscript></section>'''
 # ---------- Home ----------
 openr=sorted([r for r in outlets if r['status'] in('open','pitch-first')],key=lambda r:(r['name'] not in featured,-d_(r['last_checked']).toordinal(),r['name'].lower()))
 paytop=sorted((r for r in outlets if r.get('pay_usd_max') is not None),key=lambda r:(-r['pay_usd_max'],r['name'].lower()))[:4]
@@ -157,10 +282,10 @@ ratetbl=('<div class="rate-tbl"><div class="rate-tr rate-th"><span>Outlet · len
 paycards='<div class="pay-strip">'+''.join(
  f'<a class="pay-card" href="{esc("/outlets/"+r["slug"]+"/")}"><span class="pay-amt">${int(r["pay_usd_max"]):,}</span><b>{esc(r["name"])}</b><span class="muted sm">Checked {fmt(r["last_checked"])}</span></a>'
  for r in paytop)+'</div>'
-duecards=''.join(f'''<article class="call due-card"><h3>{esc(c["title"])}</h3>
-<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
-<p class="sm">Deadline <strong>{fmt(c["deadline"])}</strong> · Pay: {esc(c["pay"])}</p>
-<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>''' for c in due)
+duecards=''.join(f'''<article class="call due-card" data-call><h3>{esc(c["title"])}</h3>
+<p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · {call_badge(c)}</p>
+<p class="sm">{call_dates(c)} · Pay: {esc(c["pay"])}</p>
+<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <a href="/calls/#{esc(c["id"])}">Details</a> · {checked(c)}</p></article>''' for c in due)
 if not duecards: duecards='<p class="muted">No upcoming deadlines on the board right now.</p>'
 home=f'''<section class="hero home-hero"><h1>Where to pitch, and what it pays.</h1>
 <p class="lead muted">Pay, pitch status and deadlines for {len(outlets)} outlets that publish criticism — each entry shows when it was last checked.</p>
@@ -196,13 +321,15 @@ for r in outlets:
     nxt=next_outlet[r['slug']]
     body=f'''<p class="crumb"><a href="/outlets/">← Directory</a></p>
 <h1>{esc(r["name"])} {badge(r)}</h1>{'<p><span class="label">Featured · Sponsored</span> This listing is a paid placement; the data below is unaffected.</p>' if f else ''}
-<p class="checkline">{checked(r,True)} · {esc(VER.get(r["verification"],r["verification"]))}</p>
+<p class="checkline">{checked(r)} · {esc(VER.get(r["verification"],r["verification"]))}</p>
 {cta_row}
 <dl class="facts"><dt>Status</dt><dd>{esc(STATUS.get(r["status"],("","",""))[2])}</dd>
 <dt>Pay (as published)</dt><dd>{esc(r.get("pays")) if r.get("pays") else '<span class="muted">not recorded</span>'}<div class="sm muted">{pay_src_label(r)}</div></dd>
 <dt>Word count</dt><dd>{esc(r.get("word_count")) if r.get("word_count") else '<span class="muted">not recorded</span>'}</dd>
 <dt>Region</dt><dd>{esc(r["region"])}</dd>
 {f'<dt>Links</dt><dd>{" · ".join(links)}</dd>' if links else ''}</dl>
+{pay_report_box(r)}
+{outlet_calls(r['name'])}
 <h2>Pitch notes</h2><p>{esc(r.get("notes") or "No notes yet.")}</p>
 <p class="note">Spot something out of date? <a href="/about/#corrections">Tell us</a>. Always confirm on the outlet's own page before pitching; pages change without notice.</p>
 <a class="next-outlet" href="/outlets/{nxt['slug']}/">Next outlet: {esc(nxt['name'])} →</a>'''
@@ -251,16 +378,16 @@ cbody+=f'''<section class="calls-ics-bar" aria-label="Download all stated deadli
 <a class="btn calls-ics-btn" href="/calls/deadlines.ics" aria-describedby="calls-ics-note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 4h2m4 0h2m-8 3h2"/></svg><span>Add deadlines to your calendar (.ics)</span></a>
 <p class="sm muted" id="calls-ics-note">{len(dated_calls)} stated deadlines · Works with Apple Calendar, Google Calendar, and Outlook</p></section>'''
 for c in cl:
-    cbody+=f'''<article class="call" id="{esc(c["id"])}"><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · <span class="badge s-open" data-deadline="{esc(c.get("deadline") or "") if call_deadline(c) else ""}" data-opens="{esc(c.get("opens") or "")}">{daysleft(c)}</span></p>
-<p>{("Opens "+fmt(c["opens"])+" · ") if c["opens"] else ""}{("Deadline <strong>"+fmt(c["deadline"])+"</strong>") if call_deadline(c) is not None else "No deadline stated"} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
-<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · <span class="checked">Last checked {fmt(c["last_checked"])}</span></p></article>'''
+    cbody+=f'''<article class="call" id="{esc(c["id"])}" data-call><h3>{esc(c["title"])}</h3><p><strong>{esc(c["outlet"])}</strong> · {esc(c["type"])} · {call_badge(c)}</p>
+<p>{call_dates(c)} · Pay: {esc(c["pay"])}</p><p>{esc(c["details"])}</p>
+<p class="sm"><a href="{esc(c["link"])}" rel="noopener">Outlet page</a> · {checked(c)}</p></article>'''
 cbody+='<h2>Recently closed or worth watching</h2><ul class="watch">'+''.join(f'<li><strong>{esc(w["outlet"])}</strong>: {esc(w["note"])} <a href="{esc(w["link"])}" rel="noopener">page</a></li>' for w in cd['watch'])+'</ul>'
 page('/calls/','Calls & deadlines',cbody,desc="Calendar of themed calls for pitches in criticism and book reviews, with deadlines and sources.")
 # ---------- Newsletter ----------
 nbody=f'''<h1>The Open Calls newsletter</h1><p class="lead">A weekly email: what opened, what's closing, and one short critical note on an outlet.</p>
 {subscribe_box('Subscribe',True,keep_loader=True)}
 <h2>What's in an issue</h2><ul><li><strong>Open Calls:</strong> new, changed and closing-soon outlets, each with its last-checked date.</li><li><strong>One critical note:</strong> 150-250 words on a single outlet (pay vs. work, pitch rules, who gets in).</li><li><strong>One labeled sponsor slot.</strong></li></ul>
-<h2>Archive</h2><p>Past issues appear on the <a href="{ARCHIVE}" rel="noopener">Pitchboard newsletter archive</a> (hosted by beehiiv). The first issues have not been sent yet, so it may be empty.</p>
+<h2>Archive</h2><p>Issues go out weekly. Read past issues in the <a href="{ARCHIVE}" rel="noopener">Pitchboard newsletter archive</a>.</p>
 <p class="sm muted">Questions or corrections: {CONTACT_LINK}.</p>'''
 page('/newsletter/','Newsletter',nbody,desc="Free weekly Open Calls email: which criticism outlets are taking pitches now, with deadlines.",layout='article')
 # ---------- Advertise ----------
@@ -283,9 +410,13 @@ mbody=f'''<h1>Methodology</h1>
 <h2>Statuses</h2><dl class="facts">{"".join(f'<dt>{badge({"status":k})}</dt><dd>{esc(v[2])}</dd>' for k,v in STATUS.items())}</dl>
 <h2>Last-checked dates and staleness</h2><p>Every outlet shows the date we last read its page. Entries older than {STALE_DAYS} days get a <span class="badge s-stale">Stale: re-check</span> badge. We re-check entries on a rotating schedule, oldest first, and show the last-checked date on every row.</p>
 <h2>Where the facts come from</h2><ul><li><strong>Outlet page read directly:</strong> we fetched the outlet's own guidelines page.</li><li><strong>Outlet page via search excerpt:</strong> some sites block non-browser access; we saw the outlet's own page text in a search excerpt. Confirm by hand.</li><li><strong>NBCC sheet:</strong> the National Book Critics Circle's public publications spreadsheet is used as a lead list. Pay or word counts taken from it are labeled and carry that sheet row's own last-updated date; many are 2022-vintage.</li><li><strong>Third-party only:</strong> flagged as unconfirmed.</li></ul>
+<h2 id="critic-pay">Critic-reported pay</h2><p>Report what you were paid without signing in. We use a salted code made from your IP address to limit repeat submissions and check that reports come from different connections. We store that code and the report details.</p>
+<p>Reports can appear once we have at least two eligible reports from different connections for the same outlet and pay unit, covering this year and the previous two calendar years. We hold unusually high or low amounts for review by comparing them with the outlet’s recorded per-piece rate and with similar reports. A report approved by a reviewer can appear on its own, including older reports. Rejected reports stay out of the figures.</p>
+<p>We show the number of reports, median, range, and latest year in US dollars, with per-piece and per-word rates shown separately. We use approximate exchange rates. Reports in other currencies are kept for review. The directory’s pay field and sorting use the published rates.</p>
 <h2>Independence</h2><p>Sponsored and featured items are always labeled. They never change any outlet's status, data, or ordering, apart from a clearly marked featured position. Outlets cannot pay to change what we report.</p>
 <h2>Limits</h2><p>Pages change without notice, some outlets do not publish pay, and we may have missed an update. Verify on the outlet's page before pitching, and <a href="/about/#corrections">send corrections</a> to '''+CONTACT_LINK+'''.</p>
-<h2 id="privacy">Privacy</h2><p>Accounts are optional and use Google sign-in only; we store your email address and your newsletter choice on Cloudflare, which hosts this site, and you can change that choice on your account page. The site does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
+<h2 id="privacy">Privacy</h2><p>Accounts are optional and use Google sign-in only. We store your email address and preferences on Cloudflare, which hosts this site. You can change your newsletter choice on your account page. We send custom alerts through Resend to members who turn them on, and each email has an unsubscribe link.</p>
+<p>The site does not run its own analytics or ad trackers. If you subscribe to the newsletter, <a href="https://www.beehiiv.com" rel="noopener">beehiiv</a>, our email provider, collects and stores your address under its own <a href="https://www.beehiiv.com/privacy" rel="noopener">privacy policy</a>. We use it only to send the newsletter; you can unsubscribe from any issue. The signup form and beehiiv's attribution script load from beehiiv's servers. To ask us to delete your address, email '''+CONTACT_LINK+'''.</p>'''
 page('/methodology/','Methodology',mbody,desc="How The Pitchboard checks outlets, dates every fact, labels sources, and keeps sponsorship separate from data.",layout='article')
 # ---------- About ----------
 page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent directory for people who write criticism. It is run by a critic who criticizes everything, including the market that pays for criticism. Notes on outlets will be opinionated. The data will not be.</p>
@@ -296,20 +427,39 @@ page('/about/','About',f'''<h1>About</h1><p>The Pitchboard is an independent dir
 # ---------- Sign up / Account ----------
 AUTH_HEAD='<meta name="robots" content="noindex">'
 AUTH_JS='<script src="/static/auth.js" defer></script>'
-page('/signup/','Sign up','''<h1>Sign up or log in</h1><p class="lead">One click with your Google account. We only keep your email address.</p>
+page('/signup/','Sign up','''<h1>Sign up or log in</h1><p class="lead">Continue with your Google account.</p>
 <div class="authbox"><label class="optin"><input type="checkbox" id="newsletter-opt" checked> <span><strong>Get this week's paid pitch calls every Thursday.</strong> Open calls, deadlines and pay, in one short email. Untick anytime on your account page.</span></label>
 <button type="button" id="google-btn" class="btn">Continue with Google</button><p id="auth-msg" class="sm muted" role="status"></p></div>
 <p class="sm muted">By continuing you agree that we store your email address to run your account. See <a href="/methodology/#privacy">privacy</a>.</p>'''+AUTH_JS,desc="Sign up for The Pitchboard with Google.",extra_head=AUTH_HEAD,layout='article')
 page('/account/','Your account','''<h1>Your account</h1><p id="auth-msg" class="sm muted" role="status">Loading…</p>
 <div id="account" hidden><p>Signed in as <strong id="acct-email"></strong></p>
 <label class="optin"><input type="checkbox" id="acct-newsletter"> <span>Send me this week's paid pitch calls every Thursday.</span></label>
+<p><a href="/alerts/">Manage custom email alerts</a></p>
 <p><button type="button" id="signout" class="btn">Sign out</button></p></div>'''+AUTH_JS,desc="Your Pitchboard account.",extra_head=AUTH_HEAD,layout='article')
-page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
+page('/alerts/','Email alerts',f'''<h1>Custom email alerts</h1>
+<p class="lead">Get an email when a matching call opens, and reminders 7 and 2 days before its deadline. We group new matches into one email each time we check.</p>
+<p id="alerts-loading" class="sm" role="status">Loading your preferences…</p>
+<p id="alerts-signin" hidden><a class="btn" href="/signup/">Sign in to set up alerts</a></p>
+<form class="member-form" id="alert-prefs" method="post" hidden>
+<label class="optin"><input type="checkbox" name="enabled"> Email me matching calls</label>
+{alert_choices('genres','Genres',((k,v[0]) for k,v in ALERT_GENRES.items()),'Genres come from words in the listing. Leave all unchecked for Any.')}
+{alert_choices('kinds','Kind of call',((k,k) for k in CALL_KINDS))}
+{alert_choices('regions','Where you’re eligible',((k,v[0]) for k,v in ALERT_REGIONS.items()),'Choose “Open to writers anywhere” for worldwide calls only. Selecting a country includes worldwide calls too. Leave all unchecked for Any.')}
+<p><label>Minimum pay in USD per piece <input name="min_pay_usd" type="number" min="0" max="20000" step="0.01" inputmode="decimal" required value="0"></label></p>
+<label class="optin"><input type="checkbox" name="include_unstated_pay" checked> Include calls without a stated per-piece rate</label>
+<p><button type="submit">Save preferences</button></p><p class="sm" role="status"></p>
+</form><noscript><p>Managing alerts requires JavaScript. <a href="/signup/">Sign in</a>.</p></noscript>''',
+     desc="Choose which calls and deadlines The Pitchboard emails you about.",layout='article')
+page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>',
+     desc="The page you requested could not be found on The Pitchboard.")
 # ---------- static ----------
 shutil.copytree(ROOT/'static',OUT/'static',dirs_exist_ok=True)
+for icon in ('favicon.svg','apple-touch-icon.png'):
+    shutil.copyfile(OUT/'static'/icon,OUT/icon)
 (OUT/'robots.txt').write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n")
 (OUT/"_headers").unlink(missing_ok=True)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)) if not u.endswith(('/signup/','/account/')))+'</urlset>\n')
 shutil.copy(ROOT/'data/outlets.json',OUT/'outlets.json')
+(OUT/'alerts-feed.json').write_text(json.dumps(alert_feed(),ensure_ascii=False)+'\n',encoding='utf-8')
 shutil.copy(ROOT/'worker/_worker.js',OUT/'_worker.js')
-print(f"built {len(outlets)} outlet pages + 8 pages -> {OUT} (today={TODAY})")
+print(f"built {len(PAGES)-len(outlets)} site pages and {len(outlets)} outlet pages -> {OUT} (today={TODAY})")
