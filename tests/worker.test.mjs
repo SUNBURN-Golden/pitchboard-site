@@ -241,7 +241,17 @@ test('dispatch matches filters and Seoul date windows, groups email, deduplicate
   assert.equal((await app.request(link + 'bad')).status, 400);
   const confirmation = await app.request(link);
   assert.equal(confirmation.status, 200);
-  assert.match(await confirmation.text(), /Custom email alerts are off/);
+  const html = await confirmation.text();
+  assert.match(html, /Custom email alerts are off/);
+  const head = html.split('</head>')[0];
+  for (const icon of [
+    '<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">',
+    '<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">',
+    '<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png">',
+    '<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">'
+  ]) {
+    assert.ok(head.includes(icon), icon);
+  }
   assert.equal((await (await app.request('/api/alerts/prefs', { headers: session })).json()).enabled, false);
   await app.prefs(session);
   assert.equal((await app.request(link, { method: 'POST', body: { 'List-Unsubscribe': 'One-Click' } })).status, 200);

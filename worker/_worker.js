@@ -192,7 +192,12 @@ async function unsubscribe(url, env) {
   await env.DB.prepare('UPDATE alert_prefs SET enabled = 0, started_at = NULL, updated_at = ? WHERE member_id = ? AND enabled = 1')
     .bind(new Date().toISOString(), member).run();
   return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"><title>Alerts turned off · The Pitchboard</title></head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"><title>Alerts turned off · The Pitchboard</title>
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    </head>
     <body><main><h1>Custom email alerts are off</h1><p><a href="/alerts/">Manage email alerts</a></p></main></body></html>`, {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' }
   });

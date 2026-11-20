@@ -81,13 +81,35 @@ def page(path,title,body,desc="Where to pitch book reviews and cultural criticis
     nav=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in PRIMARY_NAV)
     more=''.join('<a href="%s"%s>%s</a>'%(h,cur if current==h else '',l) for h,l in MORE_NAV)
     t=f'{title} · {SITE}' if title!=SITE else f'{SITE}: paid book review & criticism outlets, with last-checked dates'
-    canon=BASE+(path if path.endswith('/') else path+'/') if path!='/404' else None
-    if canon:
+    if path=='/404':
+        canon=BASE+path
+        extra_head='<meta name="robots" content="noindex">'+extra_head
+    else:
+        canon=BASE+path.rstrip('/')+'/'
         PAGES.append(canon)
-        extra_head=f'<link rel="canonical" href="{canon}"><meta property="og:title" content="{esc(t)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{canon}"><meta property="og:type" content="website"><meta property="og:site_name" content="{SITE}">'+extra_head
-    else: extra_head='<meta name="robots" content="noindex">'+extra_head
+    title_html, desc_html, canon_html=esc(t), esc(desc), esc(canon)
+    image_html=esc(BASE+'/static/og-image.png')
     out=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(t)}</title><meta name="description" content="{esc(desc)}"><link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
+<title>{title_html}</title><meta name="description" content="{desc_html}">
+<link rel="canonical" href="{canon_html}">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{esc(SITE)}">
+<meta property="og:title" content="{title_html}">
+<meta property="og:description" content="{desc_html}">
+<meta property="og:url" content="{canon_html}">
+<meta property="og:image" content="{image_html}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Pitchboard — Where to pitch, and what it pays.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title_html}">
+<meta name="twitter:description" content="{desc_html}">
+<meta name="twitter:image" content="{image_html}">
+<link rel="stylesheet" href="/static/style.css">{extra_head}</head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">The Pitchboard</a>
 <nav aria-label="Main">{nav}<details class="nav-more"><summary>More</summary><div>{more}</div></details></nav></div></header>
@@ -428,9 +450,12 @@ page('/alerts/','Email alerts',f'''<h1>Custom email alerts</h1>
 <p><button type="submit">Save preferences</button></p><p class="sm" role="status"></p>
 </form><noscript><p>Managing alerts requires JavaScript. <a href="/signup/">Sign in</a>.</p></noscript>''',
      desc="Choose which calls and deadlines The Pitchboard emails you about.",layout='article')
-page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>')
+page('/404','Not found','<h1>Page not found</h1><p><a href="/">Back to home</a> · <a href="/outlets/">Directory</a></p>',
+     desc="The page you requested could not be found on The Pitchboard.")
 # ---------- static ----------
 shutil.copytree(ROOT/'static',OUT/'static',dirs_exist_ok=True)
+for icon in ('favicon.svg','apple-touch-icon.png'):
+    shutil.copyfile(OUT/'static'/icon,OUT/icon)
 (OUT/'robots.txt').write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n")
 (OUT/"_headers").unlink(missing_ok=True)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<!-- The Pitchboard sitemap -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'<url><loc>{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n' for u in sorted(set(PAGES)) if not u.endswith(('/signup/','/account/')))+'</urlset>\n')

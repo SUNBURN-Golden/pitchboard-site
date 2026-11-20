@@ -1,6 +1,7 @@
 """Check the feed and the public pages produced by the static build."""
 import datetime as dt
 import json
+from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
 import re
@@ -56,6 +57,64 @@ class BuildTest(unittest.TestCase):
 
     def read(self, path):
         return (self.output / path).read_text(encoding='utf-8')
+
+    def test_every_page_has_icons_and_social_metadata(self):
+        origin = 'https://pitchboard.soulbound.co.kr'
+        image = origin + '/static/og-image.png'
+        icons = [
+            {'rel': 'icon', 'href': '/static/favicon.svg', 'type': 'image/svg+xml'},
+            {'rel': 'icon', 'href': '/static/favicon-32.png', 'type': 'image/png', 'sizes': '32x32'},
+            {'rel': 'icon', 'href': '/static/favicon-16.png', 'type': 'image/png', 'sizes': '16x16'},
+            {'rel': 'apple-touch-icon', 'href': '/static/apple-touch-icon.png', 'sizes': '180x180'},
+        ]
+        pages = sorted(self.output.rglob('*.html'))
+        self.assertTrue(pages)
+        for path in pages:
+            relative = path.relative_to(self.output).as_posix()
+            with self.subTest(path=relative):
+                markup, _ = self.read(relative).split('</head>', 1)
+                head = PageHTML(markup)
+                links = head.attributes('link')
+                self.assertCountEqual(
+                    [attrs for attrs in links if attrs.get('rel') in ('icon', 'apple-touch-icon')], icons,
+                )
+                canonical = origin + '/' + relative.removesuffix('index.html').removesuffix('.html')
+                self.assertIn({'rel': 'canonical', 'href': canonical}, links)
+                meta = head.attributes('meta')
+                title = head.text[0]
+                description = next(attrs['content'] for attrs in meta if attrs.get('name') == 'description')
+                expected = {
+                    'og:type': 'website',
+                    'og:site_name': 'The Pitchboard',
+                    'og:title': title,
+                    'og:description': description,
+                    'og:url': canonical,
+                    'og:image': image,
+                    'og:image:width': '1200',
+                    'og:image:height': '630',
+                    'og:image:alt': 'The Pitchboard — Where to pitch, and what it pays.',
+                    'twitter:card': 'summary_large_image',
+                    'twitter:title': title,
+                    'twitter:description': description,
+                    'twitter:image': image,
+                }
+                for name, content in expected.items():
+                    attribute = 'property' if name.startswith('og:') else 'name'
+                    self.assertEqual([attrs['content'] for attrs in meta if attrs.get(attribute) == name],
+                                     [content], name)
+                    escaped = escape(content)
+                    if escaped != content:
+                        self.assertIn(f'<meta {attribute}="{name}" content="{escaped}">', markup)
+
+    def test_brand_assets_are_copied_to_build_output(self):
+        root_icons = ('favicon.svg', 'apple-touch-icon.png')
+        for name in (*root_icons, 'favicon-16.png', 'favicon-32.png', 'og-image.png'):
+            with self.subTest(asset=name):
+                static_path = Path('static') / name
+                content = (ROOT / static_path).read_bytes()
+                self.assertEqual((self.output / static_path).read_bytes(), content)
+                if name in root_icons:
+                    self.assertEqual((self.output / name).read_bytes(), content)
 
     def test_alert_feed_keeps_source_ids_and_uses_normalized_filters(self):
         feed = json.loads(self.read('alerts-feed.json'))
