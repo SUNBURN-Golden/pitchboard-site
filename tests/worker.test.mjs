@@ -157,9 +157,10 @@ test('member can save and load preferences; invalid inputs and cross-origin requ
   assert.deepEqual(await (await app.request('/api/alerts/prefs', { headers })).json(), prefs);
 });
 
-test('internal routes require the secret; migrate is idempotent and backups include missing tables', async context => {
+test('internal routes require the secret, and migration is disabled by default', async context => {
   const { env, member, request } = setup(context, { migrated: false });
   await member('backed-up');
+  env.ALLOW_D1_MIGRATE = 'on';
   const endpoints = [
     ['POST', '/api/internal/migrate'], ['GET', '/api/internal/backup'], ['GET', '/api/internal/pay-reports'],
     ['POST', '/api/internal/pay-reports/1'], ['POST', '/api/internal/alerts/dispatch']
@@ -171,14 +172,29 @@ test('internal routes require the secret; migrate is idempotent and backups incl
   delete env.ALERTS_CRON_SECRET;
   assert.equal((await request('/api/internal/alerts/dispatch', { method: 'POST', headers: INTERNAL })).status, 503);
   env.ALERTS_CRON_SECRET = CRON;
+  delete env.ALLOW_D1_MIGRATE;
   const before = await (await request('/api/internal/backup', { headers: INTERNAL })).json();
   assert.equal(before.members[0].email, 'backed-up@example.com');
   for (const table of ['alert_prefs', 'alert_sends', 'pay_reports', 'alert_call_seen']) assert.deepEqual(before[table], []);
+
+  const schema = env.DB.prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
+  const originalTables = (await schema.all()).results;
+  const migrate = () => request('/api/internal/migrate', { method: 'POST', headers: INTERNAL });
+  const disabled = await migrate();
+  assert.equal(disabled.status, 404);
+  assert.deepEqual(await disabled.json(), { error: 'not_found' });
+  env.ALLOW_D1_MIGRATE = 'off';
+  assert.equal((await migrate()).status, 404);
+  assert.deepEqual((await schema.all()).results, originalTables);
+
+  env.ALLOW_D1_MIGRATE = 'on';
   for (let i = 0; i < 2; i++) {
-    assert.equal((await request('/api/internal/migrate', { method: 'POST', headers: INTERNAL })).status, 200);
+    assert.equal((await migrate()).status, 200);
   }
-  const tables = (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all()).results;
+  const tables = (await schema.all()).results;
   assert.ok(Object.keys(before).every(name => tables.some(row => row.name === name)));
+  delete env.ALLOW_D1_MIGRATE;
+  assert.equal((await migrate()).status, 404);
   assert.deepEqual(await (await request('/api/internal/backup', { headers: INTERNAL })).json(), before);
 });
 

@@ -457,17 +457,19 @@ async function internal(req, env, url) {
   const allowed = crypto.subtle.timingSafeEqual ?
     crypto.subtle.timingSafeEqual(...digests) : safeEq(...digests.map(b64u));
   if (!allowed) return json({ error: 'unauthorized' }, 401);
-  if (!env.DB) return unavailable();
   const path = url.pathname;
+  const migrate = req.method === 'POST' && path === '/api/internal/migrate';
+  if (migrate && env.ALLOW_D1_MIGRATE !== 'on') return json({ error: 'not_found' }, 404);
+  if (!env.DB) return unavailable();
+  if (migrate) {
+    await env.DB.batch(SCHEMA_0002.split(';').map(s => s.trim()).filter(Boolean).map(s => env.DB.prepare(s)));
+    return json({ ok: true });
+  }
   if (req.method === 'GET') {
     if (path === '/api/internal/backup') return backup(env.DB);
     if (path === '/api/internal/pay-reports') return reviewPayReports(env);
   }
   if (req.method === 'POST') {
-    if (path === '/api/internal/migrate') {
-      await env.DB.batch(SCHEMA_0002.split(';').map(s => s.trim()).filter(Boolean).map(s => env.DB.prepare(s)));
-      return json({ ok: true });
-    }
     if (path === '/api/internal/alerts/dispatch') return dispatch(url, env);
     const report = /^\/api\/internal\/pay-reports\/(\d+)$/.exec(path);
     if (report) return moderatePayReport(req, env, Number(report[1]));
