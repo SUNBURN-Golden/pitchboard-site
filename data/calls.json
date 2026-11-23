@@ -97,18 +97,6 @@
       "last_checked": "2026-10-23"
     },
     {
-      "id": "markaz-mistranslation-2026",
-      "title": "The Markaz Review: MIS/TRANSLATION themed issue (essays, translator's notes, reviews)",
-      "outlet": "The Markaz Review",
-      "type": "Themed issue",
-      "opens": null,
-      "deadline": "2026-11-20",
-      "pay": "Honorarium paid within 30 days of publication (NBCC sheet lists $120)",
-      "details": "Works in translation and essays about the craft of translation, mistranslation, and translator's notes via Duosuma. Regular weekly book review pitches remain open year-round.",
-      "link": "https://themarkaz.org/submissions/",
-      "last_checked": "2026-11-02"
-    },
-    {
       "id": "writersreview-rolling",
       "title": "WritersReview: rolling book reviewer applications (12 genres)",
       "outlet": "WritersReview",
@@ -179,18 +167,6 @@
       "details": "Reviews of fiction and creative nonfiction books/collections from small and university presses, forthcoming or released within the calendar year; no children's/YA. Pay not stated on the page. Deadline Dec 1 per the submissions page.",
       "link": "https://anotherchicagomagazine.net/submissions/",
       "last_checked": "2026-11-09"
-    },
-    {
-      "id": "aica-usa-fellowship-2027",
-      "title": "AICA-USA Art Critic Fellowship 2027 (emerging art critics, US/Puerto Rico, age 24+)",
-      "outlet": "AICA-USA",
-      "type": "Fellowship",
-      "opens": null,
-      "deadline": "2026-11-22",
-      "pay": "$750 stipend plus $250 on publication; free to attend; mentorship and workshops Jan 10 - Apr 4, 2027",
-      "details": "Develop a piece of art criticism with a mentor for publication on the AICA-USA site; hybrid program; US/Puerto Rico residents 24+; W-9 eligible. Finalists notified mid-December 2026. Deadline Nov 22 is from the Call for Curators listing; the AICA-USA page itself did not show it in the fetch.",
-      "link": "https://aicausa.org/art-critic-fellowship2027",
-      "last_checked": "2026-11-09"
     }
   ],
   "watch": [
@@ -225,5 +201,5 @@
       "link": "https://brickmag.com/submissions/"
     }
   ],
-  "updated": "2026-11-16"
+  "updated": "2026-11-23"
 }
